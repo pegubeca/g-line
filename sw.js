@@ -1,6 +1,6 @@
 // G-Line: guarda o app no aparelho para abrir sem internet.
 // Ao publicar uma versão nova, troque o número abaixo (ex.: g-line-v15).
-const CACHE = 'g-line-v14-3';
+const CACHE = 'g-line-v15';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -25,7 +25,7 @@ self.addEventListener('fetch', e => {
     return;
   }
   // Ícones, manifesto e fontes: usa a cópia guardada; se não tiver, baixa e guarda.
-  if (u.origin === location.origin || u.hostname.endsWith('fonts.googleapis.com') || u.hostname.endsWith('fonts.gstatic.com')) {
+  if (u.origin === location.origin || u.hostname.endsWith('fonts.googleapis.com') || u.hostname.endsWith('fonts.gstatic.com') || (u.hostname == 'www.gstatic.com' && u.pathname.startsWith('/firebasejs/'))) {
     e.respondWith(caches.match(r).then(m => m || fetch(r).then(res => {
       if (res.ok || res.type === 'opaque') { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)); }
       return res;
