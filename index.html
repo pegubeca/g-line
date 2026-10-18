@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>G-Line</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#070b16">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#070b16;--panel:#0d1630;--line:#2a4a9c;--ink:#e6edff;--mute:#8a9ac4;--acc:#4da3ff;--gold:#ffc857;--ok:#5ee0b0;--bad:#ff6b81}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2fb;--panel:#fff;--line:#3b64c9;--ink:#0c1634;--mute:#5a6a92;--acc:#1f6fe0;--gold:#b97a00;--ok:#0d9a6a;--bad:#d6314a}}
+:root[data-theme="dark"]{--bg:#070b16;--panel:#0d1630;--line:#2a4a9c;--ink:#e6edff;--mute:#8a9ac4;--acc:#4da3ff;--gold:#ffc857;--ok:#5ee0b0;--bad:#ff6b81}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box}
+body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:600 17px/1.35 Rajdhani,system-ui,sans-serif;display:grid;grid-template-rows:1fr auto;overflow:hidden}
+aside{order:2;display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--panel);border-top:1px solid var(--line);padding:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+aside::-webkit-scrollbar{display:none}
+aside button{flex:0 0 calc(25% - 3px);scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:1px solid transparent;color:var(--mute);font:inherit;font-size:14px;padding:8px 2px;cursor:pointer}
+aside button i{font-style:normal;font-size:20px;line-height:1}
+aside button.on{color:var(--acc);border-color:var(--line);background:color-mix(in srgb,var(--acc) 10%,transparent)}
+main{overflow:auto;padding:12px 12px 24px}
+main>*{max-width:720px;margin-left:auto;margin-right:auto}
+.win{background:var(--panel);border:1px solid var(--line);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));padding:16px;margin-bottom:14px;box-shadow:inset 0 0 24px color-mix(in srgb,var(--acc) 08%,transparent)}
+h2{margin:0 0 10px;font-size:21px}
+.top{display:grid;grid-template-columns:1fr}
+.g{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.prof{display:flex;gap:14px;align-items:center}
+.av{width:84px;height:84px;border-radius:50%;object-fit:cover;background:var(--line);display:grid;place-items:center;font-size:36px;flex:none;border:2px solid var(--acc)}
+.rank{width:54px;height:54px;border:2px solid var(--acc);color:var(--acc);display:grid;place-items:center;font-size:30px;font-weight:700;transform:rotate(45deg);margin:8px 10px 8px 6px;flex:none}
+.rank span{transform:rotate(-45deg)}
+.mute,small{color:var(--mute)}.gold{color:var(--gold)}
+.bar{height:12px;background:color-mix(in srgb,var(--acc) 15%,transparent);margin:6px 0 2px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--line),var(--acc));transition:width .5s}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.cal button{height:38px;background:none;border:1px solid transparent;color:var(--ink);font:inherit;cursor:pointer;position:relative}
+.cal .hd{color:var(--mute);height:auto}
+.cal .td{border-color:var(--gold);color:var(--gold)}
+.cal .sel{background:var(--acc);color:var(--bg)}
+.cal .dot::after{content:"";position:absolute;bottom:3px;left:50%;width:5px;height:5px;margin-left:-2.5px;background:var(--ok);border-radius:50%}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}.tabs button{flex:1 1 auto;padding:9px 10px}
+.tabs button,.ghost{background:none;border:1px solid var(--line);color:var(--mute);padding:9px 16px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.item{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid color-mix(in srgb,var(--acc) 18%,transparent)}
+.t{flex:1;min-width:0}.t b{display:block;overflow-wrap:anywhere}
+.chk{width:38px;height:38px;flex:none;border:2px solid var(--acc);background:none;color:var(--ok);font-size:22px;cursor:pointer}
+.done .t b{text-decoration:line-through;color:var(--mute)}
+.chk.on{background:var(--acc);color:var(--bg)}
+.btn{background:var(--acc);color:var(--bg);border:0;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.f{display:block;margin-bottom:10px}.f>span{display:block;color:var(--mute);margin-bottom:4px}
+input,select,textarea{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:10px;font:inherit}
+.f2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.days{display:flex;gap:4px}.days label{flex:1;text-align:center;border:1px solid var(--line);padding:10px 0;cursor:pointer;color:var(--mute)}
+.days input{display:none}.days label:has(input:checked){background:var(--acc);color:var(--bg)}
+.chip{display:inline-block;border:1px solid var(--line);padding:1px 8px;margin:0 6px 4px 0;font-size:15px;color:var(--mute)}
+.chip.bad{border-color:var(--bad);color:var(--bad)}.chip.gd{border-color:var(--gold);color:var(--gold)}
+.ban{aspect-ratio:3/1;margin:-16px -16px 0;position:relative}
+.art{height:96px;display:grid;place-items:center;font-size:54px;margin:-12px -12px 10px;background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--acc) 35%,transparent),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--acc) 25%,var(--panel)),var(--panel));overflow:hidden}
+.art img{width:100%;height:100%;object-fit:cover}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.file{position:relative;overflow:hidden;cursor:pointer;display:inline-block}
+.file input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.file:focus-within{outline:2px solid var(--gold);outline-offset:2px}
+.add{display:grid;grid-template-columns:1fr;gap:12px}
+.ics{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:4px}
+.ics button{font-size:24px;height:42px;background:none;border:1px solid var(--line);cursor:pointer}
+.ics .on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent)}
+.pf{display:grid;grid-template-columns:1fr;gap:10px}
+.pf nav{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding-bottom:2px}.pf nav::-webkit-scrollbar{display:none}
+.pf nav button{flex:0 0 auto;white-space:nowrap;scroll-snap-align:start}
+.ov{position:fixed;inset:0;background:rgba(3,6,14,.78);display:grid;place-items:center;z-index:10;padding:14px}
+.pu{width:min(760px,100%);max-height:100%;overflow:auto;position:relative;margin:0}
+.x{position:absolute;top:8px;right:12px;background:none;border:0;color:var(--ink);font-size:28px;cursor:pointer;padding:6px 10px}
+.pu .cols{display:grid;grid-template-columns:1fr;gap:12px}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%) translateY(-120px);background:var(--panel);border:1px solid var(--acc);padding:10px 18px;z-index:20;transition:transform .3s;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.fx{position:fixed;inset:0;display:grid;place-items:center;z-index:30;pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--acc) 35%,transparent),transparent 65%);animation:fxa 2.4s ease forwards}
+.fx b{display:block;text-align:center;font-size:clamp(42px,12vw,90px);letter-spacing:.2em;color:var(--acc);text-shadow:0 0 24px var(--acc)}
+.fx small{display:block;text-align:center;font-size:30px;color:var(--gold)}
+.fx>div{animation:fxb 2.4s ease}
+@keyframes fxa{0%{opacity:0}15%,75%{opacity:1}100%{opacity:0}}
+@keyframes fxb{0%{transform:scale(.6)}20%{transform:scale(1.05)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.fx,.fx>div{animation:none}}
+.kp{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin-bottom:14px}
+.kp .win{margin:0;padding:12px}.kp b{display:block;font-size:30px}
+.gpill{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:15;background:var(--panel);border:1px solid var(--acc);color:var(--acc);font:inherit;font-weight:700;padding:6px 14px;border-radius:999px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.tb{width:100%;border-collapse:collapse;font-size:15px}.tb th,.tb td{padding:6px 4px;border-bottom:1px solid color-mix(in srgb,var(--acc) 18%,transparent);text-align:right}.tb th:first-child,.tb td:first-child{text-align:left}
+.mood{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:440px}
+.mood button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:68px;padding:4px 0;background:none;border:1px solid var(--line);color:var(--mute);cursor:pointer;font:inherit}
+.mood span{font:30px/1 "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.mood small{font-size:13px}
+.mood .on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+</style>
+</head>
+<body>
+<div id="toast" role="status"></div>
+<aside id="nav"></aside>
+<main id="app"></main>
+<div id="pop"></div>
+<div id="gt"></div>
+<script>
+const KEY='sistema-cacador-v2',DIAS=['D','S','T','Q','Q','S','S'],RK=['E','D','C','B','A','S'],TH=[1,10,20,35,50,75];
+const MES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const CAT={saude:['Saúde',10],estudo:['Estudo',12],trabalho:['Trabalho',12],casa:['Casa',8],mente:['Mente',10],ar:['Ao ar livre',10]};
+const SC={buff:'Buffs',game:'Games',comida:'Comidas',lazer:'Lazer',compras:'Compras',bem:'Bem-estar'};
+const scOf=i=>i.sc||(i.type=='buff'?'buff':/jogo|game/i.test(i.t)?'game':/lanche|pizza|doce|sorvete|comida/i.test(i.t)?'comida':/tênis|roupa|compra/i.test(i.t)?'compras':'lazer');;
+const DIF={facil:['Fácil',1],medio:['Média',2],dificil:['Difícil',3.5],epico:['Épica',5]};
+const FQ={d:'Diária',w:'Semanal',m:'Mensal'};
+const BUFF={xp:['Buff de XP +50%',1.5],gold:['Buff de Ouro +50%',1.5]};
+const TT=[['n','Novato','Disponível desde o início',s=>1],['p','Persistente','10 quests concluídas',s=>s.total>=10],['f','Incansável','50 quests concluídas',s=>s.total>=50],['d','Despertado','Chegar ao rank D',s=>ri(s.lvl)>=1],['c','Caçador de Elite','Chegar ao rank C',s=>ri(s.lvl)>=2],['a','Sombra Real','Chegar ao rank A',s=>ri(s.lvl)>=4],['s','Monarca','Chegar ao rank S',s=>ri(s.lvl)>=5],['x','Fênix','Voltar 3 vezes depois de uma pausa',s=>(s.lg||[]).filter(e=>e.k=='retomada').length>=3]];
+const BAN=['#1b3a8a','#5b2a9c','#0e6b5c','#9c2a4a','#8a5a1b','#2b2f3a'];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const hoje=()=>fmt(new Date());
+const parse=s=>{const a=s.split('-');return new Date(+a[0],+a[1]-1,+a[2])};
+/* Regras de data: tudo usa a hora local do aparelho. O dia vai de 00:00 a 23:59; a semana começa no domingo (wk); o mês é o do calendário (mesK). */
+const wk=s=>{const x=parse(s);x.setDate(x.getDate()-x.getDay());return fmt(x)};
+function emDescanso(ds){return (S.rest||[]).some(r=>ds>=r.a&&ds<=r.b)}
+function pausada(q,ds){return (q.pz||[]).some(p=>ds>=p[0]&&(!p[1]||ds<=p[1]))}
+function devido(q,ds){return !q.arch&&q.f=='d'&&q.days.includes(parse(ds).getDay())&&(!q.cr||q.cr<=ds)&&!emDescanso(ds)&&!pausada(q,ds)&&!(q.skip||[]).includes(ds)}
+const addD=(ds,n)=>{const x=parse(ds);x.setDate(x.getDate()+n);return fmt(x)},mesK=ds=>ds.slice(0,7);
+const need=l=>80+l*20;
+const ri=l=>{let r=0;TH.forEach((t,i)=>{if(l>=t)r=i});return r};
+const ALL=[0,1,2,3,4,5,6];
+const def=()=>({name:'Caçador',bio:'Subindo de nível um dia de cada vez.',photo:'',banner:BAN[0],title:'n',lvl:1,xp:0,gold:0,tab:'p',qt:'d',sub:'q',buffs:[],lg:[],rest:[],rec:null,ret:null,plan:{},rev:{},cmp:[],ct:[],ach:{},emb:'',sth:[],sug:{},retroSeen:{},lv0:1,runs:[],run:null,cfg:{pen:{on:true,deb:20,loss:5,min:1}},total:0,buys:[],wish:[],gl:GL0.slice(),gp:{},diary:{},st:ST0(),inv:[],goals:[],dg:null,pen:null,chk:ontem(),gs:0,ses:{on:false,run:null,sec:0},
+quests:[],
+shop:[
+{id:uid(),t:'Buff de XP +50% (24h)',cost:60,type:'buff',kind:'xp',lim:2,rk:0,rq:0,disc:0},
+{id:uid(),t:'Buff de Ouro +50% (24h)',cost:50,type:'buff',kind:'gold',lim:2,rk:0,rq:0,disc:0},
+{id:uid(),t:'Episódio de série',cost:80,type:'real',lim:0,rk:0,rq:0,disc:5},
+{id:uid(),t:'Lanche favorito',cost:150,type:'real',lim:4,rk:0,rq:10,disc:10},
+{id:uid(),t:'Jogo novo',cost:1500,type:'real',lim:1,rk:2,rq:40,disc:10},
+{id:uid(),t:'Tênis novo',cost:3000,type:'real',lim:1,rk:3,rq:100,disc:10}].concat(GAME_ITEMS())});
+const VER=19,ontem=()=>{const d=new Date();d.setDate(d.getDate()-1);return fmt(d)},PPL=3,CAP=30,TI={g:'🏃',l:'🗓',p:'◈',c:'✚',m:'🎯',s:'🛒',a:'📊',d:'📖',u:'👤'},ST0=()=>[{id:uid(),n:'Força',ic:'💪',b:'gold',c:'saude',p:0},{id:uid(),n:'Inteligência',ic:'🧠',b:'xp',c:'estudo',p:0},{id:uid(),n:'Disciplina',ic:'🎯',b:'xp',c:'',p:0},{id:uid(),n:'Sorte',ic:'🍀',b:'desc',c:'',p:0},{id:uid(),n:'Energia',ic:'⚡',b:'game',c:'',p:0}],GL0=[120,120,120,120,120,120,180];
+const GAME_ITEMS=()=>[{id:uid(),t:'Gameplay 30 min',cost:40,type:'real',sc:'game',min:30,lim:0,rk:0,rq:0,disc:5,wr:{estudo:1},ic:'🎮'},{id:uid(),t:'Gameplay 1 hora',cost:70,type:'real',sc:'game',min:60,lim:0,rk:0,rq:0,disc:5,wr:{estudo:2,mente:2,casa:1},ic:'🎮'}];
+function migra(o){o=o||{};if(!o.versao)o.versao=1;if(o.versao<2)o.ev=o.ev||[];if(o.versao<3&&!(o.shop||[]).some(i=>i.min))(o.shop=o.shop||[]).push(...GAME_ITEMS());o.gl=o.gl||GL0.slice();o.gp=o.gp||{};o.diary=o.diary||{};o.st=o.st||ST0();o.inv=o.inv||[];o.goals=o.goals||[];if(o.dg===undefined)o.dg=null;if(o.pen===undefined)o.pen=null;if(!o.chk)o.chk=ontem();o.gs=o.gs||0;if(o.versao<8)o.gp={};o.ses=o.ses||{on:false,run:null,sec:0};if(o.versao<9)migLg(o);o.lg=o.lg||[];o.rest=o.rest||[];o.cfg=o.cfg||{};o.cfg.pen=Object.assign({on:true,deb:20,loss:5,min:1},o.cfg.pen||{});if(o.rec===undefined)o.rec=null;if(o.ret===undefined)o.ret=null;o.plan=o.plan||{};o.rev=o.rev||{};o.cmp=o.cmp||[];o.ct=o.ct||[];o.ach=o.ach||{};o.emb=o.emb||'';o.sth=o.sth||[];o.sug=o.sug||{};o.retroSeen=o.retroSeen||{};if(!o.sth.length&&(o.st||[]).some(x=>x.p))o.sth.push({d:hoje(),pts:Object.fromEntries(o.st.map(x=>[x.id,x.p]))});if(o.versao<18){o.lv0=o.lvl||1;const sp=((o.lvl||1)-1)*3;if(sp)(o.lg=o.lg||[]).push({id:uid(),at:'2000-01-01T00:00:00',d:'2000-01-01',k:'ajuste',src:'Pontos de status ganhos antes da v14',xp:0,g:0,sp})}o.runs=o.runs||[];if(o.run===undefined)o.run=null;if(o.run&&o.run.r0){o.run.t+=Math.max(0,((o.run.ls||o.run.r0)-o.run.r0)/1000);o.run.r0=null;o.run.brk=true;o.run.err='A corrida foi pausada porque o app fechou. Toque em Continuar.'}o.versao=VER;return o}
+let S,SAFE=null;
+(function(){let raw=null;try{raw=localStorage.getItem(KEY)}catch(e){}
+ if(!raw){S=def();return}
+ try{const o=JSON.parse(raw);if(!o||typeof o!='object'||(o.quests&&!Array.isArray(o.quests))||(o.shop&&!Array.isArray(o.shop)))throw new Error('Formato inválido');S=migra(Object.assign(def(),o));
+  try{const t=hoje();if(localStorage.getItem(KEY+'-snapd')!=t){localStorage.setItem(KEY+'-snap',raw);localStorage.setItem(KEY+'-snapd',t)}}catch(e){}}
+ catch(e){SAFE={raw,err:String(e&&e.message||e)};try{localStorage.setItem(KEY+'-corrompido',raw)}catch(x){}S=def()}})();
+let QW=0;const save=ui=>{if(SAFE)return;S.versao=VER;if(!ui)S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){if(Date.now()-QW>60000){QW=Date.now();setTimeout(()=>modal('⚠ Armazenamento cheio','<p>Suas últimas alterações <b>não foram salvas</b> porque o espaço do navegador acabou.</p><p class="mute">Remova o banner ou fotos grandes (Perfil → Aparência) e exporte um backup.</p>','<button class="btn" onclick="fechaMod()">Entendi</button>'),0)}}if(!ui)sched()};
+let CV=new Date();CV.setDate(1);let SEL=hoje();
+let D={t:'',cat:'saude',dif:'medio',f:'d',n:3,days:ALL.slice()};recD();
+const mkI=()=>({t:'',cost:100,lim:0,rk:0,rq:0,disc:5,ic:'🎁',img:'',sc:'lazer',min:0,wr:{}});let I=mkI(),SCF='all';
+const ICS=['🎁','🍕','🍔','🍦','🎮','📺','🎬','📚','👟','🎧','☕','🛍️','✈️','💆','⚡'];
+const GU=[['série','📺'],['lanche','🍔'],['jogo','🎮'],['tênis','👟'],['xp','⚡'],['ouro','💰'],['pizza','🍕'],['filme','🎬'],['livro','📚']];
+const ico=i=>i.img?`<img src="${i.img}" alt="">`:(i.ic||(GU.find(g=>i.t.toLowerCase().includes(g[0]))||[0,'🎁'])[1]);
+const hojeTxt=()=>{const t=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});return t[0].toUpperCase()+t.slice(1)};
+function recD(){D.xp=Math.round(CAT[D.cat][1]*DIF[D.dif][1]);D.g=Math.round(D.xp*.6)}
+function setD(k,v){D[k]=v;if(k!='t'&&k!='xp'&&k!='g'&&k!='n'&&!D.edit)recD();if(k=='xp'||k=='g'||k=='n')D[k]=+v;render()}
+let tt;const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400)};
+const tgt=(q,d)=>q.f=='d'?1:Math.max(1,Math.ceil(q.n*recF(d||hoje())));
+const cnt=(q,d)=>q.f=='d'?(q.log.includes(d)?1:0):q.f=='w'?q.log.filter(l=>wk(l)==wk(d)).length:q.log.filter(l=>mesK(l)==mesK(d)).length;
+const mult=k=>{S.buffs=S.buffs.filter(b=>b.until>Date.now());return S.buffs.some(b=>b.kind==k)?1.5:1};
+const title=()=>{if(String(S.title).startsWith('a:')){const a=ACH.find(x=>'a:'+x[0]==S.title);if(a&&S.ach[a[0]]&&a[9])return a[9]}if(String(S.title).startsWith('c:')){const c=(S.ct||[]).find(x=>'c:'+x.id==S.title);if(c)return c.n}return (TT.find(t=>t[0]==S.title)||TT[0])[1]};
+function fx(t,sub){const e=document.createElement('div');e.className='fx';e.innerHTML='<div><b>'+esc(t)+'</b><small>'+esc(sub)+'</small></div>';document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}
+function evt(k,q,d){led(k,'Falha: '+q.t,0,0,{q:q.id,d,cat:q.cat,f:q.f})}
+function led(k,src,xp,g,o){const e=Object.assign({id:uid(),at:new Date().toISOString(),d:hoje(),k,src,xp:xp||0,g:g||0},o||{});S.lg.unshift(e);
+ if(S.lg.length>15000){const old=S.lg.splice(12000),last=old[old.length-1];S.lg.push({id:uid(),at:last.at,d:last.d,k:'resumo',src:'Resumo de '+old.length+' registros antigos',xp:old.reduce((a,x)=>a+x.xp,0),g:old.reduce((a,x)=>a+x.g,0),sp:old.reduce((a,x)=>a+(x.sp||0),0)})}return e}
+const totXP=()=>{let t=S.xp;for(let l=1;l<S.lvl;l++)t+=need(l);return t};
+function ledCheck(){const tx=totXP(),sx=S.lg.reduce((a,e)=>a+e.xp,0),sg=S.lg.reduce((a,e)=>a+e.g,0);return{tx,sx,sg,ok:tx==sx&&S.gold==sg}}
+function migLg(o){const lg=[];(o.hist||[]).forEach(h=>lg.push({id:uid(),at:h.at||((h.d||hoje())+'T12:00:00'),d:h.d||hoje(),k:h.buy?(/^Penalty/.test(h.t||'')?'pen-loss':'buy'):h.gp?'gameplay':h.id?'quest':'bonus',src:h.t||'',xp:h.xp||0,g:h.g||0,q:h.id,cat:h.cat}));
+ (o.ev||[]).filter(e=>e.k=='falha').forEach(e=>lg.push({id:uid(),at:e.a||(e.d+'T23:59:00'),d:e.d,k:'falha',src:'Falha: '+(e.n||''),xp:0,g:0,q:e.q,cat:e.c}));
+ lg.sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+ let tx=o.xp||0;for(let l=1;l<(o.lvl||1);l++)tx+=need(l);const sx=lg.reduce((a,x)=>a+x.xp,0),sg=lg.reduce((a,x)=>a+x.g,0);
+ if(tx-sx||(o.gold||0)-sg)lg.push({id:uid(),at:'2000-01-01T00:00:00',d:'2000-01-01',k:'ajuste',src:'Saldo anterior ao livro-razão',xp:tx-sx,g:(o.gold||0)-sg});
+ o.lg=lg;delete o.hist;delete o.ev}
+function addXp(n){S.xp+=n;let up=0;while(S.xp>=need(S.lvl)){S.xp-=need(S.lvl);S.lvl++;up=1}while(S.xp<0&&S.lvl>1){S.lvl--;S.xp+=need(S.lvl)}if(S.xp<0)S.xp=0;return up}
+function toggle(id,d,amt){
+ if(d>hoje())return toast('Não dá para marcar dias futuros');{const q0=S.quests.find(x=>x.id==id);if(q0&&q0.cr&&d<q0.cr&&!q0.log.includes(d))return toast('Essa quest ainda não existia nesse dia')}
+ const q=S.quests.find(x=>x.id==id),i=q.log.indexOf(d);
+ if(i>=0){const h=S.lg.find(x=>x.k=='quest'&&x.q==id&&x.d==d&&!x.rv),e=h||{xp:q.xp,g:q.g};if(S.gold<e.g)return modal('Não dá para desmarcar','<p>O ouro desta quest (<b>'+e.g+'</b>) já foi gasto. Você tem <b>'+S.gold+'</b>.</p><p class="mute">Junte mais '+(e.g-S.gold)+' de ouro para poder desmarcar.</p>','<button class="btn" onclick="fechaMod()">Entendi</button>');if((e.sp||0)>0&&spFree()<e.sp)return modal('Não dá para desmarcar','<p>'+(e.sp>1?'Os <b>'+e.sp+'</b> pontos':'O <b>1</b> ponto')+' de status desta quest já '+(e.sp>1?'foram distribuídos':'foi distribuído')+'.</p><p class="mute">Retire '+(e.sp-spFree())+' ponto'+(e.sp-spFree()>1?'s':'')+' em Perfil → Status para poder desmarcar.</p>','<button class="btn" onclick="fechaMod()">Entendi</button>');q.log.splice(i,1);if(q.amt)delete q.amt[d];addXp(-e.xp);S.gold-=e.g;S.total=Math.max(0,S.total-1);if(h)h.rv=1;led('undo','Desmarcou: '+q.t,-e.xp,-e.g,{q:id,d,ref:h&&h.id,cat:q.cat,sp:-(e.sp||0)})}
+ else{if(cnt(q,d)>=tgt(q,d))return toast('Meta do período já concluída');if(q.mq>0){amt=amt==null?q.mq:+amt;if(!(amt>=q.mq))return toast('Abaixo da meta ('+amt+' de '+q.mq+'): a quest não foi concluída')}
+  const bo=q.f=='d'?1+.02*q.log.filter(l=>wk(l)==wk(d)).length:1;q.log.push(d);q.skip=(q.skip||[]).filter(x=>x!=d);S.lg=S.lg.filter(e=>!(e.k=='falha'&&e.q==q.id&&e.d==d));const past=d<hoje(),pm=!past&&penOn()?1-S.cfg.pen.deb/100:1,eb=!past&&negCats(7).includes(q.cat)?1.1:1,mx=past?1:mult('xp')*(1+stB('xp',q.cat))*eb,mg=past?1:mult('gold')*(1+stB('gold',q.cat))*eb,xp0=Math.round(q.xp*mx*bo*pm),g0=Math.round(q.g*mg*bo*pm),o=ri(S.lvl),sec=q.f=='d'&&q.mq>0&&amt>=2*q.mq,xp=sec?xp0*2:xp0,g=sec?g0*2:g0,sp=spGain(q,d)+(sec?2:0),a0=stAuto();if(q.mq>0){q.amt=q.amt||{};q.amt[d]=amt}const up=addXp(xp);S.gold+=g;S.total++;led('quest',(sec?'✨ Quest secreta: ':'')+q.t+(q.mq>0?' ('+amt+(q.mu?' '+q.mu:'')+')':''),xp,g,{q:id,d,cat:q.cat,f:q.f,sp,sec:sec?1:0,qty:q.mq>0?amt:undefined});if(S.ret&&S.ret.d==hoje()&&!S.ret.cl&&d==hoje())retClaim();
+  if(up)fx(ri(S.lvl)!=o?'RANK UP':'LEVEL UP',(ri(S.lvl)!=o?RK[o]+' → '+RK[ri(S.lvl)]:'Nível '+S.lvl)+' · status +'+(stAuto()-a0));if(sec)setTimeout(()=>fx('QUEST SECRETA','2x XP e ouro · +'+sp+' pontos'),up?2600:0);toast(up?(ri(S.lvl)!=o?'RANK UP! Rank '+RK[ri(S.lvl)]:'NÍVEL '+S.lvl+'!'):'+'+xp+' XP · +'+g+' ouro'+(past?' (dia passado: valor base)':'')+(eb>1?' (equilíbrio +10%)':'')+(sec?' ✨ QUEST SECRETA':'')+(sp?' · +'+sp+' ponto'+(sp>1?'s':''):''))}
+ save();render()}
+function addQuest(){
+ if(!D.t.trim())return toast('Dê um nome à quest');if(D.f=='d'&&!D.days.length)return toast('Escolha ao menos um dia');
+ const o={t:D.t.trim(),cat:D.cat,f:D.f,n:D.f=='d'?1:Math.max(1,D.n),days:D.f=='d'?D.days.slice():ALL,xp:Math.max(1,D.xp),g:Math.max(0,D.g),pr:D.pr=='o'?'o':'p',mq:D.f=='d'&&+D.mq>0?Math.round(+D.mq*100)/100:0,mu:D.f=='d'?(D.mu||'').trim():''};
+ if(D.edit){const q=S.quests.find(x=>x.id==D.edit);if(q)Object.assign(q,o);toast('Quest alterada com sucesso!')}
+ else{S.quests.push(Object.assign({id:uid(),log:[],cr:hoje()},o));toast('Quest criada com sucesso!')}
+ S.qt=D.f;cancEdit(true);save();render()}
+function editQ(id){const q=S.quests.find(x=>x.id==id);D={t:q.t,cat:q.cat||'saude',dif:'medio',f:q.f,n:q.n||3,days:q.days.slice(),xp:q.xp,g:q.g,pr:q.pr||'p',mq:q.mq||'',mu:q.mu||'',edit:id};S.tab='c';save(true);render();document.getElementById('app').scrollTop=0}
+function cancEdit(q){D={t:'',cat:'saude',dif:'medio',f:'d',n:3,days:ALL.slice()};recD();if(!q)render()}
+function delQuest(id){const q=S.quests.find(x=>x.id==id);modal('Excluir "'+esc(q.t)+'"?','<p><b>Arquivar</b> tira a quest das listas, mas mantém as conclusões dela na Análise, nos requisitos da Loja e na Dungeon. Dá para restaurar em Perfil → Backup.</p><p><b>Apagar de vez</b> remove a quest e as conclusões dela da Análise.</p><p class="mute">Nos dois casos, o XP e o ouro já ganhos continuam no Histórico.</p>','<button class="ghost" onclick="fechaMod()">Cancelar</button><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="qApaga(\''+id+'\')">Apagar de vez</button><button class="btn" onclick="qArq(\''+id+'\')">Arquivar</button>')}
+function qArq(id){const q=S.quests.find(x=>x.id==id);if(q)q.arch=1;MOD='';save();render();toast('Quest arquivada')}
+function qApaga(id){S.quests=S.quests.filter(q=>q.id!=id);MOD='';save();render();toast('Quest apagada')}
+function qRest(id){const q=S.quests.find(x=>x.id==id);if(q)delete q.arch;save();render();toast('Quest restaurada')}
+const price=(i,r)=>Math.round(i.cost*(1-Math.min(.6,i.disc*r/100+stB('desc'))));
+const usedM=i=>S.buys.filter(b=>b.id==i.id&&b.m==mesK(hoje())).length;
+const wcat=c=>S.quests.filter(q=>q.cat==c).reduce((a,q)=>a+q.log.filter(l=>wk(l)==wk(hoje())).length,0);
+const limOf=ds=>Math.round(S.gl[parse(ds).getDay()]*(1+stB('game'))),dayLim=()=>limOf(hoje()),wkLim=()=>Math.round(S.gl.reduce((a,b)=>a+b,0)*(1+stB('game'))),wkMin=()=>Object.keys(S.gp).filter(d=>wk(d)==wk(hoje())).reduce((a,d)=>a+S.gp[d],0);
+function lock(i){const r=[],k=ri(S.lvl);if(k<i.rk)r.push('Rank '+RK[i.rk]);if(S.total<i.rq)r.push(i.rq+' quests concluídas ('+S.total+')');if(i.lim&&usedM(i)>=i.lim)r.push('Limite mensal atingido');for(const c in (i.wr||{}))if(i.wr[c]>0&&wcat(c)<i.wr[c])r.push(i.wr[c]+' de '+(CAT[c]?CAT[c][0]:c)+' na semana ('+wcat(c)+')');return r}
+function buy(id){const i=S.shop.find(x=>x.id==id),p=price(i,ri(S.lvl));if(lock(i).length||S.gold<p)return;
+ S.gold-=p;led('buy','Compra: '+i.t,0,-p,{item:i.id});S.buys.push({id,m:mesK(hoje())});if(i.min)S.gs=(S.gs||0)+i.min*60;
+ if(i.type=='buff'){S.inv.push({id:uid(),kind:i.kind,t:i.t});toast('Buff guardado na Mochila')}
+ else{toast('Recompensa resgatada!')}
+ save();render()}
+function wish(id){const i=S.wish.indexOf(id);i>=0?S.wish.splice(i,1):S.wish.push(id);save();render()}
+function itemObj(){return{t:I.t.trim(),cost:+I.cost,lim:+I.lim||0,rk:+I.rk,rq:+I.rq||0,disc:Math.max(0,+I.disc||0),ic:I.ic,img:I.img,sc:I.sc,min:I.sc=='game'?(+I.min||0):0,wr:Object.fromEntries(Object.entries(I.wr).filter(e=>e[1]>0))}}
+function addItem(){if(!I.t.trim()||!(+I.cost>0))return toast('Informe nome e preço');
+ if(I.edit)return modal('Salvar alterações?','<p>Você vai alterar o item <b>'+esc(I.t)+'</b>, incluindo preço e requisitos. Tem certeza?</p>','<button class="ghost" onclick="fechaMod()">Não</button><button class="btn" onclick="saveItem()">Sim, alterar</button>');
+ S.shop.push(Object.assign({id:uid(),type:'real'},itemObj()));I=mkI();save();toast('Item adicionado com sucesso!');render()}
+function saveItem(){const it=S.shop.find(x=>x.id==I.edit);if(it)Object.assign(it,itemObj());I=mkI();MOD='';save();toast('Item alterado com sucesso!');render()}
+function editI(id){const i=S.shop.find(x=>x.id==id);I={t:i.t,cost:i.cost,lim:i.lim||0,rk:i.rk||0,rq:i.rq||0,disc:i.disc||0,ic:i.ic||'🎁',img:i.img||'',sc:scOf(i),min:i.min||0,wr:Object.assign({},i.wr||{}),edit:id};S.tab='s';save(true);render();document.getElementById('app').scrollTop=1e5}
+function cancI(){I=mkI();render()}
+function delItem(id){S.shop=S.shop.filter(i=>i.id!=id);S.wish=S.wish.filter(w=>w!=id);save();render()}
+function foto(inp,t){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=128;const s=Math.min(im.width,im.height);c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,128,128);const u=c.toDataURL('image/jpeg',.8);if(t=='i')I.img=u;else{S.photo=u;save()}render();toast('Imagem carregada')};im.onerror=()=>toast('Não consegui abrir essa imagem. Tente JPG ou PNG.');im.src=r.result};r.onerror=()=>toast('Falha ao ler o arquivo');r.readAsDataURL(f);inp.value=''}
+function bn(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=1500;c.height=500;const k=Math.max(1500/im.width,500/im.height),w=im.width*k,h=im.height*k;c.getContext('2d').drawImage(im,(1500-w)/2,(500-h)/2,w,h);S.bannerImg=c.toDataURL('image/jpeg',.8);save();render();toast('Banner atualizado')};im.onerror=()=>toast('Não consegui abrir essa imagem. Tente JPG ou PNG.');im.src=r.result};r.readAsDataURL(f);inp.value=''}
+const go=(k,v)=>{S[k]=v;save(['tab','qt','sub'].includes(k));render()};
+const av=sz=>S.photo?`<img class="av" style="width:${sz}px;height:${sz}px" src="${S.photo}" alt="Foto">`:`<div class="av" style="width:${sz}px;height:${sz}px">${esc(S.name[0]||'?')}</div>`;
+const F=(l,x)=>`<label class="f"><span>${l}</span>${x}</label>`;
+const xpbar=()=>`<div class="bar"><i style="width:${S.xp/need(S.lvl)*100}%"></i></div><div class="row"><span>${S.xp}/${need(S.lvl)} XP</span><span class="gold">${S.gold} ouro</span></div>`;
+const rk=()=>`<div class="rank"><span>${RK[ri(S.lvl)]}</span></div>`;
+
+function qrow(q,d){const c=cnt(q,d),t=tgt(q,d),on=q.log.includes(d),full=c>=t,wd=q.log.filter(l=>wk(l)==wk(d)).length,bn=2*(wd-(on?1:0));
+ return `<div class="item ${full?'done':''}"><button class="chk ${on?'on':''}" aria-label="Marcar" onclick="${q.mq&&!on?`qtyAsk('${q.id}','${d}')`:`toggle('${q.id}','${d}')`}">${on?'✓':''}</button>
+ <div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''}${q.mq?' · meta '+q.mq+(q.mu?' '+esc(q.mu):''):''}${on&&q.amt&&q.amt[d]!=null?' · fez '+q.amt[d]:''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' · <span class="gold">✨ secreta</span>':''}${d==hoje()&&!on&&negCats(7).includes(q.cat)?' · <span class="gold">equilíbrio +10%</span>':''}${q.pr=='o'?' · opcional':''}${(q.skip||[]).includes(d)?' · dispensada':''} · +${q.xp} XP · +${q.g} ouro${t>1?' · '+c+'/'+t+' '+(q.f=='w'?'na semana':'no mês'):''}${q.f=='d'?' · semana '+wd+'/'+q.days.length+' · bônus +'+bn+'%':''}</small>${t>1||q.f=='d'?`<div class="bar"><i style="width:${Math.min(100,(q.f=='d'?wd/q.days.length:c/t)*100)}%"></i></div>`:''}</div>
+ ${q.mq&&/km/i.test(q.mu||'')&&d==hoje()&&!on?`<button class="ghost" aria-label="Correr com GPS" onclick="RUNQ='${q.id}';go('tab','g')">🏃</button>`:''}<button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">✎</button>${q.f=='d'&&d==hoje()&&!on?((q.skip||[]).includes(d)?`<button class="ghost" aria-label="Desfazer dispensa" onclick="skipQ('${q.id}')">↺</button>`:`<button class="ghost" aria-label="Dispensar hoje" onclick="skipQ('${q.id}')">⏭</button>`):''}</div>`}
+function calHtml(){const y=CV.getFullYear(),m=CV.getMonth(),n=new Date(y,m+1,0).getDate(),o=CV.getDay(),h=hoje();
+ let b=DIAS.map(d=>`<button class="hd" tabindex="-1">${d}</button>`).join('')+'<span></span>'.repeat(o);
+ for(let i=1;i<=n;i++){const d=fmt(new Date(y,m,i));b+=`<button class="${d==h?'td ':''}${d==SEL?'sel ':''}${S.quests.some(q=>q.log.includes(d))?'dot':''}" onclick="SEL='${d}';render()">${i}</button>`}
+ const wd=parse(SEL).getDay(),qs=S.quests.filter(q=>!q.arch&&!pausada(q,SEL)&&(q.f!='d'||q.days.includes(wd)));
+ return `<section class="win"><div class="row"><button class="ghost" aria-label="Mês anterior" onclick="CV.setMonth(CV.getMonth()-1);render()">‹</button><b>${MES[m]} ${y}</b><button class="ghost" aria-label="Próximo mês" onclick="CV.setMonth(CV.getMonth()+1);render()">›</button></div>
+ <div class="cal" style="margin:8px 0">${b}</div>${SEL==hoje()?'<small>Toque em outro dia para ver ou marcar as quests dele.</small>':`<b>${parse(SEL).toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}</b>${qs.length?qs.map(q=>qrow(q,SEL)).join(''):'<div class="mute">Sem quests neste dia.</div>'}<div style="margin-top:8px"><button class="ghost" onclick="SEL=hoje();render()">Voltar para hoje</button></div>`}</section>`}
+function panel(){const h=hoje(),wd=new Date().getDay(),list=S.quests.filter(q=>!q.arch&&!pausada(q,h)&&q.f==S.qt&&(q.f!='d'||q.days.includes(wd)));
+ return `${restCard()}${recCard()}${retCard()}${penCard()}${revCard()}${focCard()}${campCard()}${runCard()}${sgCard()}${retroCard()}<div class="top"><section class="win prof">${av(84)}<div style="flex:1;min-width:0"><div class="row"><div><b style="font-size:26px">${emb()}${esc(S.name)}</b><br><small>${title()} · Nível ${S.lvl}</small></div>${rk()}</div>${xpbar()}${spFree()>0?`<button class="ghost" style="margin-top:8px;color:var(--gold);border-color:var(--gold)" onclick="S.sub='s';go('tab','u')">✨ ${spFree()} pontos de status para distribuir</button>`:''}</div></section>${calHtml()}</div>
+ <section class="win"><div class="tabs">${Object.keys(FQ).map(k=>`<button class="${S.qt==k?'on':''}" onclick="go('qt','${k}')">${['Diárias','Semanais','Mensais'][['d','w','m'].indexOf(k)]}</button>`).join('')}</div>
+ ${list.length?list.map(q=>qrow(q,h)).join(''):'<div class="mute">Nenhuma quest aqui. Crie na janela Criar.</div>'}</section>${dgCard()}`}
+function criar(){return `<section class="win"><h2>${D.edit?'Editar quest':'Nova quest'}</h2>${D.edit?'<p class="mute" style="margin-top:-4px">As mudanças valem daqui para frente: XP e ouro já ganhos não mudam.</p>':''}
+ ${F('Nome da quest',`<input value="${esc(D.t)}" maxlength="60" onchange="D.t=this.value" placeholder="Ex.: Correr 5 km">`)}
+ <div class="f2">${F('Categoria',`<select onchange="setD('cat',this.value)">${Object.keys(CAT).map(k=>`<option value="${k}" ${D.cat==k?'selected':''}>${CAT[k][0]}</option>`).join('')}</select>`)}
+ ${F('Dificuldade',`<select onchange="setD('dif',this.value)">${Object.keys(DIF).map(k=>`<option value="${k}" ${D.dif==k?'selected':''}>${DIF[k][0]}</option>`).join('')}</select>`)}
+ ${F('Frequência',`<select onchange="setD('f',this.value)">${Object.keys(FQ).map(k=>`<option value="${k}" ${D.f==k?'selected':''}>${FQ[k]}</option>`).join('')}</select>`)}${F('Tipo',`<select onchange="D.pr=this.value"><option value="p" ${D.pr!='o'?'selected':''}>Prioritária</option><option value="o" ${D.pr=='o'?'selected':''}>Opcional (nunca gera falha)</option></select>`)}</div>
+ ${D.f=='d'?'<div class="f2">'+F('Meta numérica (opcional)',`<input type="number" min="0" value="${D.mq||''}" onchange="D.mq=+this.value" placeholder="Ex.: 10">`)+F('Unidade',`<input value="${esc(D.mu||'')}" maxlength="20" onchange="D.mu=this.value" placeholder="conexões, páginas, km">`)+'</div><small style="display:block;margin:-4px 0 10px">Com meta numérica, o app pergunta quanto você fez. Fazer o dobro vira ✨ Quest Secreta.</small>':''}${D.f=='d'?F('Dias da semana',`<div class="days">${DIAS.map((d,i)=>`<label><input type="checkbox" ${D.days.includes(i)?'checked':''} onchange="D.days=this.checked?[...D.days,${i}]:D.days.filter(x=>x!=${i})">${d}</label>`).join('')}</div>`):F('Vezes no '+(D.f=='w'?'semana':'mês')+' (1 = quest única)',`<input type="number" min="1" value="${D.n}" onchange="setD('n',this.value)">`)}
+ <p class="mute">Recomendado para ${CAT[D.cat][0]} · ${DIF[D.dif][0]}: <span class="gold">${Math.round(CAT[D.cat][1]*DIF[D.dif][1])} XP · ${Math.round(CAT[D.cat][1]*DIF[D.dif][1]*.6)} ouro</span>. Você pode ajustar.</p>
+ <div class="f2">${F('XP por conclusão',`<input type="number" min="1" value="${D.xp}" onchange="D.xp=+this.value">`)}${F('Ouro por conclusão',`<input type="number" min="0" value="${D.g}" onchange="D.g=+this.value">`)}</div>
+ <button class="btn" onclick="addQuest()">${D.edit?'Salvar alterações':'Criar quest'}</button>${D.edit?'<button class="ghost" style="margin-left:8px" onclick="cancEdit()">Cancelar</button>':''}</section>${qAll()}`}
+function loja(){const k=ri(S.lvl),dl=dayLim(),du=S.gp[hoje()]||0,list=S.shop.filter(i=>SCF=='all'||(SCF=='wish'?S.wish.includes(i.id):scOf(i)==SCF));
+ return `${mochila()}<section class="win"><h2>🎮 Gameplay</h2>${gCard()}<div class="row"><span>Hoje: ${Math.round(du)}/${dl} min</span><span>Semana: ${Math.round(wkMin())}/${wkLim()} min</span></div><div class="bar"><i style="width:${dl?Math.min(100,du/dl*100):100}%"></i></div>
+ <small>Limite por dia, em horas (você pode ajustar):</small><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px">${DIAS.map((d,i)=>`<label class="f" style="margin:0"><span style="text-align:center">${d}</span><input type="number" min="0" step="0.5" style="padding:8px 2px;text-align:center" value="${S.gl[i]/60}" onchange="S.gl[${i}]=Math.max(0,+this.value*60);save();render()"></label>`).join('')}</div></section>
+ <section class="win"><h2>Loja · <span class="gold">${S.gold} ouro</span></h2><div class="tabs" style="flex-wrap:wrap">${[['all','Todos'],['wish','♥ Desejos']].concat(Object.entries(SC)).map(c=>`<button class="${SCF==c[0]?'on':''}" onclick="SCF='${c[0]}';render()">${c[1]}</button>`).join('')}</div><div class="g">${list.map(i=>{const p=price(i,k),l=lock(i),w=S.wish.includes(i.id);
+ return `<div class="win" style="margin:0;padding:12px"><div class="art">${ico(i)}</div><div class="row"><b>${esc(i.t)}</b><button class="ghost" aria-label="Lista de desejos" style="color:${w?'var(--bad)':''}" onclick="wish('${i.id}')">${w?'♥':'♡'}</button></div>
+ <small>${SC[scOf(i)]}${i.min?' · '+i.min+' min de jogo':''}</small>
+ <div><span class="gold" style="font-size:24px">${p}</span> ${p<i.cost?`<small><s>${i.cost}</s></small>`:''}</div>
+ ${i.disc&&k<5?`<small>No rank ${RK[k+1]}: −${i.disc}% mais barato (${price(i,k+1)})</small><br>`:''}
+ ${i.rk?`<span class="chip ${k<i.rk?'bad':''}">Rank ${RK[i.rk]}</span>`:''}${i.rq?`<span class="chip ${S.total<i.rq?'bad':''}">${i.rq} quests</span>`:''}${i.lim?`<span class="chip">${usedM(i)}/${i.lim} no mês</span>`:''}${Object.keys(i.wr||{}).filter(c=>i.wr[c]>0).map(c=>`<span class="chip ${wcat(c)<i.wr[c]?'bad':''}">${CAT[c]?CAT[c][0]:c} ${wcat(c)}/${i.wr[c]}</span>`).join('')}
+ ${l.length?`<div><small class="mute">Bloqueado: ${l.join(', ')}</small></div>`:''}
+ <div class="row" style="margin-top:8px"><button class="btn" ${l.length||S.gold<p?'disabled':''} onclick="buy('${i.id}')">${S.gold<p&&!l.length?'Faltam '+(p-S.gold):'Comprar'}</button><span><button class="ghost" aria-label="Editar item" onclick="editI('${i.id}')">✎</button>${i.type=='real'?` <button class="ghost" aria-label="Remover" onclick="delItem('${i.id}')">×</button>`:''}</span></div></div>`}).join('')||'<div class="mute">Nenhum item nesta categoria.</div>'}</div></section>
+ <section class="win"><h2>${I.edit?'Editar item':'Adicionar item'}</h2><div class="add"><div>
+<div class="art" style="margin:0 0 8px;height:130px;border:1px solid var(--line)">${I.img?`<img src="${I.img}" alt="Prévia">`:I.ic}</div>
+<button class="ghost" style="display:block;width:100%;margin-bottom:8px" onclick="document.getElementById('fi').click()">🖼 Enviar imagem</button><input id="fi" class="vh" type="file" accept="image/*" onchange="foto(this,'i')" tabindex="-1">
+${I.img?`<button class="ghost" style="width:100%;margin-bottom:8px" onclick="I.img='';render()">Usar ícone</button>`:''}
+<small>Ou escolha um ícone</small><div class="ics">${ICS.map(e=>`<button class="${I.ic==e&&!I.img?'on':''}" aria-label="Ícone ${e}" onclick="I.ic='${e}';I.img='';render()">${e}</button>`).join('')}</div></div>
+<div>${F('Nome do item',`<input value="${esc(I.t)}" maxlength="60" onchange="I.t=this.value" placeholder="Ex.: Pizza no sábado">`)}
+<div class="f2">${F('Categoria',`<select onchange="I.sc=this.value;render()">${Object.keys(SC).map(c=>`<option value="${c}" ${I.sc==c?'selected':''}>${SC[c]}</option>`).join('')}</select>`)}${F('Preço (ouro)',`<input type="number" min="1" value="${I.cost}" onchange="I.cost=this.value">`)}${F('Desconto por rank (%)',`<input type="number" min="0" max="10" value="${I.disc}" onchange="I.disc=this.value">`)}${I.sc=='game'?F('Minutos de gameplay',`<input type="number" min="0" value="${I.min}" onchange="I.min=this.value">`):''}</div>
+<b>Requisitos e limites</b><div class="f2" style="margin-top:6px">${F('Rank mínimo',`<select onchange="I.rk=this.value">${RK.map((r,i)=>`<option value="${i}" ${I.rk==i?'selected':''}>${r}</option>`).join('')}</select>`)}${F('Quests concluídas',`<input type="number" min="0" value="${I.rq}" onchange="I.rq=this.value">`)}${F('Limite por mês (0 = sem)',`<input type="number" min="0" value="${I.lim}" onchange="I.lim=this.value">`)}</div>
+<b>Requisitos da semana</b> <small>(quests concluídas por categoria; 0 = sem requisito)</small><div class="f2" style="margin-top:6px">${Object.keys(CAT).map(c=>F(CAT[c][0],`<input type="number" min="0" value="${I.wr[c]||0}" onchange="I.wr['${c}']=+this.value">`)).join('')}</div>
+<button class="btn" onclick="addItem()">${I.edit?'Salvar alterações':'Adicionar à loja'}</button>${I.edit?'<button class="ghost" style="margin-left:8px" onclick="cancI()">Cancelar</button>':''}</div></div></section>`}
+const MOOD=['😞','😕','😐','🙂','😄'],MN=['Péssimo','Ruim','Ok','Bom','Ótimo'];let DDT=hoje();
+function dsave(k,v){S.diary=S.diary||{};const e=S.diary[DDT]||{t:'',m:0};e[k]=v;e.at=new Date().toISOString();
+ if(!e.t.trim()&&!e.m)delete S.diary[DDT];else S.diary[DDT]=e;save()}
+function dmood(m){const e=(S.diary||{})[DDT];dsave('m',e&&e.m==m?0:m);render()}
+function dtext(v){dsave('t',v);toast('Resumo do dia salvo')}
+function dday(n){const d=parse(DDT);d.setDate(d.getDate()+n);if(fmt(d)>hoje())return toast('Esse dia ainda não chegou');DDT=fmt(d);render()}
+function ddel(d){if(confirm('Apagar o resumo deste dia?')){delete S.diary[d];save();render();toast('Resumo apagado')}}
+function diario(){const e=(S.diary||{})[DDT]||{t:'',m:0},done=S.quests.filter(q=>q.log.includes(DDT)),xp=S.lg.filter(h=>h.d==DDT&&h.xp&&h.k!='ajuste').reduce((a,h)=>a+h.xp,0),ents=Object.keys(S.diary||{}).sort().reverse().filter(d=>d!=DDT).slice(0,30);
+ return `${diaWeek()}<section class="win"><div class="row"><button class="ghost" aria-label="Dia anterior" onclick="dday(-1)">‹</button><b style="font-size:22px;text-align:center">${parse(DDT).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</b><button class="ghost" aria-label="Próximo dia" onclick="dday(1)">›</button></div>
+ ${DDT!=hoje()?`<div style="margin-top:8px"><button class="ghost" onclick="DDT=hoje();render()">Voltar para hoje</button></div>`:''}
+ <p class="mute" style="margin:12px 0 4px">Como foi o seu dia?</p><div class="mood">${MOOD.map((m,i)=>`<button class="${e.m==i+1?'on':''}" aria-label="${MN[i]}" onclick="dmood(${i+1})"><span>${m}</span><small>${MN[i]}</small></button>`).join('')}</div>
+ <label class="f" style="margin-top:12px"><span>Resumo do dia</span><textarea id="dt" rows="8" maxlength="3000" placeholder="O que aconteceu hoje? O que deu certo? O que você aprendeu?" onchange="dtext(this.value)">${esc(e.t)}</textarea></label>
+ <div class="row"><small>${e.at?'Salvo em '+dt(e.at):'Ainda não salvo'}</small><div><button class="btn" onclick="dtext(document.getElementById('dt').value);render()">Salvar</button>${e.t||e.m?` <button class="ghost" onclick="ddel('${DDT}')">Apagar</button>`:''}</div></div></section>
+ <section class="win"><h2>Neste dia</h2>${done.length?`<p>${done.length} quest${done.length>1?'s':''} concluída${done.length>1?'s':''} · <span class="gold">+${xp} XP</span></p>${done.slice(0,10).map(q=>`<span class="chip">${esc(q.t)}</span>`).join('')}`:'<div class="mute">Nenhuma quest concluída neste dia.</div>'}</section>
+ <section class="win"><h2>Dias anteriores</h2>${ents.length?ents.map(d=>{const x=S.diary[d];return `<div class="item" style="cursor:pointer" onclick="DDT='${d}';render()"><div class="t"><b>${parse(d).toLocaleDateString('pt-BR',{day:'numeric',month:'short',year:'numeric'})} ${x.m?MOOD[x.m-1]:''}</b><small>${esc((x.t||'').slice(0,90))}${(x.t||'').length>90?'…':''}</small></div></div>`}).join(''):'<div class="mute">Seus resumos aparecerão aqui.</div>'}</section>`}
+let AP=7;
+function svgBars(v,lb,col){const W=320,H=110,n=v.length,m=Math.max(1,...v),bw=W/n;
+ return `<svg viewBox="0 0 ${W} ${H+16}" style="width:100%;height:auto" role="img" aria-label="Gráfico">${v.map((x,i)=>{const h=x/m*H;return `<rect x="${i*bw+1.5}" y="${H-h}" width="${Math.max(1,bw-3)}" height="${h}" rx="2" style="fill:var(--${col||'acc'})"><title>${lb[i]}: ${x}</title></rect>`}).join('')}${lb.map((l,i)=>n<=14||i%5==0?`<text x="${i*bw+bw/2}" y="${H+12}" font-size="9" text-anchor="middle" style="fill:var(--mute)">${l}</text>`:'').join('')}</svg>`}
+function hbars(rows){const m=Math.max(1,...rows.map(r=>r[1]));return rows.map(r=>`<div class="row"><small>${r[0]}</small><small>${r[2]||r[1]}</small></div><div class="bar"><i style="width:${r[1]/m*100}%"></i></div>`).join('')}
+function xpToNext(){const r=ri(S.lvl);if(r>=5)return 0;let x=need(S.lvl)-S.xp;for(let l=S.lvl+1;l<TH[r+1];l++)x+=need(l);return x}
+function analise(){const days=[],prev=[];let d=parse(hoje());for(let i=0;i<AP;i++){days.unshift(fmt(d));d.setDate(d.getDate()-1)}for(let i=0;i<AP;i++){prev.unshift(fmt(d));d.setDate(d.getDate()-1)}
+ const P=new Set(days),PP=new Set(prev),logs=[];S.quests.forEach(q=>q.log.forEach(x=>logs.push({d:x,q})));
+ const fa=[...logs.map(l=>l.d),...Object.keys(S.diary||{})].sort()[0]||hoje();
+ const nQ=logs.filter(l=>P.has(l.d)).length,nQP=logs.filter(l=>PP.has(l.d)).length,hx=S.lg.filter(e=>!['buy','ajuste','pen-loss','resumo'].includes(e.k));
+ const sum=(a,f)=>a.reduce((s,e)=>s+f(e),0),xpP=sum(hx.filter(e=>P.has(e.d)),e=>e.xp),xpPP=sum(hx.filter(e=>PP.has(e.d)),e=>e.xp);
+ const gIn=sum(hx.filter(e=>P.has(e.d)),e=>e.g),gOut=sum(S.lg.filter(e=>(e.k=='buy'||e.k=='pen-loss')&&P.has(e.d)),e=>-e.g);
+ const qd=days.map(x=>logs.filter(l=>l.d==x).length),xd=days.map(x=>sum(hx.filter(e=>e.d==x),e=>e.xp)),md=days.map(x=>((S.diary||{})[x]||{}).m||0);
+ let sc=0,dn=0;const wS=[0,0,0,0,0,0,0],wD=[0,0,0,0,0,0,0],qr=[];
+ S.quests.filter(q=>q.f=='d'&&!q.arch).forEach(q=>{let a=0,b=0;days.forEach(x=>{const w=parse(x).getDay();if(x>=fa&&q.pr!='o'&&devido(q,x)){b++;wS[w]++;if(q.log.includes(x)){a++;wD[w]++}}});sc+=b;dn+=a;if(b>=3)qr.push([q.t,a,b])});
+ const rate=sc?Math.round(dn/sc*100):0,cc={};logs.filter(l=>P.has(l.d)).forEach(l=>cc[l.q.cat]=(cc[l.q.cat]||0)+1);
+ const ms=md.filter(x=>x),mAvg=ms.length?ms.reduce((a,b)=>a+b,0)/ms.length:0;
+ const ds=new Set(logs.map(l=>l.d));let st=0,x=new Date();if(!ds.has(fmt(x)))x.setDate(x.getDate()-1);for(let i=0;i<4000;i++){const f=fmt(x);if(ds.has(f))st++;else if(!emDescanso(f))break;x.setDate(x.getDate()-1)}
+ const nd=days.filter(x=>x>=fa&&!emDescanso(x)),cons=nd.length?Math.round(nd.filter(x=>ds.has(x)).length/nd.length*100):0,nr=S.lg.filter(e=>e.k=='retomada').length;
+ const dl=(a,b)=>b?`<small style="color:${a>=b?'var(--ok)':'var(--bad)'}">${a>=b?'▲':'▼'} ${Math.abs(Math.round((a-b)/b*100))}% vs ${AP} dias antes</small>`:'<small>sem dados anteriores</small>';
+ const kp=(l,v,e)=>`<div class="win"><small>${l}</small><b>${v}</b>${e||''}</div>`;
+ const NM=['domingo','segunda','terça','quarta','quinta','sexta','sábado'],lb=days.map(x=>AP==7?DIAS[parse(x).getDay()]:parse(x).getDate());
+ const T=[];
+ if(sc)T.push(['📋',`Você cumpriu <b>${rate}%</b> das quests diárias agendadas nos últimos ${AP} dias.`]);
+ if(nQP)T.push([nQ>=nQP?'📈':'📉',`Você concluiu ${nQ} quests, ${nQ>=nQP?'mais':'menos'} que nos ${AP} dias anteriores (${nQP}).`]);
+ const wr=wS.map((v,i)=>v?[i,wD[i]/v]:null).filter(Boolean);
+ if(wr.length>1){const b=wr.reduce((a,c)=>c[1]>a[1]?c:a),w=wr.reduce((a,c)=>c[1]<a[1]?c:a);if(b[0]!=w[0])T.push(['📅',`Seu dia mais forte é <b>${NM[b[0]]}</b> (${Math.round(b[1]*100)}%) e o mais fraco é <b>${NM[w[0]]}</b> (${Math.round(w[1]*100)}%).`])}
+ if(qr.length){const f=qr.reduce((a,c)=>c[1]/c[2]<a[1]/a[2]?c:a);if(f[1]<f[2])T.push(['⚠️',`A quest mais esquecida é <b>${esc(f[0])}</b>: feita em ${f[1]} de ${f[2]} dias.`])}
+ const ck=Object.keys(CAT).filter(c=>S.quests.some(q=>q.cat==c&&!q.arch));if(ck.length>1){const lo=ck.reduce((a,c)=>(cc[c]||0)<(cc[a]||0)?c:a);T.push(['🧭',`Categoria menos trabalhada: <b>${CAT[lo][0]}</b> (${cc[lo]||0} ${(cc[lo]||0)==1?'conclusão':'conclusões'}).`])}
+ if(ms.length>=7){const avgQ=qd.reduce((a,b)=>a+b,0)/AP,hi=[],lo=[];days.forEach((x,i)=>{if(md[i])(qd[i]>=avgQ?hi:lo).push(md[i])});if(hi.length&&lo.length){const a=hi.reduce((s,v)=>s+v,0)/hi.length,b=lo.reduce((s,v)=>s+v,0)/lo.length;if(Math.abs(a-b)>=.5)T.push(['💭',`Nos dias com mais quests seu humor médio foi ${a.toFixed(1)}, contra ${b.toFixed(1)} nos outros. Isso mostra uma relação, não necessariamente uma causa.`])}}
+ const nf=S.lg.filter(e=>e.k=='falha'&&P.has(e.d)).length;if(nf)T.push(['❌',`${nf} falha${nf>1?'s':''} nas quests diárias nos últimos ${AP} dias.`]);
+ if(nr)T.push(['🔄',`Você já voltou ${nr} vez${nr>1?'es':''} depois de uma pausa. Voltar conta mais do que nunca parar.`]);
+ const nsec=S.lg.filter(e=>e.k=='quest'&&e.sec&&!e.rv&&P.has(e.d)).length;if(nsec)T.push(['✨',`${nsec} quest${nsec>1?'s':''} secreta${nsec>1?'s':''} no período: você fez o dobro da meta.`]);
+ const xn=xpToNext();T.push(['⚔️',xn?`Faltam <b>${xn} XP</b> para o rank ${RK[ri(S.lvl)+1]}.`:'Você chegou ao rank máximo!']);
+ if(wkLim())T.push(['🎮',`Gameplay nesta semana: ${Math.round(wkMin())} de ${wkLim()} minutos.`]);
+ if(st>=2)T.push(['🔥',`Sequência de ${st} dias seguidos com quests concluídas.`]);
+ return `${sugSec()}<div class="tabs">${[7,30,90].map(n=>`<button class="${AP==n?'on':''}" onclick="AP=${n};render()">Últimos ${n} dias</button>`).join('')}</div>
+ ${nQ<10||days.filter(d=>ds.has(d)).length<5?'<p style="color:var(--gold);margin:0 0 10px">⚠ Pouco conclusivo: ainda há poucos dados neste período.</p>':''}<div class="kp">${kp('Quests concluídas',nQ,dl(nQ,nQP))}${kp('XP ganho',xpP,dl(xpP,xpPP))}${kp('Diárias cumpridas',rate+'%',`<small>${dn} de ${sc} agendadas</small>`)}${kp('Ouro',`<span class="gold">+${gIn}</span>`,`<small>gasto: ${gOut}</small>`)}${kp('Sequência',st+' dia'+(st==1?'':'s'),'<small>dias de descanso não quebram</small>')}${kp('Consistência',cons+'%',`<small>dias com quest, fora descanso${nr?' · '+nr+' retomada'+(nr>1?'s':''):''}</small>`)}${kp('Humor médio',mAvg?MOOD[Math.round(mAvg)-1]+' '+mAvg.toFixed(1):'—',`<small>${ms.length} dia(s) com diário</small>`)}</div>
+ <section class="win"><h2>Tópicos</h2>${T.map(t=>`<div class="item"><span style="font-size:22px">${t[0]}</span><div class="t">${t[1]}</div></div>`).join('')}</section>
+ ${eqSec(cc)}<div class="top"><section class="win"><h2>Quests por dia</h2>${svgBars(qd,lb)}</section><section class="win"><h2>XP por dia</h2>${svgBars(xd,lb)}</section></div>
+ <div class="top"><section class="win"><h2>Por categoria</h2>${Object.keys(cc).length?hbars(Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).map(c=>[CAT[c]?CAT[c][0]:c,cc[c]])):'<div class="mute">Sem conclusões no período.</div>'}</section>
+ <section class="win"><h2>Conclusão por dia da semana</h2>${wS.some(v=>v)?hbars([1,2,3,4,5,6,0].filter(i=>wS[i]).map(i=>[NM[i],Math.round(wD[i]/wS[i]*100),Math.round(wD[i]/wS[i]*100)+'%'])):'<div class="mute">Sem quests diárias agendadas.</div>'}</section></div>
+ <section class="win"><h2>Humor por dia</h2>${ms.length?svgBars(md,lb,'gold'):'<div class="mute">Escreva no Diário e marque seu humor para ver este gráfico.</div>'}</section>${catEvo()}${cmpSec()}${retroSec()}`}
+const BT={xp:'XP',gold:'Ouro',desc:'Desconto na loja',game:'Tempo de gameplay'},STI=['💪','🧠','🎯','🍀','⚡','❤️','🛡️','📚','🧘','🎨','💼','🔥'];
+const spEarn=()=>S.lg.reduce((a,e)=>a+(e.sp||0),0),spFree=()=>spEarn()-S.st.reduce((a,x)=>a+x.p,0);
+function stAuto(){let a=0;for(let l=(S.lv0||1)+1;l<=S.lvl;l++)a+=1+Math.floor(l/50);return a}
+const stVal=x=>x.p+stAuto(),bonusPct=v=>v<=30?v:Math.min(40,30+(v-30)*.1),fmtPct=v=>Number.isInteger(v)?v:v.toFixed(1).replace('.',',');
+function spGain(q,d){if(q.f=='d')return 1;if(cnt(q,d)<tgt(q,d))return 0;const same=e=>q.f=='w'?wk(e.d)==wk(d):mesK(e.d)==mesK(d);return S.lg.some(e=>e.k=='quest'&&e.q==q.id&&!e.rv&&e.sp>0&&same(e))?0:(q.f=='w'?3:5)}
+const stB=(t,cat)=>spFree()<0?0:Math.min(60,S.st.filter(x=>x.b==t&&(t=='desc'||t=='game'||!x.c||x.c==cat)).reduce((a,x)=>a+bonusPct(stVal(x)),0))/100;
+const stTxt=x=>'+'+fmtPct(bonusPct(stVal(x)))+'% '+BT[x.b]+((x.b=='xp'||x.b=='gold')&&x.c&&CAT[x.c]?' em '+CAT[x.c][0]:'');
+const mkSt=()=>({n:'',ic:'💪',b:'xp',c:''});let SD=mkSt();
+function stAdd(id,v){const x=S.st.find(e=>e.id==id);if(!x)return;if(v>0&&spFree()<1)return toast('Sem pontos disponíveis');if(v<0&&x.p<1)return;x.p+=v;stSnap();save();render()}
+function stSave(){if(!SD.n.trim())return toast('Dê um nome ao status');const o={n:SD.n.trim(),ic:SD.ic,b:SD.b,c:SD.b=='xp'||SD.b=='gold'?SD.c:''};
+ if(SD.edit){const x=S.st.find(e=>e.id==SD.edit);if(x)Object.assign(x,o);toast('Status alterado com sucesso!')}else{S.st.push(Object.assign({id:uid(),p:0},o));toast('Status criado!')}SD=mkSt();stSnap();save();render()}
+function stEdit(id){const x=S.st.find(e=>e.id==id);SD={n:x.n,ic:x.ic,b:x.b,c:x.c,edit:id};render()}
+function stDel(id){if(confirm('Excluir este status? Os pontos dele voltam para você.')){S.st=S.st.filter(e=>e.id!=id);stSnap();save();render()}}
+function radar(){const n=S.st.length;if(n<3)return '<small>Crie pelo menos 3 status para ver o gráfico.</small>';
+ const M=Math.max(10,...S.st.map(x=>stVal(x))),R=90,C=130,an=i=>-Math.PI/2+i*2*Math.PI/n,pt=(i,r)=>[C+r*Math.cos(an(i)),C+r*Math.sin(an(i))],pp=a=>a.map(v=>v.toFixed(1)).join(','),poly=r=>S.st.map((x,i)=>pp(pt(i,r))).join(' ');
+ let g='';for(let k=1;k<=5;k++)g+=`<polygon points="${poly(R*k/5)}" style="fill:none;stroke:var(--line);stroke-width:1;opacity:${k==5?1:.45}"/>`;
+ S.st.forEach((x,i)=>{const [a,b]=pt(i,R);g+=`<line x1="${C}" y1="${C}" x2="${a}" y2="${b}" style="stroke:var(--line);opacity:.45"/>`});
+ g+=`<polygon points="${S.st.map((x,i)=>pp(pt(i,Math.max(.04,stVal(x)/M)*R))).join(' ')}" style="fill:color-mix(in srgb,var(--acc) 35%,transparent);stroke:var(--acc);stroke-width:2;stroke-linejoin:round"/>`;
+ S.st.forEach((x,i)=>{const [a,b]=pt(i,R);g+=`<circle cx="${pt(i,Math.max(.04,stVal(x)/M)*R)[0]}" cy="${pt(i,Math.max(.04,stVal(x)/M)*R)[1]}" r="3" style="fill:var(--acc)"/>`;const [c,d]=pt(i,R+26);g+=`<text x="${c}" y="${d}" text-anchor="middle" style="fill:var(--ink);font-size:12px;font-weight:700">${x.ic} ${esc(x.n.slice(0,12))}</text><text x="${c}" y="${d+14}" text-anchor="middle" style="fill:var(--gold);font-size:12px;font-weight:700">${stVal(x)}</text>`});
+ return `<svg viewBox="-55 -10 370 285" style="width:100%;max-width:380px;display:block;margin:0 auto 8px" role="img" aria-label="Gráfico de status">${g}</svg><div class="row" style="justify-content:center;margin-bottom:10px"><small>Poder total: <b class="gold">${S.st.reduce((a,x)=>a+stVal(x),0)}</b></small></div>`}
+function stView(){const f=spFree(),tot=S.st.reduce((a,x)=>a+stVal(x),0),au=stAuto(),rec=stRec();
+ return `${radar()}<div class="row"><b>Pontos disponíveis</b><b class="gold" style="font-size:28px">${f}</b></div><small>Você ganha pontos concluindo quests: diária 1, semanal 3 e mensal 5 (ao bater a meta do período), Dungeon 5 e Quest Secreta +2. Ao subir de nível, todos os status sobem sozinhos (+1 por nível até o 49, +2 do 50 ao 99, +3 do 100 ao 149…). Bônus: 1% por ponto até 30; depois 0,1% por ponto até 40%; no máximo 60% somando status do mesmo tipo.</small>${f>0&&rec.length?'<p style="margin:8px 0 0"><b>💡 Recomendado para seus pontos</b></p>'+rec.map(r=>'<small style="display:block">'+r[0].ic+' '+esc(r[0].n)+': '+r[2]+'</small>').join(''):''}${f<0?'<p style="color:var(--bad)">Você perdeu níveis: retire alguns pontos para equilibrar. Enquanto isso, os bônus de status ficam suspensos.</p>':''}
+ ${S.st.map(x=>`<div class="item"><span style="font-size:26px">${x.ic}</span><div class="t"><b>${esc(x.n)} <span class="gold">${stVal(x)}</span></b><small>${stTxt(x)}${au?' · '+x.p+' distribuído'+(x.p==1?'':'s')+' + '+au+' do nível':''}${tot&&stVal(x)?' · '+Math.round(stVal(x)/tot*100)+'% do poder':''}</small><div class="bar"><i style="width:${bonusPct(stVal(x))/40*100}%"></i></div></div><button class="ghost" aria-label="Remover ponto" ${x.p<1?'disabled':''} onclick="stAdd('${x.id}',-1)">−</button><button class="btn" aria-label="Adicionar ponto" ${f<1?'disabled':''} onclick="stAdd('${x.id}',1)">+</button></div><div class="row" style="justify-content:flex-end;gap:6px;margin-bottom:4px"><button class="ghost" onclick="stEdit('${x.id}')">✎ Editar</button><button class="ghost" onclick="stDel('${x.id}')">× Excluir</button></div>`).join('')}
+ <p style="margin:16px 0 4px"><b>Evolução dos pontos</b></p>${stEvo()}<h2 style="margin-top:16px">${SD.edit?'Editar status':'Novo status'}</h2>${F('Nome',`<input value="${esc(SD.n)}" maxlength="20" onchange="SD.n=this.value" placeholder="Ex.: Carisma">`)}
+ <small>Ícone</small><div class="ics" style="margin-bottom:10px">${STI.map(e=>`<button class="${SD.ic==e?'on':''}" aria-label="Ícone ${e}" onclick="SD.ic='${e}';render()">${e}</button>`).join('')}</div>
+ <div class="f2">${F('Bônus',`<select onchange="SD.b=this.value;render()">${Object.keys(BT).map(k=>`<option value="${k}" ${SD.b==k?'selected':''}>${BT[k]}</option>`).join('')}</select>`)}${SD.b=='xp'||SD.b=='gold'?F('Vale para',`<select onchange="SD.c=this.value">${[['','Todas as quests']].concat(Object.keys(CAT).map(k=>[k,CAT[k][0]])).map(o=>`<option value="${o[0]}" ${SD.c==o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`):''}</div>
+ <button class="btn" onclick="stSave()">${SD.edit?'Salvar alterações':'Criar status'}</button>${SD.edit?' <button class="ghost" onclick="SD=mkSt();render()">Cancelar</button>':''}`}
+/* ---- Falhas e Penalty Quest ---- */
+const PEN=['Faça 20 agachamentos','Arrume seu quarto por 10 minutos','Leia 10 páginas extras','Caminhe 15 minutos','Estude 20 minutos extras','Fique 1 hora sem redes sociais','Lave a louça do dia'];
+const penOn=()=>!!(!recOn(hoje())&&S.cfg.pen.on&&S.pen&&!S.pen.done&&S.pen.d==hoje()&&!emDescanso(hoje()));
+function runFails(){const y=ontem();if(!S.chk||S.chk>=y)return;
+ if(S.pen&&!S.pen.done&&S.pen.d<hoje()){if(S.cfg.pen.on&&!emDescanso(S.pen.d)&&!recOn(S.pen.d)){const loss=Math.round(S.gold*S.cfg.pen.loss/100);if(loss>0){S.gold-=loss;led('pen-loss','Penalty Quest não cumprida',0,-loss,{d:S.pen.d})}}S.pen=null}
+ const d=parse(S.chk);let last=0;
+ for(let i=0;i<60;i++){d.setDate(d.getDate()+1);const ds=fmt(d);if(ds>y)break;const w=d.getDay();let f=0;
+  S.quests.filter(q=>q.pr!='o'&&devido(q,ds)&&!q.log.includes(ds)).forEach(q=>{evt('falha',q,ds);f++});if(ds==y)last=f}
+ {const ld=[];S.quests.forEach(q=>q.log.forEach(x=>{if(x<=y)ld.push(x)}));if(ld.length){let gap=0,c=addD(ld.sort().pop(),1);while(c<=y){if(!emDescanso(c))gap++;c=addD(c,1)}if(gap>=3&&!(S.ret&&S.ret.d==hoje()))S.ret={d:hoje(),gap,cl:false}}}
+ S.chk=y;if(S.cfg.pen.on&&last>=Math.max(1,S.cfg.pen.min)&&!emDescanso(hoje())&&!recOn(hoje())&&!(S.ret&&S.ret.d==hoje())&&!(S.pen&&S.pen.d==hoje()))S.pen={d:hoje(),t:PEN[Math.floor(Math.random()*PEN.length)],n:last,done:false};save()}
+function penDone(){if(!penOn())return;S.pen.done=true;addXp(10);led('pen-ok','Penalty Quest cumprida',10,0);toast('Penalidade cumprida! Debuff removido');save();render()}
+function penCard(){return penOn()?`<section class="win" style="border-color:var(--bad)"><h2 style="color:var(--bad)">⚠ Penalty Quest</h2><p style="margin-top:0">Você deixou ${S.pen.n} quest${S.pen.n>1?'s':''} diária${S.pen.n>1?'s':''} sem fazer ontem.</p><p><b>${esc(S.pen.t)}</b></p><small>Até concluir: −${S.cfg.pen.deb}% de XP e ouro. Se não fizer hoje, você perde ${S.cfg.pen.loss}% do seu ouro.</small><div style="margin-top:10px"><button class="btn" onclick="penDone()">Concluí a penalidade</button></div></section>`:''}
+/* ---- Dungeon semanal ---- */
+function dgEnsure(){const w=wk(hoje());if(S.dg&&S.dg.w==w)return;const cs=Object.keys(CAT).filter(c=>S.quests.some(q=>q.cat==c&&!q.arch)),pool=cs.length?cs:Object.keys(CAT),c=pool[Math.floor(Math.random()*pool.length)],n=3+Math.floor(Math.random()*4);S.dg={w,c,n,xp:40*n,g:25*n,cl:false};save(true)}
+function dgCard(){dgEnsure();const d=S.dg,p=Math.min(d.n,wcat(d.c)),r=7-new Date().getDay();
+ return `<section class="win"><div class="row"><h2 style="margin:0">🏰 Dungeon da semana</h2><small>${r} dia${r>1?'s':''}</small></div><p>Conclua <b>${d.n} quests de ${CAT[d.c]?CAT[d.c][0]:d.c}</b> até sábado.</p><div class="bar"><i style="width:${p/d.n*100}%"></i></div><div class="row"><small>${p}/${d.n}</small><small class="gold">+${d.xp} XP · +${d.g} ouro</small></div>${d.cl?'<p class="mute" style="margin-bottom:0">✓ Recompensa resgatada</p>':p>=d.n?'<button class="btn" style="margin-top:8px" onclick="dgClaim()">Resgatar recompensa</button>':''}</section>`}
+function dgClaim(){const d=S.dg;if(!d||d.cl||wcat(d.c)<d.n)return;d.cl=true;const o=ri(S.lvl),up=addXp(d.xp);S.gold+=d.g;led('dungeon','Dungeon: '+d.n+' quests de '+(CAT[d.c]?CAT[d.c][0]:d.c),d.xp,d.g,{sp:5});
+ fx(up?(ri(S.lvl)!=o?'RANK UP':'LEVEL UP'):'DUNGEON CLEAR','+'+d.xp+' XP · +'+d.g+' ouro · +5 pontos');toast('Dungeon concluída! +5 pontos de status');save();render()}
+/* ---- Mochila ---- */
+function invG(){const g={};S.inv.forEach(x=>{const k=x.kind+'|'+x.t;(g[k]=g[k]||[]).push(x)});return Object.values(g)}
+function useInv(id){const x=S.inv.find(e=>e.id==id);if(!x)return;const a=S.buffs.find(b=>b.kind==x.kind&&b.until>Date.now());
+ if(a){a.until+=864e5;toast('Buff estendido: +24h')}else{S.buffs.push({kind:x.kind,until:Date.now()+864e5});toast('Buff ativado por 24h')}
+ S.inv=S.inv.filter(e=>e.id!=id);save();render()}
+function mochila(){const b=S.buffs.filter(x=>x.until>Date.now());
+ return `<section class="win"><h2>🎒 Mochila</h2>${S.inv.length?invG().map(g=>`<div class="item"><span style="font-size:22px">${g[0].kind=='xp'?'⚡':'💰'}</span><div class="t"><b>${esc(g[0].t)}${g.length>1?` <span class="gold">×${g.length}</span>`:''}</b><small>+24h de efeito a cada uso</small></div><button class="btn" onclick="useInv('${g[0].id}')">Usar</button></div>`).join(''):'<div class="mute">Os buffs que você comprar ficam guardados aqui.</div>'}${b.length?`<p style="margin-bottom:0">Ativos: ${b.map(x=>`<span class="chip gd">${BUFF[x.kind][0]} · ${Math.ceil((x.until-Date.now())/36e5)}h</span>`).join('')}</p>`:''}</section>`}
+/* ---- Metas de longo prazo ---- */
+const mkG=()=>({t:'',tg:10,un:'',dl:'',xp:200,g:100});let GD=mkG();
+function goals(){return `<section class="win"><h2>🎯 Metas de longo prazo</h2>${S.goals.length?S.goals.map(m=>{const p=Math.min(m.cur,m.tg),late=m.dl&&!m.cl&&m.dl<hoje();
+ return `<div class="item" style="display:block"><div class="row"><b>${esc(m.t)}</b><span><button class="ghost" aria-label="Editar meta" onclick="gEdit('${m.id}')">✎</button> <button class="ghost" aria-label="Excluir meta" onclick="gDel('${m.id}')">×</button></span></div><div class="bar"><i style="width:${p/m.tg*100}%"></i></div><div class="row"><small>${p}/${m.tg} ${esc(m.un)}${m.dl?' · prazo '+parse(m.dl).toLocaleDateString('pt-BR'):''}${late?' · <span style="color:var(--bad)">atrasada</span>':''}</small><small class="gold">+${m.xp} XP · +${m.g} ouro</small></div>${m.cl?'<p class="mute" style="margin:6px 0 0">✓ Meta concluída</p>':`<div class="row" style="justify-content:flex-start;gap:8px;margin-top:6px"><button class="ghost" aria-label="Voltar uma etapa" onclick="gStep('${m.id}',-1)">−</button><button class="btn" onclick="gStep('${m.id}',1)">+1 etapa</button></div>`}</div>`}).join(''):'<div class="mute">Crie sua primeira meta abaixo.</div>'}</section>
+ <section class="win"><h2>${GD.edit?'Editar meta':'Nova meta'}</h2>${F('Nome da meta',`<input value="${esc(GD.t)}" maxlength="60" onchange="GD.t=this.value" placeholder="Ex.: Ler 12 livros no ano">`)}<div class="f2">${F('Total de etapas',`<input type="number" min="1" value="${GD.tg}" onchange="GD.tg=+this.value">`)}${F('Unidade (opcional)',`<input value="${esc(GD.un)}" maxlength="20" onchange="GD.un=this.value" placeholder="livros">`)}${F('Prazo (opcional)',`<input type="date" value="${GD.dl}" onchange="GD.dl=this.value">`)}${F('XP ao concluir',`<input type="number" min="0" value="${GD.xp}" onchange="GD.xp=+this.value">`)}${F('Ouro ao concluir',`<input type="number" min="0" value="${GD.g}" onchange="GD.g=+this.value">`)}</div><button class="btn" onclick="gSave()">${GD.edit?'Salvar alterações':'Criar meta'}</button>${GD.edit?' <button class="ghost" onclick="GD=mkG();render()">Cancelar</button>':''}</section>`}
+function gSave(){if(!GD.t.trim()||!(GD.tg>0))return toast('Informe o nome e o total de etapas');const o={t:GD.t.trim(),tg:Math.round(GD.tg),un:(GD.un||'').trim(),dl:GD.dl||'',xp:Math.max(0,GD.xp||0),g:Math.max(0,GD.g||0)};
+ if(GD.edit){const m=S.goals.find(x=>x.id==GD.edit);if(m)Object.assign(m,o);toast('Meta alterada com sucesso!')}else{S.goals.push(Object.assign({id:uid(),cur:0,cl:false,cr:hoje()},o));toast('Meta criada!')}GD=mkG();save();render()}
+function gEdit(id){const m=S.goals.find(x=>x.id==id);GD={t:m.t,tg:m.tg,un:m.un,dl:m.dl,xp:m.xp,g:m.g,edit:id};render();document.getElementById('app').scrollTop=1e5}
+function gDel(id){if(confirm('Excluir esta meta?')){S.goals=S.goals.filter(x=>x.id!=id);save();render()}}
+function gStep(id,v){const m=S.goals.find(x=>x.id==id);if(!m||m.cl)return;const c0=m.cur;m.cur=Math.max(0,Math.min(m.tg,m.cur+v));if(m.cur!=c0)led('meta-etapa',(v>0?'Avançou: ':'Voltou: ')+m.t,0,0,{n:m.cur-c0,gid:m.id});
+ if(m.cur>=m.tg){m.cl=true;const o=ri(S.lvl),up=addXp(m.xp);S.gold+=m.g;led('meta','Meta: '+m.t,m.xp,m.g);fx(up?(ri(S.lvl)!=o?'RANK UP':'LEVEL UP'):'META CONCLUÍDA',m.t);toast('Meta concluída! +'+m.xp+' XP · +'+m.g+' ouro')}
+ save();render()}
+function zeraQ(){modal('Apagar todas as quests?','<p>Todas as quests e o registro de conclusões delas serão apagados. Nível, XP, ouro, loja, diário, metas e status continuam.</p><p class="mute">Dica: exporte um backup antes, por segurança.</p>','<button class="ghost" onclick="fechaMod()">Cancelar</button><button class="btn" onclick="zeraOk()">Sim, apagar</button>')}
+function zeraOk(){S.quests=[];S.dg=null;S.pen=null;MOD='';save();render();toast('Todas as quests foram apagadas')}
+/* ---- Cronômetro de gameplay ---- */
+function gLeft(){const now=Date.now(),t0=parse(hoje()).getTime(),e=S.ses.run?(now-S.ses.run)/1000:0,et=S.ses.run?(now-Math.max(S.ses.run,t0))/1000:0;return{e,saldo:S.gs-e,hoje:dayLim()*60-(S.gp[hoje()]||0)*60-et}}
+function fmtT(x){x=Math.max(0,Math.round(x));const h=Math.floor(x/3600),m=Math.floor(x%3600/60),s=x%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')}
+function gSettle(){if(!S.ses.run)return;const now=Date.now();let t=S.ses.run,used=0;
+ while(t<now&&S.gs-used>0){const d=new Date(t),ds=fmt(d),end=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime(),seg=(Math.min(end,now)-t)/1000,e=Math.max(0,Math.min(seg,S.gs-used,limOf(ds)*60-(S.gp[ds]||0)*60));
+  if(e>0){S.gp[ds]=(S.gp[ds]||0)+e/60;used+=e}t=end}
+ S.gs=Math.max(0,S.gs-used);S.ses.sec+=used;S.ses.run=now}
+function gStart(){if(S.ses.run)return;if(S.gs<1)return toast('Sem saldo de gameplay. Compre na Loja.');if(dayLim()*60-(S.gp[hoje()]||0)*60<1)return toast('Limite de gameplay de hoje atingido');if(!S.ses.on)S.ses={on:true,run:null,sec:0};S.ses.run=Date.now();save();render();toast('Sessão iniciada. Bom jogo!')}
+function gPause(){gSettle();S.ses.run=null;save();render();toast('Sessão pausada')}
+function gStop(){gSettle();const m=Math.round(S.ses.sec/60);if(S.ses.sec>0)led('gameplay','Sessão de gameplay: '+m+' min',0,0,{min:m});S.ses={on:false,run:null,sec:0};save();render();toast('Sessão encerrada: '+m+' min jogados')}
+function gAlert(msg){try{navigator.vibrate&&navigator.vibrate([400,200,400,200,400])}catch(e){}
+ try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(a.destination);o.start();setTimeout(()=>{o.stop();a.close()},900)}catch(e){}
+ modal('⏰ Tempo esgotado','<p>'+msg+'</p><p class="mute">Hora de voltar para as quests!</p>','<button class="btn" onclick="gStop();fechaMod()">Encerrar sessão</button>')}
+function gtick(){if(!S.ses||!S.ses.run)return;const L=gLeft();
+ if(L.saldo<=0||L.hoje<=0){gSettle();S.ses.run=null;save();render();gAlert(L.saldo<=0?'Seu saldo de gameplay acabou.':'Você atingiu o limite de gameplay de hoje.');return}
+ const t=fmtT(Math.min(L.saldo,L.hoje));document.querySelectorAll('.gtm').forEach(e=>e.textContent=t);document.querySelectorAll('.gsd').forEach(e=>e.textContent=fmtT(L.saldo));document.querySelectorAll('.ghj').forEach(e=>e.textContent=fmtT(L.hoje))}
+function gCard(){const L=gLeft(),run=!!S.ses.run;
+ return `<div style="text-align:center;margin:4px 0 14px"><small>${run?'Jogando · tempo restante':'Saldo de gameplay'}</small><div class="gtm" style="font-size:46px;font-weight:700;line-height:1.1;color:${run?'var(--acc)':'var(--ink)'}">${fmtT(run?Math.min(L.saldo,L.hoje):S.gs)}</div><div class="row" style="justify-content:center;gap:14px;flex-wrap:wrap"><small>Saldo: <b class="gsd">${fmtT(L.saldo)}</b></small><small>Restante hoje: <b class="ghj">${fmtT(L.hoje)}</b></small></div>${run&&L.hoje<L.saldo?'<small style="color:var(--gold)">O limite de hoje termina antes do seu saldo.</small><br>':''}${S.ses.on?`<small>Nesta sessão: ${Math.round((S.ses.sec+(run?L.e:0))/60)} min</small>`:(S.gs<1?'<small>Compre tempo na Loja (categoria Games)</small>':'')}
+ <div class="row" style="justify-content:center;gap:8px;margin-top:10px">${run?'<button class="btn" onclick="gPause()">⏸ Pausar</button>':`<button class="btn" ${S.gs<1?'disabled':''} onclick="gStart()">▶ ${S.ses.on?'Continuar':'Iniciar'}</button>`}${S.ses.on?'<button class="ghost" onclick="gStop()">⏹ Encerrar</button>':''}</div></div>`}
+let HF='all',HN=40;
+const LK={corrida:'Corrida',sugestao:'Sugestão',conquista:'Conquista',campanha:'Campanha','meta-etapa':'Meta',retomada:'Retomada',skip:'Dispensa',quest:'Quest',undo:'Desfeito',buy:'Compra',dungeon:'Dungeon',meta:'Meta','pen-ok':'Penalidade','pen-loss':'Penalidade',gameplay:'Gameplay',falha:'Falha',bonus:'Bônus',ajuste:'Saldo inicial',resumo:'Resumo'};
+function histView(){const ck=ledCheck(),all=S.lg.filter(e=>HF=='all'||(HF=='xp'?e.xp:HF=='g'?e.g:e.k=='falha')),L=all.slice(0,HN);
+ return `<div class="win" style="margin:0 0 10px;padding:10px;border-color:${ck.ok?'var(--ok)':'var(--bad)'}"><b>${ck.ok?'✓ Contas conferidas':'⚠ Diferença encontrada'}</b><br><small>XP total: ${ck.tx} (registros: ${ck.sx}) · Ouro: ${S.gold} (registros: ${ck.sg}) · Pontos de status: ${spEarn()} ganhos, ${S.st.reduce((a,x)=>a+x.p,0)} distribuídos</small></div>
+ <div class="tabs">${[['all','Tudo'],['xp','XP'],['g','Ouro'],['falha','Falhas']].map(f=>`<button class="${HF==f[0]?'on':''}" onclick="HF='${f[0]}';HN=40;render()">${f[1]}</button>`).join('')}</div>
+ ${L.length?L.map(e=>`<div class="item"><div class="t"><b>${esc(e.src)}</b><small>${LK[e.k]||e.k} · ${e.d=='2000-01-01'?'antes da v9.3':parse(e.d).toLocaleDateString('pt-BR')}${e.rv?' · desfeito':''}</small></div><span style="text-align:right;font-size:15px;flex:none">${e.xp?`<span style="color:${e.xp>0?'var(--ok)':'var(--bad)'}">${e.xp>0?'+':''}${e.xp} XP</span><br>`:''}${e.g?`<span class="gold">${e.g>0?'+':''}${e.g} ouro</span>`:''}${e.sp?`<br><span style="color:var(--acc)">${e.sp>0?'+':''}${e.sp} ponto${Math.abs(e.sp)>1?'s':''}</span>`:''}</span></div>`).join(''):'<div class="mute">Nada por aqui ainda.</div>'}
+ ${all.length>HN?'<button class="ghost" style="width:100%;margin-top:8px" onclick="HN+=40;render()">Ver mais</button>':''}`}
+function qAll(){const A=S.quests.filter(q=>!q.arch),na=S.quests.length-A.length;
+ return `<section class="win"><h2>Quests configuradas (${A.length})</h2>${A.length?[['d','Diárias'],['w','Semanais'],['m','Mensais']].map(([f,n])=>{const L=A.filter(q=>q.f==f);return L.length?`<p style="margin:12px 0 2px"><b>${n}</b> <small>(${L.length})</small></p>${L.map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''} · ${f=='d'?(q.days.length==7?'todos os dias':q.days.slice().sort().join()=='1,2,3,4,5'?'seg a sex':q.days.slice().sort().map(i=>['dom','seg','ter','qua','qui','sex','sáb'][i]).join(', ')):(q.n==1?'única':q.n+'x '+(f=='w'?'na semana':'no mês'))} · +${q.xp} XP · +${q.g} ouro${q.pr=='o'?' · opcional':''}${pausada(q,hoje())?' · <b style="color:var(--gold)">pausada</b>':''}</small></div><button class="ghost" aria-label="${pausada(q,hoje())?'Retomar':'Pausar'}" onclick="pauseQ('${q.id}')">${pausada(q,hoje())?'▶':'⏸'}</button><button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">✎</button><button class="ghost" aria-label="Arquivar ou apagar" onclick="delQuest('${q.id}')">×</button></div>`).join('')}`:''}).join(''):'<div class="mute">Nenhuma quest configurada ainda. Crie a primeira acima.</div>'}${na?`<p class="mute" style="margin:12px 0 0">${na} quest${na>1?'s':''} arquivada${na>1?'s':''}: veja em Perfil → Backup.</p>`:''}</section>`}
+function restCard(){return emDescanso(hoje())?'<section class="win" style="border-color:var(--gold)"><b>🌙 Dia de descanso</b><br><small>Sem falhas e sem Penalty Quest hoje. Se quiser fazer quests, o XP vale normalmente.</small></section>':''}
+function skipQ(id){const q=S.quests.find(x=>x.id==id),h=hoje();q.skip=q.skip||[];if(q.skip.includes(h)){q.skip=q.skip.filter(x=>x!=h);toast('Dispensa desfeita')}else{q.skip.push(h);led('skip','Dispensou hoje: '+q.t,0,0,{q:id,cat:q.cat});toast('Dispensada hoje: não conta como falha')}save();render()}
+function pauseQ(id){const q=S.quests.find(x=>x.id==id),h=hoje();q.pz=q.pz||[];const o=q.pz.find(p=>!p[1]||p[1]>=h);
+ if(o&&pausada(q,h)){if(o[0]>=h)q.pz=q.pz.filter(p=>p!==o);else o[1]=addD(h,-1);toast('Quest retomada')}else{q.pz.push([h,null]);toast('Quest pausada: não aparece nem gera falha')}save();render()}
+let RD={a:'',b:'',m:''};
+function rotView(){const P=S.cfg.pen,hr=emDescanso(hoje()),fut=S.rest.filter(r=>r.b>=hoje()).sort((x,y)=>x.a.localeCompare(y.a)),pas=S.rest.length-fut.length,br=d=>parse(d).toLocaleDateString('pt-BR');
+ return `${recSec()}<h2 style="margin-top:22px">🌙 Descanso planejado</h2><small>Em dias de descanso não há falhas nem Penalty Quest. Se quiser fazer quests, o XP vale normalmente.</small>
+ <div style="margin:10px 0">${hr?'<p style="color:var(--gold);margin:0">Hoje é dia de descanso.</p>':'<button class="btn" onclick="restHoje()">Descansar hoje</button>'}</div>
+ ${fut.length?fut.map(r=>`<div class="item"><div class="t"><b>${esc(r.m||'Descanso')}</b><small>${r.a==r.b?br(r.a):br(r.a)+' a '+br(r.b)}</small></div><button class="ghost" aria-label="Remover descanso" onclick="restDel('${r.id}')">×</button></div>`).join(''):'<div class="mute">Nenhum descanso agendado.</div>'}${pas?`<small>${pas} descanso${pas>1?'s':''} já passado${pas>1?'s':''}.</small>`:''}
+ <div class="f2" style="margin-top:10px">${F('De',`<input type="date" min="${hoje()}" value="${RD.a}" onchange="RD.a=this.value">`)}${F('Até',`<input type="date" min="${hoje()}" value="${RD.b}" onchange="RD.b=this.value">`)}</div>${F('Motivo (opcional)',`<input value="${esc(RD.m)}" maxlength="40" onchange="RD.m=this.value" placeholder="Ex.: viagem, feriado, doente">`)}<button class="btn" onclick="restAdd()">Agendar descanso</button>
+ <h2 style="margin-top:22px">⚠ Penalidades</h2><label class="row" style="justify-content:flex-start;gap:10px;margin-bottom:10px"><input type="checkbox" style="width:auto" ${P.on?'checked':''} onchange="penCfg('on',this.checked)"> Penalty Quest ativada</label>
+ ${P.on?`<div class="f2">${F('Debuff até concluir (%)',`<input type="number" min="0" max="50" value="${P.deb}" onchange="penCfg('deb',this.value)">`)}${F('Perda de ouro se não fizer (%)',`<input type="number" min="0" max="20" value="${P.loss}" onchange="penCfg('loss',this.value)">`)}${F('Falhas no dia para gerar',`<input type="number" min="1" max="10" value="${P.min}" onchange="penCfg('min',this.value)">`)}</div>`:'<small>Sem penalidades: as falhas continuam registradas no Histórico e na Análise, mas nada é cobrado.</small>'}<p class="mute" style="margin-bottom:0">Quests opcionais, pausadas ou dispensadas nunca contam como falha.</p>`}
+function restAdd(){if(!RD.a)return toast('Escolha a data de início');const b=RD.b||RD.a;if(RD.a<hoje())return toast('O descanso só pode começar de hoje em diante');if(b<RD.a)return toast('A data final é antes da inicial');S.rest.push({id:uid(),a:RD.a,b,m:(RD.m||'').trim()});RD={a:'',b:'',m:''};save();render();toast('Descanso agendado')}
+function restHoje(){S.rest.push({id:uid(),a:hoje(),b:hoje(),m:'Descanso'});save();render();toast('Bom descanso! Hoje não há falhas.')}
+function restDel(id){S.rest=S.rest.filter(r=>r.id!=id);save();render();toast('Descanso removido')}
+function penCfg(k,v){const P=S.cfg.pen;if(k=='on')P.on=!!v;else{const L={deb:[0,50],loss:[0,20],min:[1,10]}[k];P[k]=Math.max(L[0],Math.min(L[1],Math.round(+v||0)))}save();render();toast('Penalidades atualizadas')}
+function recF(ds){const r=S.rec;if(!r)return 1;if(ds>=r.a&&ds<=r.b)return .5;if(ds>r.b&&ds<=addD(r.b,7))return .75;return 1}
+function recOn(ds){return !!(S.rec&&ds>=S.rec.a&&ds<=S.rec.b)}
+function recStart(n){S.rec={a:hoje(),b:addD(hoje(),n-1)};if(S.pen&&!S.pen.done)S.pen=null;save();render();toast('Modo recuperação ativo por '+n+' dias')}
+function recEnd(){if(S.rec){S.rec.b=addD(hoje(),-1);if(S.rec.b<S.rec.a)S.rec=null}save();render();toast('Modo recuperação encerrado')}
+function retClaim(){S.ret.cl=true;addXp(50);S.gold+=30;led('retomada','Missão de Retomada ('+S.ret.gap+' dias fora)',50,30);setTimeout(()=>fx('RETOMADA','+50 XP · +30 ouro'),2600)}
+const brD=d=>parse(d).toLocaleDateString('pt-BR');
+function recCard(){if(recOn(hoje()))return `<section class="win" style="border-color:var(--gold)"><b>🛡 Modo recuperação até ${brD(S.rec.b)}</b><br><small>Metas semanais e mensais pela metade e sem Penalty Quest. Vá no seu ritmo.</small></section>`;
+ if(recF(hoje())<1)return `<section class="win" style="border-color:var(--gold)"><b>↗ Retorno gradual até ${brD(addD(S.rec.b,7))}</b><br><small>Metas semanais e mensais em 75% enquanto você retoma o ritmo.</small></section>`;return ''}
+function retCard(){const r=S.ret;if(!r||r.d!=hoje())return '';if(r.cl)return '<section class="win" style="border-color:var(--ok)"><b>✓ Retomada concluída!</b><br><small>Bem-vindo de volta. Um passo de cada vez.</small></section>';
+ return `<section class="win" style="border-color:var(--gold)"><h2 style="margin-top:0">🔄 Missão de Retomada</h2><p style="margin-top:0">Você ficou ${r.gap} dias sem concluir quests. Tudo bem: conclua <b>1 quest hoje</b> para ganhar <span class="gold">+50 XP e +30 de ouro</span>. Hoje não há Penalty Quest.</p>${recOn(hoje())?'':'<button class="ghost" onclick="recStart(7)">Ativar modo recuperação (7 dias)</button>'}</section>`}
+let RCD=7;
+function recSec(){const r=S.rec,on=recOn(hoje()),gr=!on&&recF(hoje())<1;
+ return `<h2>🛡 Modo recuperação</h2><small>Para fases difíceis: metas semanais e mensais pela metade e sem Penalty Quest. Ao terminar, mais 7 dias de retorno gradual com as metas em 75%.</small><div style="margin:10px 0">${on?`<p style="color:var(--gold);margin:0 0 8px">Ativo até ${brD(r.b)}.</p><button class="ghost" onclick="recEnd()">Encerrar agora</button>`:gr?`<p style="color:var(--gold);margin:0">Retorno gradual até ${brD(addD(r.b,7))} (metas em 75%).</p>`:`<div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><select style="width:auto" onchange="RCD=+this.value">${[3,7,14].map(n=>`<option value="${n}" ${RCD==n?'selected':''}>${n} dias</option>`).join('')}</select><button class="btn" onclick="recStart(RCD)">Ativar modo recuperação</button></div>`}</div>`}
+/* ---- Planejamento e revisão semanal ---- */
+let PD=null,PW='atual',TKD={t:'',pr:'p'};
+const dLbl=d=>d==hoje()?'Hoje':d==addD(hoje(),1)?'Amanhã':['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][parse(d).getDay()]+' '+parse(d).getDate();
+const pget=d=>S.plan[d]||{f:[],t:[]},pset=d=>S.plan[d]||(S.plan[d]={f:[],t:[]});
+function dueOn(d){return S.quests.filter(q=>!q.arch&&!pausada(q,d)&&(q.f=='d'?devido(q,d)||q.log.includes(d):cnt(q,d)<tgt(q,d)||q.log.includes(d)))}
+function focoT(d,id){const p=pset(d);if(p.f.includes(id))p.f=p.f.filter(x=>x!=id);else{if(p.f.length>=3)return toast('Máximo de 3 quests em foco por dia');p.f.push(id)}save();render()}
+function tkAdd(d){if(!TKD.t.trim())return toast('Escreva a tarefa');pset(d).t.push({id:uid(),t:TKD.t.trim(),pr:TKD.pr,done:false});TKD={t:'',pr:TKD.pr};save();render();toast('Tarefa adicionada')}
+function tkTog(d,id){const t=pset(d).t.find(x=>x.id==id);if(!t)return;if(d>hoje())return toast('Só dá para marcar no próprio dia');t.done=!t.done;save();render()}
+function tkDel(d,id){const p=pset(d);p.t=p.t.filter(x=>x.id!=id);save();render()}
+function tkLevar(){const h=hoje(),p=pget(h),pend=p.t.filter(x=>!x.done);if(!pend.length)return toast('Nenhuma tarefa pendente');pset(addD(h,1)).t.push(...pend.map(x=>({id:uid(),t:x.t,pr:x.pr,done:false})));pset(h).t=p.t.filter(x=>x.done);save();render();toast(pend.length+' tarefa'+(pend.length>1?'s levadas':' levada')+' para amanhã')}
+const tkRow=(d,t)=>`<div class="item"><button class="chk ${t.done?'on':''}" aria-label="Marcar tarefa" onclick="tkTog('${d}','${t.id}')">${t.done?'✓':''}</button><div class="t"><b style="${t.done?'text-decoration:line-through;color:var(--mute)':''}">${esc(t.t)}</b><small>Tarefa · ${t.pr=='o'?'opcional':'prioritária'}</small></div><button class="ghost" aria-label="Apagar tarefa" onclick="tkDel('${d}','${t.id}')">×</button></div>`;
+function focCard(){const h=hoje(),p=pget(h),F=p.f.map(id=>S.quests.find(q=>q.id==id)).filter(q=>q&&!q.arch);if(!F.length&&!p.t.length)return '';
+ return `<section class="win" style="border-color:var(--acc)"><div class="row"><h2 style="margin:0">🎯 Foco de hoje</h2><button class="ghost" onclick="PD=null;go('tab','l')">Planejar</button></div>${F.map(q=>qrow(q,h)).join('')}${p.t.map(t=>tkRow(h,t)).join('')}</section>`}
+function plano(){const d=PD||hoje(),p=pget(d),Q=dueOn(d).sort((a,b)=>p.f.includes(b.id)-p.f.includes(a.id)),ch=[0,1,2,3,4,5,6].map(i=>addD(hoje(),i));
+ return `<section class="win"><h2>🗓 Planejamento</h2><div class="tabs" style="flex-wrap:nowrap;overflow-x:auto">${ch.map(x=>`<button class="${x==d?'on':''}" style="flex:0 0 auto" onclick="PD='${x}';render()">${dLbl(x)}</button>`).join('')}</div>
+ ${emDescanso(d)?'<p style="color:var(--gold);margin:4px 0">🌙 Dia de descanso.</p>':''}
+ <p style="margin:6px 0 2px"><b>Quests do dia</b> <small>· toque na ☆ para pôr até 3 em foco</small></p>${Q.length?Q.map(q=>{const fo=p.f.includes(q.id);return `<div class="item"><button class="ghost" aria-label="${fo?'Tirar do foco':'Pôr em foco'}" style="font-size:20px;${fo?'color:var(--gold);border-color:var(--gold)':''}" onclick="focoT('${d}','${q.id}')">${fo?'★':'☆'}</button><div class="t"><b>${esc(q.t)}</b><small>${FQ[q.f]}${q.f!='d'?' · '+cnt(q,d)+'/'+tgt(q,d):''}${q.pr=='o'?' · opcional':''}${q.log.includes(d)?' · feita ✓':''}</small></div></div>`}).join(''):'<div class="mute">Nenhuma quest para este dia.</div>'}
+ <p style="margin:14px 0 2px"><b>Tarefas avulsas</b> <small>· coisas do dia que não são quests (sem XP)</small></p>${p.t.length?p.t.map(t=>tkRow(d,t)).join(''):'<div class="mute">Nenhuma tarefa.</div>'}
+ <div class="row" style="gap:8px;margin-top:8px"><input value="${esc(TKD.t)}" maxlength="80" placeholder="Nova tarefa" onchange="TKD.t=this.value" style="flex:1"><select style="width:auto" onchange="TKD.pr=this.value"><option value="p" ${TKD.pr=='p'?'selected':''}>Prioritária</option><option value="o" ${TKD.pr=='o'?'selected':''}>Opcional</option></select></div>
+ <div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" onclick="tkAdd('${d}')">Adicionar tarefa</button>${d==hoje()&&p.t.some(x=>!x.done)?'<button class="ghost" onclick="tkLevar()">Levar pendentes para amanhã</button>':''}</div></section>${revisao()}`}
+function wkSt(w){const ds=[0,1,2,3,4,5,6].map(i=>addD(w,i)),W=new Set(ds),lg=S.lg.filter(e=>W.has(e.d)),logs=[],G=['quest','undo','dungeon','meta','pen-ok','retomada','campanha','conquista'],cc={};
+ S.quests.forEach(q=>q.log.forEach(x=>{if(W.has(x))logs.push({d:x,q})}));logs.forEach(l=>cc[l.q.cat]=(cc[l.q.cat]||0)+1);
+ let tt=0,td=0,tp=0;ds.forEach(d=>{const p=pget(d);tt+=p.t.length;td+=p.t.filter(x=>x.done).length;tp+=p.t.filter(x=>x.pr=='p'&&!x.done&&d<hoje()).length});
+ const sm=(a,f)=>a.reduce((s,e)=>s+f(e),0);
+ return{ds,nQ:logs.length,xp:sm(lg.filter(e=>G.includes(e.k)),e=>e.xp),gIn:sm(lg.filter(e=>G.includes(e.k)),e=>e.g),gOut:-sm(lg.filter(e=>e.k=='buy'||e.k=='pen-loss'),e=>e.g),fal:lg.filter(e=>e.k=='falha').length,at:new Set(logs.map(l=>l.d)).size,cc,et:sm(lg.filter(e=>e.k=='meta-etapa'),e=>e.n||0),mc:lg.filter(e=>e.k=='meta').length,tt,td,tp}}
+function revSug(a,b){const R=[];
+ if(a.fal>=5&&!recOn(hoje()))R.push('Foram '+a.fal+' falhas: considere o modo recuperação ou reduzir algumas metas.');
+ let wo=null;S.quests.filter(q=>q.f=='d'&&!q.arch&&q.pr!='o').forEach(q=>{const dv=a.ds.filter(d=>d<=hoje()&&devido(q,d)).length;if(dv>=3){const f=a.ds.filter(d=>q.log.includes(d)).length,r=f/dv;if(r<.5&&(!wo||r<wo[1]))wo=[q,r,f,dv]}});
+ if(wo)R.push(wo[0].t+' foi feita em '+wo[2]+' de '+wo[3]+' dias: talvez reduzir os dias ou torná-la opcional.');
+ const ac=Object.keys(CAT).filter(c=>S.quests.some(q=>q.cat==c&&!q.arch));if(ac.length>1){const lo=ac.reduce((x,c)=>(a.cc[c]||0)<(a.cc[x]||0)?c:x);R.push('Pouco de '+CAT[lo][0]+' ('+(a.cc[lo]||0)+' conclus'+((a.cc[lo]||0)==1?'ão':'ões')+'): que tal pôr uma quest dessa categoria em foco?')}
+ if(b.nQ&&a.nQ>=b.nQ*1.2&&a.fal==0)R.push('Semana forte! Dá para subir a meta de uma quest semanal.');
+ if(a.tp)R.push(a.tp+' tarefa'+(a.tp>1?'s prioritárias ficaram':' prioritária ficou')+' pendente'+(a.tp>1?'s':'')+': tente planejar menos coisas por dia.');
+ if(!R.length)R.push('Semana equilibrada. Mantenha o ritmo!');return R}
+function revisao(){const w=PW=='passada'?addD(wk(hoje()),-7):wk(hoje()),a=wkSt(w),b=wkSt(addD(w,-7)),r=S.rev[w]||{},top=Object.keys(a.cc).sort((x,y)=>a.cc[y]-a.cc[x]);
+ const cmp=(x,y,inv)=>x==y?'<small>= semana anterior</small>':`<small style="color:${(inv?x<y:x>y)?'var(--ok)':'var(--bad)'}">${x>y?'▲':'▼'} ${Math.abs(x-y)} vs anterior</small>`,k=(l,v,c)=>`<div class="win"><small>${l}</small><b>${v}</b>${c||''}</div>`;
+ return `<section class="win" id="rev"><h2>📋 Revisão semanal</h2><div class="tabs">${[['atual','Esta semana'],['passada','Semana passada']].map(t=>`<button class="${PW==t[0]?'on':''}" onclick="PW='${t[0]}';render()">${t[1]}</button>`).join('')}</div><small>${brD(w)} a ${brD(addD(w,6))}</small>
+ <div class="kp" style="margin-top:8px">${k('Quests',a.nQ,cmp(a.nQ,b.nQ))}${k('XP',a.xp,cmp(a.xp,b.xp))}${k('Dias ativos',a.at+'/7',cmp(a.at,b.at))}${k('Falhas',a.fal,cmp(a.fal,b.fal,1))}${k('Ouro','<span class="gold">+'+a.gIn+'</span>','<small>gasto: '+a.gOut+'</small>')}${k('Metas',a.et+' etapa'+(a.et==1?'':'s'),a.mc?'<small>'+a.mc+' concluída'+(a.mc>1?'s':'')+'</small>':'')}${a.tt?k('Tarefas',a.td+'/'+a.tt):''}</div>${diaLine(w)}
+ ${top.length?'<p style="margin:0 0 4px"><b>Categorias trabalhadas</b></p>'+hbars(top.map(c=>[CAT[c]?CAT[c][0]:c,a.cc[c]])):''}
+ <p style="margin:12px 0 4px"><b>Sugestões</b></p>${revSug(a,b).map(t=>`<div class="item"><span>💡</span><div class="t">${esc(t)}</div></div>`).join('')}
+ <p style="margin:12px 0 4px"><b>Sua reflexão</b></p>${F('O que funcionou',`<textarea id="rv1" rows="2" maxlength="500">${esc(r.ok||'')}</textarea>`)}${F('Dificuldades',`<textarea id="rv2" rows="2" maxlength="500">${esc(r.dif||'')}</textarea>`)}${F('Ajustes para a próxima semana',`<textarea id="rv3" rows="2" maxlength="500">${esc(r.aj||'')}</textarea>`)}<button class="btn" onclick="revSave('${w}')">Salvar reflexão</button>${r.at?' <small>salva em '+dt(r.at)+'</small>':''}</section>`}
+function revSave(w){const g=id=>document.getElementById(id).value.trim();S.rev[w]=Object.assign(S.rev[w]||{},{ok:g('rv1'),dif:g('rv2'),aj:g('rv3'),at:new Date().toISOString(),seen:1});save();render();toast('Reflexão salva')}
+function revCard(){const w=addD(wk(hoje()),-7),a=wkSt(w);if((!a.nQ&&!a.fal)||(S.rev[w]&&S.rev[w].seen))return '';
+ return `<section class="win" style="border-color:var(--acc)"><b>📋 Revisão da semana passada pronta</b><br><small>Veja como foi a semana de ${brD(w)} e anote seus ajustes.</small><div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" onclick="PW='passada';PD=null;go('tab','l');setTimeout(()=>{const e=document.getElementById('rev');if(e)e.scrollIntoView()},60)">Ver revisão</button><button class="ghost" onclick="revDis('${w}')">Dispensar</button></div></section>`}
+function revDis(w){S.rev[w]=Object.assign(S.rev[w]||{},{seen:1});save();render()}
+/* ---- Campanhas ---- */
+const CDUR={7:[150,80],30:[500,250],90:[1500,700]},CST={ativa:'Ativa',pausada:'Pausada',concluida:'Concluída ✓',abandonada:'Abandonada',expirada:'Prazo encerrado'};
+const mkCD=()=>({t:'',ds:'',dur:30,xp:500,g:250,ti:'',it:''});
+let MT='c',CMD=null,CD=mkCD(),CHN='',OB={ch:'',k:'q',q:'',n:5,m:'',t:''};
+function metasTab(){return `<div class="tabs">${[['c','⚔ Campanhas'],['m','🎯 Metas']].map(t=>`<button class="${MT==t[0]?'on':''}" onclick="MT='${t[0]}';CMD=null;render()">${t[1]}</button>`).join('')}</div>${MT=='c'?(CMD?campDet():campList()):goals()}`}
+function objProg(c,ch,o){if(o.k=='q'){const q=S.quests.find(x=>x.id==o.q),f=ch.u||c.a;return [q?Math.min(o.n,q.log.filter(d=>d>=f&&d<=c.b).length):0,o.n]}if(o.k=='m'){const m=S.goals.find(x=>x.id==o.m);return [m&&m.cl?1:0,1]}return [o.ok?1:0,1]}
+const chDone=(c,ch)=>ch.objs.length>0&&ch.objs.every(o=>{const p=objProg(c,ch,o);return p[0]>=p[1]});
+function cmpProg(c){let a=0,n=0;c.chs.forEach(ch=>ch.objs.forEach(o=>{const p=objProg(c,ch,o);a+=p[0]/p[1];n++}));return n?Math.round(a/n*100):0}
+function cmpUpd(){let chg=0;(S.cmp||[]).forEach(c=>{if(c.st!='ativa')return;
+ for(let i=0;i<c.chs.length;i++){const ch=c.chs[i];if(!ch.u)break;if(!ch.ok&&chDone(c,ch)){ch.ok=hoje();chg=1;if(c.chs[i+1]&&!c.chs[i+1].u)c.chs[i+1].u=hoje();toast('Capítulo concluído: '+ch.t)}if(!ch.ok)break}
+ if(c.chs.length&&c.chs.every(ch=>ch.ok)){c.st='concluida';c.fim=hoje();chg=1}else if(hoje()>c.b){c.st='expirada';chg=1}});if(chg)save()}
+function campCard(){const A=(S.cmp||[]).filter(c=>c.st=='ativa'||(c.st=='concluida'&&!c.cl));if(!A.length)return '';
+ return `<section class="win"><h2>⚔ Campanhas</h2>${A.map(c=>{const cur=c.chs.find(ch=>ch.u&&!ch.ok),p=cmpProg(c);return `<div class="item" style="display:block;cursor:pointer" onclick="MT='c';CMD='${c.id}';go('tab','m')"><div class="row"><b>${esc(c.t)}</b><small>${c.st=='concluida'?'<span class="gold">🏆 Resgatar</span>':p+'%'}</small></div><div class="bar"><i style="width:${p}%"></i></div>${cur?'<small>Capítulo: '+esc(cur.t)+'</small>':''}</div>`}).join('')}</section>`}
+function campList(){const A=S.cmp,act=A.filter(c=>c.st=='ativa'||c.st=='pausada'||(c.st=='concluida'&&!c.cl)),end=A.filter(c=>!act.includes(c));
+ const card=c=>{const p=cmpProg(c),cur=c.chs.find(ch=>ch.u&&!ch.ok),left=Math.max(0,Math.round((parse(c.b)-parse(hoje()))/864e5)+1);return `<div class="item" style="display:block;cursor:pointer" onclick="CMD='${c.id}';render()"><div class="row"><b>${esc(c.t)}</b><small>${CST[c.st]}</small></div><div class="bar"><i style="width:${p}%"></i></div><div class="row"><small>${p}%${cur?' · '+esc(cur.t):c.chs.length?'':' · sem capítulos'}</small><small>${c.st=='ativa'?left+' dia'+(left==1?'':'s'):''}</small></div></div>`};
+ return `<section class="win"><h2>⚔ Campanhas</h2><small>Agrupe quests e metas em capítulos, com prazo e recompensa final.</small>${act.length?act.map(card).join(''):'<div class="mute" style="margin-top:8px">Nenhuma campanha ativa.</div>'}</section>${end.length?`<section class="win"><h2>Encerradas</h2>${end.map(card).join('')}</section>`:''}
+ <section class="win"><h2>Nova campanha</h2>${F('Nome',`<input value="${esc(CD.t)}" maxlength="50" onchange="CD.t=this.value" placeholder="Ex.: Aprender programação">`)}${F('Objetivo (opcional)',`<input value="${esc(CD.ds)}" maxlength="120" onchange="CD.ds=this.value" placeholder="Ex.: terminar um curso de JavaScript">`)}
+ <div class="f2">${F('Duração',`<select onchange="CD.dur=+this.value;CD.xp=CDUR[CD.dur][0];CD.g=CDUR[CD.dur][1];render()">${[7,30,90].map(n=>`<option value="${n}" ${CD.dur==n?'selected':''}>${n} dias</option>`).join('')}</select>`)}${F('XP final',`<input type="number" min="0" value="${CD.xp}" onchange="CD.xp=+this.value">`)}${F('Ouro final',`<input type="number" min="0" value="${CD.g}" onchange="CD.g=+this.value">`)}${F('Item final',`<select onchange="CD.it=this.value"><option value="">Nenhum</option><option value="xp" ${CD.it=='xp'?'selected':''}>Buff de XP</option><option value="gold" ${CD.it=='gold'?'selected':''}>Buff de Ouro</option></select>`)}</div>
+ ${F('Título exclusivo (opcional)',`<input value="${esc(CD.ti)}" maxlength="24" onchange="CD.ti=this.value" placeholder="Ex.: Programador Desperto">`)}<button class="btn" onclick="cmpNew()">Criar campanha</button></section>`}
+function cmpNew(){if(!CD.t.trim())return toast('Dê um nome à campanha');const c={id:uid(),t:CD.t.trim(),ds:(CD.ds||'').trim(),dur:CD.dur,a:hoje(),b:addD(hoje(),CD.dur-1),st:'ativa',chs:[],xp:Math.max(0,CD.xp||0),g:Math.max(0,CD.g||0),ti:(CD.ti||'').trim(),it:CD.it,cl:false};S.cmp.push(c);CD=mkCD();CMD=c.id;save();render();toast('Campanha criada! Agora adicione os capítulos.')}
+function campDet(){const c=S.cmp.find(x=>x.id==CMD);if(!c){CMD=null;return campList()}const p=cmpProg(c),ed=c.st=='ativa'||c.st=='pausada',QS=S.quests.filter(q=>!q.arch),GS=S.goals;
+ const obT=(ch,o)=>{const pr=objProg(c,ch,o),nm=o.k=='q'?esc((S.quests.find(q=>q.id==o.q)||{}).t||'(quest removida)')+' · '+pr[0]+'/'+pr[1]+'x':o.k=='m'?'Meta: '+esc((S.goals.find(m=>m.id==o.m)||{}).t||'(meta removida)'):esc(o.t);
+  return `<div class="item">${o.k=='t'&&ch.u&&!ch.ok&&c.st=='ativa'?`<button class="chk ${o.ok?'on':''}" aria-label="Marcar objetivo" onclick="obTog('${ch.id}','${o.id}')">${o.ok?'✓':''}</button>`:`<span style="width:26px;text-align:center;flex:none">${pr[0]>=pr[1]?'✓':'·'}</span>`}<div class="t"><b style="font-size:15px">${nm}</b>${o.k=='q'?`<div class="bar"><i style="width:${pr[0]/pr[1]*100}%"></i></div>`:''}</div>${ed&&!ch.ok?`<button class="ghost" aria-label="Remover objetivo" onclick="obDel('${ch.id}','${o.id}')">×</button>`:''}</div>`};
+ return `<section class="win"><button class="ghost" onclick="CMD=null;render()">‹ Campanhas</button><h2 style="margin-top:10px">⚔ ${esc(c.t)}</h2>${c.ds?`<p class="mute" style="margin-top:0">${esc(c.ds)}</p>`:''}<small>${brD(c.a)} a ${brD(c.b)} · ${CST[c.st]}</small><div class="bar" style="margin-top:8px"><i style="width:${p}%"></i></div><small>${p}% concluído · Recompensa: <span class="gold">+${c.xp} XP · +${c.g} ouro</span>${c.it?' · '+BUFF[c.it][0]:''}${c.ti?' · título "'+esc(c.ti)+'"':''}</small>
+ ${c.st=='concluida'&&!c.cl?`<div style="margin-top:10px"><button class="btn" onclick="cmpClaim('${c.id}')">🏆 Resgatar recompensa final</button></div>`:''}
+ <div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-top:10px">${c.st=='ativa'?`<button class="ghost" onclick="cmpPause('${c.id}')">⏸ Pausar</button>`:''}${c.st=='pausada'?`<button class="btn" onclick="cmpPause('${c.id}')">▶ Retomar</button>`:''}${c.st=='expirada'?`<button class="btn" onclick="cmpExt('${c.id}')">+7 dias de prazo</button>`:''}${ed||c.st=='expirada'?`<button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="cmpAband('${c.id}')">Abandonar</button>`:''}</div></section>
+ ${c.chs.map((ch,i)=>`<section class="win" style="${ch.u?'':'opacity:.6'}"><div class="row"><h2 style="margin:0">${ch.ok?'✓':ch.u?'▶':'🔒'} Cap. ${i+1}: ${esc(ch.t)}</h2>${ed&&!ch.ok&&!ch.objs.length?`<button class="ghost" aria-label="Remover capítulo" onclick="chDel('${ch.id}')">×</button>`:''}</div>${ch.u?'':'<small>Libera quando o capítulo anterior terminar.</small>'}${ch.objs.length?ch.objs.map(o=>obT(ch,o)).join(''):'<div class="mute">Sem objetivos ainda.</div>'}</section>`).join('')}
+ ${ed?`<section class="win"><h2>Adicionar capítulo</h2><div class="row" style="gap:8px"><input value="${esc(CHN)}" maxlength="40" placeholder="Ex.: Fundamentos" onchange="CHN=this.value" style="flex:1"><button class="btn" onclick="chAdd()">Adicionar</button></div></section>
+ ${c.chs.some(ch=>!ch.ok)?`<section class="win"><h2>Adicionar objetivo</h2><div class="f2">${F('Capítulo',`<select onchange="OB.ch=this.value">${c.chs.filter(ch=>!ch.ok).map(ch=>`<option value="${ch.id}" ${OB.ch==ch.id?'selected':''}>${esc(ch.t)}</option>`).join('')}</select>`)}${F('Tipo',`<select onchange="OB.k=this.value;render()"><option value="q" ${OB.k=='q'?'selected':''}>Concluir uma quest X vezes</option><option value="m" ${OB.k=='m'?'selected':''}>Concluir uma meta</option><option value="t" ${OB.k=='t'?'selected':''}>Tarefa livre (marcar à mão)</option></select>`)}</div>
+ ${OB.k=='q'?(QS.length?`<div class="f2">${F('Quest',`<select onchange="OB.q=this.value">${QS.map(q=>`<option value="${q.id}" ${OB.q==q.id?'selected':''}>${esc(q.t)}</option>`).join('')}</select>`)}${F('Quantas vezes',`<input type="number" min="1" value="${OB.n}" onchange="OB.n=+this.value">`)}</div>`:'<div class="mute">Crie quests na aba Criar primeiro.</div>'):OB.k=='m'?(GS.length?F('Meta',`<select onchange="OB.m=this.value">${GS.map(m=>`<option value="${m.id}" ${OB.m==m.id?'selected':''}>${esc(m.t)}</option>`).join('')}</select>`):'<div class="mute">Crie metas na aba Metas primeiro.</div>'):F('Descrição',`<input value="${esc(OB.t)}" maxlength="80" onchange="OB.t=this.value" placeholder="Ex.: montar um projeto simples">`)}
+ <button class="btn" onclick="obAdd()">Adicionar objetivo</button><br><small>Quests contam as conclusões feitas depois que o capítulo é liberado.</small></section>`:''}`:''}
+ ${!ed?`<section class="win"><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="cmpDel('${c.id}')">Excluir campanha</button><br><small>O XP e o ouro já ganhos continuam no Histórico.</small></section>`:''}`}
+const cmpCur=()=>S.cmp.find(x=>x.id==CMD);
+function chAdd(){const c=cmpCur();if(!CHN.trim())return toast('Dê um nome ao capítulo');const pv=c.chs[c.chs.length-1],ch={id:uid(),t:CHN.trim(),objs:[]};if(!pv)ch.u=c.a;else if(pv.ok)ch.u=hoje();c.chs.push(ch);CHN='';OB.ch=ch.id;save();render();toast('Capítulo adicionado')}
+function chDel(id){const c=cmpCur();c.chs=c.chs.filter(x=>x.id!=id);if(c.chs[0]&&!c.chs[0].u)c.chs[0].u=c.a;save();render()}
+function obAdd(){const c=cmpCur(),op=c.chs.filter(ch=>!ch.ok),ch=op.find(x=>x.id==OB.ch)||op[0];if(!ch)return;const o={id:uid(),k:OB.k};
+ if(OB.k=='q'){const q=S.quests.find(x=>x.id==OB.q&&!x.arch)||S.quests.filter(x=>!x.arch)[0];if(!q)return toast('Crie uma quest primeiro');o.q=q.id;o.n=Math.max(1,Math.round(OB.n||1))}
+ else if(OB.k=='m'){const m=S.goals.find(x=>x.id==OB.m)||S.goals[0];if(!m)return toast('Crie uma meta primeiro');o.m=m.id}
+ else{if(!(OB.t||'').trim())return toast('Descreva a tarefa');o.t=OB.t.trim();o.ok=false}
+ ch.objs.push(o);OB.t='';save();render();toast('Objetivo adicionado')}
+function obDel(chid,oid){const ch=cmpCur().chs.find(x=>x.id==chid);ch.objs=ch.objs.filter(o=>o.id!=oid);save();render()}
+function obTog(chid,oid){const o=cmpCur().chs.find(x=>x.id==chid).objs.find(x=>x.id==oid);o.ok=!o.ok;save();render()}
+function cmpPause(id){const c=S.cmp.find(x=>x.id==id);if(c.st=='ativa'){c.st='pausada';c.pa=hoje();toast('Campanha pausada: o prazo fica congelado')}else{const n=Math.round((parse(hoje())-parse(c.pa))/864e5);c.b=addD(c.b,n);c.st='ativa';delete c.pa;toast('Campanha retomada'+(n?': prazo +'+n+' dia'+(n>1?'s':''):''))}save();render()}
+function cmpExt(id){const c=S.cmp.find(x=>x.id==id);c.b=addD(hoje(),6);c.st='ativa';save();render();toast('Prazo estendido por 7 dias')}
+function cmpAband(id){if(!confirm('Abandonar esta campanha? O histórico fica guardado.'))return;S.cmp.find(x=>x.id==id).st='abandonada';save();render()}
+function cmpDel(id){if(!confirm('Excluir esta campanha de vez?'))return;S.cmp=S.cmp.filter(x=>x.id!=id);CMD=null;save();render()}
+function cmpClaim(id){const c=S.cmp.find(x=>x.id==id);if(!c||c.st!='concluida'||c.cl)return;c.cl=true;const o=ri(S.lvl),up=addXp(c.xp);S.gold+=c.g;led('campanha','Campanha: '+c.t,c.xp,c.g);if(c.ti)S.ct.push({id:c.id,n:c.ti});if(c.it)S.inv.push({id:uid(),kind:c.it,t:BUFF[c.it][0]+' (24h)'});
+ fx(up&&ri(S.lvl)!=o?'RANK UP':'CAMPANHA CONCLUÍDA',c.t);toast('Recompensa resgatada!'+(c.ti?' Título liberado: '+c.ti:''));save();render()}
+/* ---- Conquistas ---- */
+function actDays(){const s=new Set();S.quests.forEach(q=>q.log.forEach(d=>s.add(d)));return s}
+function bestStreak(){const A=actDays(),D=[...A].sort();if(!D.length)return 0;let best=0,cur=0,d=D[0];const end=hoje();for(let i=0;i<2000&&d<=end;i++){if(A.has(d)){cur++;if(cur>best)best=cur}else if(!emDescanso(d)&&d!=end)cur=0;d=addD(d,1)}return best}
+function wkCount(min){const A=actDays(),W={};[...A].forEach(d=>{const w=wk(d);W[w]=(W[w]||0)+1});(S.rest||[]).forEach(r=>{let d=r.a;for(let i=0;i<400&&d<=r.b&&d<=hoje();i++){if(!A.has(d)){const w=wk(d);W[w]=(W[w]||0)+1}d=addD(d,1)}});return Object.values(W).filter(n=>n>=min).length}
+const catN=c=>S.quests.filter(q=>q.cat==c).reduce((a,q)=>a+q.log.length,0),lgN=k=>S.lg.filter(e=>e.k==k).length;
+// [id, grupo, emblema, nome, descrição, métrica, alvo, xp, ouro, título]
+const ACH=[
+['c1','Consistência','👣','Primeiro passo','Concluir sua primeira quest',()=>S.total,1,20,10],
+['c2','Consistência','🔥','Pegando o ritmo','Sequência de 7 dias',bestStreak,7,100,50],
+['c3','Consistência','⚡','Hábito formado','Sequência de 30 dias',bestStreak,30,300,150,'Imparável'],
+['c4','Consistência','💯','Centenário','Sequência de 100 dias',bestStreak,100,1000,500,'Lenda Viva'],
+['c5','Consistência','👑','Um ano de sistema','Sequência de 365 dias',bestStreak,365,3000,1500,'Monarca do Tempo'],
+['c6','Consistência','🗓','Semana perfeita','Uma semana com os 7 dias ativos (descanso conta)',()=>wkCount(7),1,80,40],
+['c7','Consistência','📆','Mês consistente','4 semanas com pelo menos 5 dias ativos',()=>wkCount(5),4,250,120],
+['v1','Volume','🎯','Centena','100 quests concluídas',()=>S.total,100,150,80],
+['v2','Volume','🏅','Quinhentas','500 quests concluídas',()=>S.total,500,500,250,'Veterano'],
+['saude','Categorias','💪','Corpo de Aço','50 quests de Saúde',()=>catN('saude'),50,120,60,'Corpo de Aço'],
+['estudo','Categorias','📚','Mente Afiada','50 quests de Estudo',()=>catN('estudo'),50,120,60,'Mente Afiada'],
+['trabalho','Categorias','💼','Profissional','50 quests de Trabalho',()=>catN('trabalho'),50,120,60,'Profissional'],
+['casa','Categorias','🏠','Guardião do Lar','50 quests de Casa',()=>catN('casa'),50,120,60,'Guardião do Lar'],
+['mente','Categorias','🧘','Sábio Sereno','50 quests de Mente',()=>catN('mente'),50,120,60,'Sábio Sereno'],
+['ar','Categorias','🌲','Explorador','50 quests Ao ar livre',()=>catN('ar'),50,120,60,'Explorador'],
+['m1','Metas e campanhas','🏁','Meta cumprida','Concluir 1 meta de longo prazo',()=>S.goals.filter(m=>m.cl).length,1,80,40],
+['m2','Metas e campanhas','🏆','Colecionador de metas','Concluir 5 metas',()=>S.goals.filter(m=>m.cl).length,5,300,150],
+['k1','Metas e campanhas','⚔','Primeira campanha','Concluir 1 campanha',()=>S.cmp.filter(c=>c.st=='concluida').length,1,150,80],
+['k2','Metas e campanhas','🛡','Comandante','Concluir 3 campanhas',()=>S.cmp.filter(c=>c.st=='concluida').length,3,500,250,'Comandante'],
+['d1','Diário','📖','Querido diário','Escrever 1 resumo do dia',()=>Object.values(S.diary||{}).filter(x=>(x.t||'').trim()).length,1,20,10],
+['d2','Diário','✍','Cronista','Escrever 30 resumos do dia',()=>Object.values(S.diary||{}).filter(x=>(x.t||'').trim()).length,30,200,100,'Cronista'],
+['r1','Jornada','🔄','Voltei','Concluir 1 Missão de Retomada',()=>lgN('retomada'),1,50,25],
+['g1','Jornada','🏰','Desbravador','Limpar 5 Dungeons',()=>lgN('dungeon'),5,200,100],
+['p1','Jornada','📋','Autocrítico','Salvar 4 revisões semanais',()=>Object.values(S.rev||{}).filter(r=>r.at).length,4,120,60],
+['p2','Jornada','⛓','Disciplina de ferro','Cumprir 5 Penalty Quests',()=>lgN('pen-ok'),5,100,50],
+['s1','Jornada','🌌','Além do Limite','Concluir 1 Quest Secreta (o dobro da meta)',()=>S.lg.filter(e=>e.k=='quest'&&e.sec).length,1,100,50,'Além do Limite']];
+const emb=()=>{const a=S.emb&&S.ach[S.emb]&&ACH.find(x=>x[0]==S.emb);return a?a[2]+' ':''};
+function achCheck(){const nw=[];ACH.forEach(a=>{if(S.ach[a[0]])return;let v=0;try{v=a[5]()}catch(e){}if(v>=a[6]){S.ach[a[0]]=hoje();addXp(a[7]);S.gold+=a[8];led('conquista','Conquista: '+a[3],a[7],a[8],{ach:a[0]});nw.push(a)}});
+ if(nw.length){save();setTimeout(()=>fx(nw.length>1?'CONQUISTAS':'CONQUISTA',nw.length>1?nw.length+' desbloqueadas':nw[0][2]+' '+nw[0][3]),2600);toast(nw.length>1?nw.length+' conquistas desbloqueadas!':'Conquista: '+nw[0][3])}}
+function achView(){const n=Object.keys(S.ach).filter(k=>ACH.some(a=>a[0]==k)).length,G=[...new Set(ACH.map(a=>a[1]))];
+ return `<div class="row"><b>Coleção de conquistas</b><b class="gold">${n} de ${ACH.length}</b></div><div class="bar"><i style="width:${n/ACH.length*100}%"></i></div><small>Cada conquista é recebida uma única vez. Toque em "Usar" para mostrar o ícone ao lado do seu nome.</small>
+ ${G.map(g=>`<p style="margin:14px 0 2px"><b>${g}</b></p>`+ACH.filter(a=>a[1]==g).map(a=>{const u=S.ach[a[0]];let v=0;try{v=a[5]()}catch(e){}const pv=Math.min(v,a[6]);
+  return `<div class="item"><span style="font-size:30px;flex:none;${u?'':'filter:grayscale(1);opacity:.4'}">${a[2]}</span><div class="t"><b>${a[3]}</b><small style="display:block">${a[4]} · +${a[7]} XP · +${a[8]} ouro${a[9]?' · título "'+a[9]+'"':''}</small>${u?`<small style="color:var(--ok);display:block">✓ Desbloqueada em ${brD(u)}</small>`:`<div class="bar"><i style="width:${pv/a[6]*100}%"></i></div><small>${pv}/${a[6]}</small>`}</div>${u?`<button class="${S.emb==a[0]?'btn':'ghost'}" style="flex:none;padding:6px 10px;font-size:15px" aria-label="Usar como emblema" onclick="S.emb=S.emb=='${a[0]}'?'':'${a[0]}';save();render()">${S.emb==a[0]?'✓ Em uso':'Usar'}</button>`:''}</div>`}).join('')).join('')}`}
+/* ---- Equilíbrio e evolução dos atributos ---- */
+let NEGC={};
+function negCats(win){win=win||7;if(NEGC[win])return NEGC[win];const h=hoje(),A=[...new Set(S.quests.filter(q=>!q.arch&&!pausada(q,h)).map(q=>q.cat))];let r=[];
+ if(A.length>=2){const from=addD(h,-win),cc={};A.forEach(c=>cc[c]=0);let tot=0;S.quests.forEach(q=>{if(cc[q.cat]===undefined)return;q.log.forEach(d=>{if(d>=from&&d<h){cc[q.cat]++;tot++}})});if(tot>=(win>7?5:3)){const avg=tot/A.length;r=A.filter(c=>cc[c]<avg*.5)}}return NEGC[win]=r}
+function focoAm(qid){const d=addD(hoje(),1),p=pset(d);if(p.f.includes(qid))return toast('Já está em foco amanhã');if(p.f.length>=3)return toast('Amanhã já tem 3 quests em foco');p.f.push(qid);save();render();toast('Em foco amanhã')}
+function radarG(L,V){const n=L.length,M=Math.max(1,...V),R=80,C=120,an=i=>-Math.PI/2+i*2*Math.PI/n,pt=(i,r)=>[C+r*Math.cos(an(i)),C+r*Math.sin(an(i))],pp=a=>a.map(v=>v.toFixed(1)).join(',');let g='';
+ for(let k=1;k<=4;k++)g+=`<polygon points="${L.map((x,i)=>pp(pt(i,R*k/4))).join(' ')}" style="fill:none;stroke:var(--line);opacity:${k==4?1:.4}"/>`;
+ L.forEach((x,i)=>{const[a,b]=pt(i,R);g+=`<line x1="${C}" y1="${C}" x2="${a}" y2="${b}" style="stroke:var(--line);opacity:.4"/>`});
+ g+=`<polygon points="${V.map((v,i)=>pp(pt(i,Math.max(.04,v/M)*R))).join(' ')}" style="fill:color-mix(in srgb,var(--gold) 30%,transparent);stroke:var(--gold);stroke-width:2;stroke-linejoin:round"/>`;
+ L.forEach((x,i)=>{const[a,b]=pt(i,R+22);g+=`<text x="${a}" y="${b}" text-anchor="middle" style="fill:var(--ink);font-size:12px;font-weight:700">${x}</text><text x="${a}" y="${b+13}" text-anchor="middle" style="fill:var(--gold);font-size:11px">${V[i]}</text>`});
+ return `<svg viewBox="-55 -10 350 265" style="width:100%;max-width:360px;display:block;margin:0 auto" role="img" aria-label="Gráfico de equilíbrio">${g}</svg>`}
+function eqSec(cc){const h=hoje(),A=[...new Set(S.quests.filter(q=>!q.arch&&!pausada(q,h)).map(q=>q.cat))].filter(c=>CAT[c]);if(A.length<2)return '';
+ const tot=A.reduce((a,c)=>a+(cc[c]||0),0);let H=0;A.forEach(c=>{const p=(cc[c]||0)/(tot||1);if(p>0)H-=p*Math.log(p)});const idx=tot?Math.round(H/Math.log(A.length)*100):null,n7=negCats(7),n30=negCats(30),NG=[...new Set([...n7,...n30])];
+ return `<section class="win"><h2>⚖ Equilíbrio</h2>${A.length>=3?radarG(A.map(c=>CAT[c][0]),A.map(c=>cc[c]||0)):hbars(A.map(c=>[CAT[c][0],cc[c]||0]))}<div class="row" style="justify-content:center"><small>Índice de equilíbrio: <b class="gold">${idx===null?'—':idx+'/100'}</b></small></div><small style="display:block;text-align:center">100 = esforço bem distribuído entre as áreas que você usa (período escolhido acima).</small>
+ ${NG.length?'<p style="margin:10px 0 4px"><b>Áreas negligenciadas</b></p>'+NG.map(c=>{const q=S.quests.find(x=>x.cat==c&&!x.arch&&!pausada(x,h));return `<div class="item"><div class="t"><b>${CAT[c][0]}</b><small style="display:block">${[n7.includes(c)?'últimos 7 dias':'',n30.includes(c)?'últimos 30 dias':''].filter(Boolean).join(' e ')}${n7.includes(c)?' · quests dessa área dão +10% de XP e ouro hoje':''}</small></div>${q?`<button class="ghost" style="flex:none" onclick="focoAm('${q.id}')">Foco amanhã</button>`:''}</div>`}).join(''):'<p class="mute" style="margin-bottom:0">Nenhuma área negligenciada. Boa distribuição!</p>'}</section>`}
+function stSnap(){const d=hoje(),pts={};S.st.forEach(x=>pts[x.id]=stVal(x));S.sth=S.sth||[];const l=S.sth[S.sth.length-1];if(l&&l.d==d)l.pts=pts;else S.sth.push({d,pts});if(S.sth.length>400)S.sth=S.sth.slice(-400)}
+function stEvo(){const H=S.sth||[];if(H.length<2)return '<small>A evolução aparece quando você distribuir pontos em dias diferentes.</small>';const W=320,Y=110,n=H.length,M=Math.max(1,...H.flatMap(h=>Object.values(h.pts))),COL=['--acc','--gold','--ok','--bad','--ink','--mute'];let g='';
+ S.st.forEach((x,j)=>{g+=`<polyline points="${H.map((h,i)=>(i/(n-1)*W).toFixed(1)+','+(Y-(h.pts[x.id]||0)/M*Y).toFixed(1)).join(' ')}" style="fill:none;stroke:var(${COL[j%6]});stroke-width:2.5;stroke-linejoin:round"/>`});
+ return `<svg viewBox="-4 -6 ${W+8} ${Y+26}" style="width:100%;height:auto" role="img" aria-label="Evolução dos pontos de status">${g}<text x="0" y="${Y+16}" style="fill:var(--mute);font-size:10px">${brD(H[0].d)}</text><text x="${W}" y="${Y+16}" text-anchor="end" style="fill:var(--mute);font-size:10px">${brD(H[n-1].d)}</text></svg><div>${S.st.map((x,j)=>`<span class="chip" style="border-color:var(${COL[j%6]});color:var(${COL[j%6]})">${x.ic} ${esc(x.n)}</span>`).join('')}</div>`}
+function stRec(){const from=addD(hoje(),-30),cc={};let tot=0;S.quests.forEach(q=>q.log.forEach(d=>{if(d>=from){cc[q.cat]=(cc[q.cat]||0)+1;tot++}}));const buys=S.lg.filter(e=>e.k=='buy'&&e.d>=from).length,gm=Object.keys(S.gp||{}).filter(d=>d>=from).reduce((a,d)=>a+S.gp[d],0);
+ return S.st.filter(x=>bonusPct(stVal(x))<40).map(x=>{let v=0,r='';if((x.b=='xp'||x.b=='gold')&&x.c){v=tot?(cc[x.c]||0)/tot:0;r=CAT[x.c]?Math.round(v*100)+'% das suas quests no último mês são de '+CAT[x.c][0]:''}else if(x.b=='xp'||x.b=='gold'){v=tot?.35:0;r='vale para todas as quests'}else if(x.b=='desc'){v=Math.min(.5,.1*buys);r=buys+' compra'+(buys>1?'s':'')+' na loja no último mês'}else if(x.b=='game'){v=Math.min(.5,gm/600);r=Math.round(gm)+' min de gameplay no último mês'}return [x,v,r]}).filter(a=>a[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,2)}
+/* ---- Sugestões do Sistema ---- */
+const DNS=['dom','seg','ter','qua','qui','sex','sáb'];
+const etapasDe=(m,from)=>S.lg.filter(e=>e.k=='meta-etapa'&&e.d>=from&&(e.gid==m.id||(!e.gid&&e.src.slice(e.src.indexOf(': ')+2)==m.t)));
+function sugs(){const h=hoje(),R=[],rej=k=>{const x=(S.sug||{})[k];return !!(x&&(x.st=='ok'||(x.st=='rej'&&x.d>addD(h,-30))))};
+ S.quests.filter(q=>!q.arch&&q.f=='d'&&q.pr!='o'&&!pausada(q,h)).forEach(q=>{const due=[];for(let i=1;i<=28&&due.length<14;i++){const d=addD(h,-i);if(devido(q,d))due.push(d)}if(due.length<7)return;
+  const done=due.filter(d=>q.log.includes(d)).length,r=done/due.length;if(r>=.4)return;const wd=[0,0,0,0,0,0,0];q.log.filter(d=>d>=addD(h,-28)).forEach(d=>wd[parse(d).getDay()]++);
+  let days=[0,1,2,3,4,5,6].filter(i=>wd[i]>0&&q.days.includes(i));if(!days.length||days.length>=q.days.length)days=q.days.filter(i=>[1,3,5].includes(i));if(!days.length)days=[q.days[0]];
+  const k='dias:'+q.id+':'+q.days.join('');if(rej(k))return;
+  R.push({k,ic:'📉',t:'"'+q.t+'" está pesada para a rotina atual',why:'Feita em '+done+' de '+due.length+' dias em que era devida ('+Math.round(r*100)+'%).'+(wd.some(x=>x)?' Você costuma conseguir em: '+[0,1,2,3,4,5,6].filter(i=>wd[i]).map(i=>DNS[i]).join(', ')+'.':''),prop:'Fazer só em '+days.map(i=>DNS[i]).join(', ')+' ('+days.length+'x por semana).',ac:[['Aplicar',`sgDias('${q.id}','${days.join('')}','${k}')`],['Tornar opcional',`sgOpc('${q.id}','${k}')`],['Editar',`editQ('${q.id}')`]]})});
+ S.quests.filter(q=>!q.arch&&q.f!='d'&&!pausada(q,h)).forEach(q=>{const P=[];
+  if(q.f=='w'){for(let i=1;i<=4;i++){const w=addD(wk(h),-7*i);if((q.cr||'')>w)break;P.push(q.log.filter(d=>wk(d)==w).length)}}
+  else{let m=parse(h);for(let i=1;i<=3;i++){m=new Date(m.getFullYear(),m.getMonth()-1,1);const mk=fmt(m).slice(0,7);if((q.cr||'').slice(0,7)>mk)break;P.push(q.log.filter(d=>d.slice(0,7)==mk).length)}}
+  if(P.length<(q.f=='w'?3:2))return;const avg=P.reduce((a,b)=>a+b,0)/P.length,un=q.f=='w'?'semana':'mês',per=q.f=='w'?'semanas':'meses';
+  if(q.n>1&&avg<q.n*.6){const nv=Math.max(1,Math.round(avg)),k='meta:'+q.id+':'+q.n;if(nv<q.n&&!rej(k))R.push({k,ic:'🎯',t:'Meta de "'+q.t+'" acima do seu ritmo',why:'Média de '+avg.toFixed(1).replace('.',',')+' por '+un+' nas últimas '+P.length+' '+per+' ('+P.join(', ')+'), para uma meta de '+q.n+'.',prop:'Meta realista: '+nv+'x por '+un+'.',ac:[['Aplicar',`sgN('${q.id}',${nv},'${k}')`],['Editar',`editQ('${q.id}')`]]})}
+  else if(P.every(x=>x>=q.n)&&avg>=q.n+.5&&q.n<20){const nv=q.n+1,k='sobe:'+q.id+':'+q.n;if(!rej(k))R.push({k,ic:'📈',t:'"'+q.t+'" ficou fácil',why:'Você bateu a meta de '+q.n+' em todas as últimas '+P.length+' '+per+' ('+P.join(', ')+').',prop:'Subir a meta para '+nv+'x por '+un+'.',ac:[['Aplicar',`sgN('${q.id}',${nv},'${k}')`]]})}});
+ S.goals.filter(m=>!m.cl&&m.dl&&m.dl>=h&&m.cur<m.tg).forEach(m=>{const left=m.tg-m.cur,days=Math.round((parse(m.dl)-parse(h))/864e5)+1,st=etapasDe(m,addD(h,-30)).reduce((a,e)=>a+(e.n||0),0),pace=st/30;
+  if(st>0&&left/days<=pace*1.5)return;if(st<=0&&left<=days/7)return;const k='prazo:'+m.id+':'+m.dl+':'+m.tg;if(rej(k))return;
+  const nd=addD(h,pace>0?Math.ceil(left/pace):left*7),nt=pace>0?m.cur+Math.max(1,Math.floor(pace*days)):0,ac=[['Estender prazo para '+brD(nd),`sgDl('${m.id}','${nd}','${k}')`]];if(nt>m.cur&&nt<m.tg)ac.push(['Reduzir para '+nt+' etapas',`sgTg('${m.id}',${nt},'${k}')`]);
+  R.push({k,ic:'⏳',t:'Meta "'+m.t+'" difícil para o prazo',why:'Faltam '+left+' etapa'+(left>1?'s':'')+' em '+days+' dia'+(days>1?'s':'')+'. No último mês você avançou '+Math.max(0,st)+' etapa'+(st==1?'':'s')+'.',prop:pace>0?'No seu ritmo atual, a meta termina por volta de '+brD(nd)+'.':'Com 1 etapa por semana, a meta termina em '+brD(nd)+'.',ac})});
+ S.goals.filter(m=>!m.cl).forEach(m=>{if(etapasDe(m,addD(h,-14)).length||(m.cr&&m.cr>addD(h,-14))||S.quests.some(q=>!q.arch&&q.t=='Avançar: '+m.t))return;const k='nova:'+m.id;if(rej(k))return;
+  R.push({k,ic:'🧭',t:'Criar uma quest para a meta "'+m.t+'"',why:'A meta não avança há pelo menos 14 dias e nenhuma quest ajuda nela.',prop:'Quest semanal "Avançar: '+m.t+'", 2x por semana.',ac:[['Criar quest',`sgNova('${m.id}','${k}')`],['Editar antes',`sgNovaEd('${m.id}')`]]})});
+ return R.slice(0,6)}
+function padroes(){const h=hoje(),wD=[0,0,0,0,0,0,0],wS=[0,0,0,0,0,0,0],L=[],dn=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+ S.quests.filter(q=>q.f=='d'&&!q.arch&&q.pr!='o').forEach(q=>{for(let i=1;i<=28;i++){const d=addD(h,-i);if(devido(q,d)){const w=parse(d).getDay();wS[w]++;if(q.log.includes(d))wD[w]++}}});
+ const tot=wS.reduce((a,b)=>a+b,0);if(tot>=14){const r=wS.map((v,i)=>v?[i,wD[i]/v]:null).filter(Boolean).sort((a,b)=>b[1]-a[1]);if(r.length>=3)L.push(`Seus dias mais fortes são <b>${dn[r[0][0]]}</b> (${Math.round(r[0][1]*100)}%) e <b>${dn[r[1][0]]}</b> (${Math.round(r[1][1]*100)}%); o mais fraco é <b>${dn[r[r.length-1][0]]}</b> (${Math.round(r[r.length-1][1]*100)}%). Dica: planeje as quests mais difíceis para os dias fortes.`)}
+ const E=S.lg.filter(e=>e.k=='quest'&&!e.rv&&e.at&&e.at.length>10&&e.d>=addD(h,-30)&&fmt(new Date(e.at))==e.d);
+ if(E.length>=15){const B=[['de madrugada',0,5],['de manhã',5,12],['à tarde',12,18],['à noite',18,24]],c=B.map(b=>E.filter(e=>{const x=new Date(e.at).getHours();return x>=b[1]&&x<b[2]}).length),i=c.indexOf(Math.max(...c));L.push(`Você costuma marcar suas quests <b>${B[i][0]}</b> (${Math.round(c[i]/E.length*100)}% de ${E.length} conclusões no último mês).`)}
+ return {L,need:!L.length,pouco:tot<28&&E.length<30}}
+function sugSec(){const R=sugs(),P=padroes();
+ return `<section class="win"><h2>💡 Sugestões do Sistema</h2><small>Baseadas no seu histórico. Nada muda sem você tocar em Aplicar.</small>${R.length?R.map(x=>`<div class="item" style="display:block"><b>${x.ic} ${esc(x.t)}</b><small style="display:block;margin-top:2px"><b>Por quê:</b> ${esc(x.why)}</small><small style="display:block"><b>Proposta:</b> ${esc(x.prop)}</small><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap;margin-top:6px">${x.ac.map((a,i)=>`<button class="${i?'ghost':'btn'}" style="padding:6px 12px" onclick="${a[1]}">${a[0]}</button>`).join('')}<button class="ghost" style="padding:6px 12px" onclick="sgRej('${x.k}')">Recusar</button></div></div>`).join(''):'<p class="mute" style="margin-bottom:0">Nenhuma sugestão agora. Sua rotina está alinhada com o seu ritmo.</p>'}
+ <p style="margin:12px 0 4px"><b>📊 Seus padrões</b></p>${P.need?'<small>Ainda não há dados suficientes. Use o app por pelo menos 2 semanas para ver seus padrões.</small>':P.L.map(x=>`<small style="display:block;margin-bottom:4px">${x}</small>`).join('')+(P.pouco?'<small style="color:var(--gold)">Pouco conclusivo: ainda são poucos dados.</small>':'')}</section>`}
+function sgCard(){if(S.sugHide==hoje())return '';const n=sugs().length;if(!n)return '';
+ return `<section class="win" style="border-color:var(--gold)"><b>💡 O Sistema tem ${n} sugest${n>1?'ões':'ão'} para sua rotina</b><div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" onclick="go('tab','a');document.getElementById('app').scrollTop=0">Ver sugestões</button><button class="ghost" onclick="S.sugHide=hoje();save(true);render()">Agora não</button></div></section>`}
+function sgDone(k,st){S.sug=S.sug||{};S.sug[k]={st,d:hoje()}}
+function sgFim(k,msg){sgDone(k,'ok');led('sugestao',msg,0,0);save();render();toast('Sugestão aplicada')}
+function sgDias(id,ds,k){const q=S.quests.find(x=>x.id==id);if(!q)return;q.days=ds.split('').map(Number);sgFim(k,'Sugestão: "'+q.t+'" só em '+q.days.map(i=>DNS[i]).join(', '))}
+function sgOpc(id,k){const q=S.quests.find(x=>x.id==id);if(!q)return;q.pr='o';sgFim(k,'Sugestão: "'+q.t+'" virou opcional')}
+function sgN(id,n,k){const q=S.quests.find(x=>x.id==id);if(!q)return;const o=q.n;q.n=n;sgFim(k,'Sugestão: meta de "'+q.t+'" de '+o+' para '+n)}
+function sgDl(id,dl,k){const m=S.goals.find(x=>x.id==id);if(!m)return;m.dl=dl;sgFim(k,'Sugestão: prazo de "'+m.t+'" para '+brD(dl))}
+function sgTg(id,tg,k){const m=S.goals.find(x=>x.id==id);if(!m)return;const o=m.tg;m.tg=tg;sgFim(k,'Sugestão: "'+m.t+'" de '+o+' para '+tg+' etapas')}
+function sgNova(id,k){const m=S.goals.find(x=>x.id==id);if(!m)return;S.quests.push({id:uid(),t:'Avançar: '+m.t,cat:'mente',f:'w',n:2,days:ALL.slice(),xp:20,g:12,log:[],cr:hoje(),pr:'p'});sgFim(k,'Sugestão: quest criada para "'+m.t+'"')}
+function sgNovaEd(id){const m=S.goals.find(x=>x.id==id);if(!m)return;D={t:'Avançar: '+m.t,cat:'mente',dif:'medio',f:'w',n:2,days:ALL.slice(),xp:20,g:12,pr:'p'};S.tab='c';save(true);render();document.getElementById('app').scrollTop=0;toast('Ajuste o que quiser e toque em Criar quest')}
+function sgRej(k){sgDone(k,'rej');save();render();toast('Sugestão recusada: ela não volta por 30 dias')}
+/* ---- Análises avançadas ---- */
+let CP=null,EC='',RM=null,DW=0;
+const fmtMood=m=>m==null?'—':MOOD[Math.max(0,Math.min(4,Math.round(m)-1))]+' '+m.toFixed(1).replace('.',',');
+function perStats(a,b){const ds=[];for(let d=a,i=0;d<=b&&i<400;d=addD(d,1),i++)ds.push(d);const W=new Set(ds),logs=[],G=['quest','undo','dungeon','meta','pen-ok','retomada','campanha','conquista'],lg=S.lg.filter(e=>W.has(e.d)),sm=(x,f)=>x.reduce((t,e)=>t+f(e),0);
+ S.quests.forEach(q=>q.log.forEach(x=>{if(W.has(x))logs.push({d:x,q})}));let due=0,dn=0;S.quests.filter(q=>q.f=='d'&&q.pr!='o').forEach(q=>ds.forEach(d=>{if(d<=hoje()&&devido(q,d)){due++;if(q.log.includes(d))dn++}}));
+ const md=ds.map(d=>((S.diary||{})[d]||{}).m||0).filter(x=>x),cc={};logs.forEach(l=>cc[l.q.cat]=(cc[l.q.cat]||0)+1);const act=new Set(logs.map(l=>l.d)).size;
+ return{ds,logs,n:logs.length,xp:sm(lg.filter(e=>G.includes(e.k)),e=>e.xp),gIn:sm(lg.filter(e=>G.includes(e.k)),e=>e.g),gOut:-sm(lg.filter(e=>e.k=='buy'||e.k=='pen-loss'),e=>e.g),fal:lg.filter(e=>e.k=='falha').length,act,nd:ds.filter(d=>d<=hoje()).length,rate:due?Math.round(dn/due*100):null,mood:md.length?md.reduce((x,y)=>x+y,0)/md.length:null,nmood:md.length,cc,diary:ds.filter(d=>((S.diary||{})[d]||{}).t).length,ach:Object.entries(S.ach||{}).filter(([k,v])=>W.has(v)).map(([k])=>k),pouco:act<5||logs.length<10}}
+function cmpSec(){const h=hoje();CP=CP||{a1:addD(h,-29),b1:h,a2:addD(h,-59),b2:addD(h,-30)};const ok=CP.a1<=CP.b1&&CP.a2<=CP.b2,A=ok?perStats(CP.a1,CP.b1):null,B=ok?perStats(CP.a2,CP.b2):null;
+ const v=(x,u)=>x==null?'—':u=='m'?fmtMood(x):x+(u||''),df=(a,b,inv)=>a==null||b==null?'':a==b?'=':`<span style="color:${(inv?a<b:a>b)?'var(--ok)':'var(--bad)'}">${a>b?'▲':'▼'}</span>`;
+ const rows=ok?[['Quests',A.n,B.n],['XP',A.xp,B.xp],['Dias ativos',A.act,B.act],['Diárias cumpridas',A.rate,B.rate,'%'],['Falhas',A.fal,B.fal,'',1],['Ouro ganho',A.gIn,B.gIn],['Ouro gasto',A.gOut,B.gOut,'',1],['Humor médio',A.mood,B.mood,'m'],['Dias com diário',A.diary,B.diary]]:[];
+ return `<section class="win"><h2>🔀 Comparar períodos</h2><div class="f2">${F('Período A: de',`<input type="date" value="${CP.a1}" onchange="CP.a1=this.value;render()">`)}${F('até',`<input type="date" value="${CP.b1}" onchange="CP.b1=this.value;render()">`)}${F('Período B: de',`<input type="date" value="${CP.a2}" onchange="CP.a2=this.value;render()">`)}${F('até',`<input type="date" value="${CP.b2}" onchange="CP.b2=this.value;render()">`)}</div>
+ ${ok?`<div style="overflow-x:auto"><table class="tb"><tr><th></th><th>A</th><th>B</th><th></th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${v(r[1],r[3])}</td><td>${v(r[2],r[3])}</td><td>${df(r[1],r[2],r[4])}</td></tr>`).join('')}</table></div>${A.pouco||B.pouco?'<small style="color:var(--gold)">Pouco conclusivo: um dos períodos tem poucos dados.</small>':''}`:'<small style="color:var(--bad)">A data inicial precisa ser antes da final.</small>'}</section>`}
+function catEvo(){const A=Object.keys(CAT).filter(c=>S.quests.some(q=>q.cat==c));if(!A.length)return '';if(!A.includes(EC))EC=A[0];const w0=wk(hoje()),W=[];for(let i=11;i>=0;i--)W.push(addD(w0,-7*i));
+ const v=W.map(w=>S.quests.filter(q=>q.cat==EC).reduce((a,q)=>a+q.log.filter(d=>wk(d)==w).length,0)),r4=v.slice(-4).reduce((a,b)=>a+b,0)/4,p4=v.slice(-8,-4).reduce((a,b)=>a+b,0)/4,f1=x=>x.toFixed(1).replace('.',',');
+ const tr=!r4&&!p4?'sem atividade nas últimas 8 semanas':r4>p4*1.15?'📈 subindo':r4<p4*.85?'📉 caindo':'➡ estável';
+ return `<section class="win"><h2>📈 Evolução por categoria</h2><div class="tabs" style="flex-wrap:wrap">${A.map(c=>`<button class="${EC==c?'on':''}" onclick="EC='${c}';render()">${CAT[c][0]}</button>`).join('')}</div>${svgBars(v,W.map(w=>parse(w).getDate()+'/'+(parse(w).getMonth()+1)))}<small>Quests por semana nas últimas 12 semanas. Tendência: <b>${tr}</b> (média das últimas 4 semanas: ${f1(r4)}; das 4 anteriores: ${f1(p4)}).</small></section>`}
+function mkRange(mk){const p=mk.split('-').map(Number),l=fmt(new Date(p[0],p[1],0));return [mk+'-01',l<hoje()?l:hoje()]}
+const prevMk=mk=>{const p=mk.split('-').map(Number);return fmt(new Date(p[0],p[1]-2,1)).slice(0,7)},nextMk=mk=>{const p=mk.split('-').map(Number);return fmt(new Date(p[0],p[1],1)).slice(0,7)},mkName=mk=>MES[+mk.slice(5,7)-1]+' de '+mk.slice(0,4);
+function retroData(mk){const [a,b]=mkRange(mk),A=perStats(a,b),pr=mkRange(prevMk(mk)),B=perStats(pr[0],pr[1]),w2={},qc={};A.logs.forEach(l=>{const w=wk(l.d);w2[w]=(w2[w]||0)+1;qc[l.q.id]=(qc[l.q.id]||0)+1});
+ const bw=Object.keys(w2).sort((x,y)=>w2[y]-w2[x])[0],tq=Object.keys(qc).sort((x,y)=>qc[y]-qc[x])[0],tc=Object.keys(A.cc).sort((x,y)=>A.cc[y]-A.cc[x])[0];let wo=null,st=0,best=0;
+ S.quests.filter(q=>q.f=='d'&&q.pr!='o'&&!q.arch).forEach(q=>{const dv=A.ds.filter(d=>d<=hoje()&&devido(q,d)).length;if(dv>=5){const r=A.ds.filter(d=>q.log.includes(d)).length/dv;if(!wo||r<wo[1])wo=[q,r]}});
+ const AD=new Set(A.logs.map(l=>l.d));A.ds.forEach(d=>{if(AD.has(d)){st++;if(st>best)best=st}else if(!emDescanso(d)&&d<hoje())st=0});
+ return {mk,a,b,A,B,bw,bwn:bw?w2[bw]:0,tq:tq?(S.quests.find(q=>q.id==tq)||{}).t:null,tqn:tq?qc[tq]:0,tc,wo,best,metas:S.lg.filter(e=>e.k=='meta'&&e.d>=a&&e.d<=b).map(e=>e.src.replace('Meta: ','')),camps:S.lg.filter(e=>e.k=='campanha'&&e.d>=a&&e.d<=b).map(e=>e.src.replace('Campanha: ','')),ach:A.ach.map(k=>(ACH.find(x=>x[0]==k)||[])[3]).filter(Boolean)}}
+function retroSec(){RM=RM||prevMk(hoje().slice(0,7));const R=retroData(RM),A=R.A,B=R.B,cmp=(x,y,inv)=>x==null||y==null||x==y?'':` <small style="color:${(inv?x<y:x>y)?'var(--ok)':'var(--bad)'}">${x>y?'▲':'▼'} vs mês anterior</small>`;
+ const L=[`<b>${A.n}</b> quests concluídas${cmp(A.n,B.n)}`,`<b>${A.xp}</b> XP ganho${cmp(A.xp,B.xp)}`,`<b>${A.act}</b> dias ativos de ${A.nd}${cmp(A.act,B.act)}`];if(A.rate!=null)L.push(`<b>${A.rate}%</b> das diárias cumpridas${cmp(A.rate,B.rate)}`);L.push(`<b>${A.fal}</b> falha${A.fal==1?'':'s'}${cmp(A.fal,B.fal,1)}`);if(A.mood!=null)L.push(`Humor médio ${fmtMood(A.mood)} (${A.nmood} dia${A.nmood>1?'s':''} com humor marcado)`);
+ const D=[];if(R.bw)D.push(`Melhor semana: a de ${brD(R.bw)}, com ${R.bwn} quests.`);if(R.tq)D.push(`Quest mais feita: ${esc(R.tq)} (${R.tqn}x).`);if(R.tc)D.push(`Área mais trabalhada: ${CAT[R.tc]?CAT[R.tc][0]:R.tc}.`);if(R.best>1)D.push(`Maior sequência no mês: ${R.best} dias.`);R.metas.forEach(m=>D.push('Meta concluída: '+esc(m)+'.'));R.camps.forEach(c=>D.push('Campanha concluída: '+esc(c)+'.'));if(R.ach.length)D.push('Conquistas: '+R.ach.join(', ')+'.');
+ const Df=[];if(R.wo&&R.wo[1]<.6)Df.push(`${esc(R.wo[0].t)} foi a diária mais difícil (feita em ${Math.round(R.wo[1]*100)}% dos dias).`);if(A.fal>=10)Df.push(`Foram ${A.fal} falhas no mês: vale revisar metas ou usar o modo recuperação.`);
+ return `<section class="win" id="retro"><div class="row"><button class="ghost" aria-label="Mês anterior" onclick="RM=prevMk(RM);render()">‹</button><h2 style="margin:0;text-align:center">🗓 Retrospectiva<br><small>${mkName(RM)}</small></h2><button class="ghost" aria-label="Próximo mês" ${RM>=hoje().slice(0,7)?'disabled':''} onclick="RM=nextMk(RM);render()">›</button></div>
+ ${A.pouco?'<p style="color:var(--gold)">⚠ Pouco conclusivo: poucos dados neste mês.</p>':''}${L.map(x=>`<div style="margin:4px 0">${x}</div>`).join('')}
+ ${D.length?'<p style="margin:12px 0 4px"><b>🏆 Destaques</b></p>'+D.map(x=>`<small style="display:block;margin-bottom:3px">${x}</small>`).join(''):''}${Df.length?'<p style="margin:12px 0 4px"><b>🧗 Dificuldades</b></p>'+Df.map(x=>`<small style="display:block;margin-bottom:3px">${x}</small>`).join(''):''}
+ <button class="ghost" style="margin-top:12px;width:100%" onclick="expRel()">⬇ Exportar relatório</button></section>`}
+function retroCard(){const h=hoje();if(+h.slice(8,10)>7)return '';const mk=prevMk(h.slice(0,7)),r=mkRange(mk);if((S.retroSeen||{})[mk]||!S.quests.some(q=>q.log.some(d=>d>=r[0]&&d<=r[1])))return '';
+ return `<section class="win" style="border-color:var(--acc)"><b>🗓 Sua retrospectiva de ${mkName(mk)} está pronta</b><div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" onclick="RM='${mk}';S.retroSeen['${mk}']=1;save(true);go('tab','a');setTimeout(()=>{const e=document.getElementById('retro');if(e)e.scrollIntoView()},60)">Ver retrospectiva</button><button class="ghost" onclick="S.retroSeen['${mk}']=1;save(true);render()">Dispensar</button></div></section>`}
+function dlF(name,text,type){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+function expRel(){const h=hoje(),R=retroData(RM||prevMk(h.slice(0,7))),P=perStats(addD(h,-(AP-1)),h),row=(k,v)=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`;
+ const blk=(t,X)=>`<h2>${t}</h2><table>${row('Quests concluídas',X.n)}${row('XP ganho',X.xp)}${row('Dias ativos',X.act+' de '+X.nd)}${row('Diárias cumpridas',X.rate==null?'—':X.rate+'%')}${row('Falhas',X.fal)}${row('Ouro ganho / gasto',X.gIn+' / '+X.gOut)}${row('Humor médio',X.mood==null?'—':X.mood.toFixed(1).replace('.',','))}${row('Dias com diário',X.diary)}</table><p>Por área: ${Object.keys(X.cc).map(c=>(CAT[c]?CAT[c][0]:c)+' '+X.cc[c]).join(' · ')||'—'}</p>${X.pouco?'<p><i>Pouco conclusivo: poucos dados neste período.</i></p>':''}`;
+ const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório G-Line</title><style>body{font-family:system-ui,sans-serif;max-width:720px;margin:20px auto;padding:0 14px;color:#111}h1{font-size:22px}h2{font-size:18px;margin-top:24px}td{padding:4px 8px;border-bottom:1px solid #ddd}</style></head><body><h1>Relatório G-Line</h1><p>${esc(S.name)} · Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl} · gerado em ${dt(new Date().toISOString())}</p>${blk('Últimos '+AP+' dias ('+brD(addD(h,-(AP-1)))+' a '+brD(h)+')',P)}${blk('Retrospectiva de '+mkName(R.mk),R.A)}</body></html>`;
+ dlF('g-line-relatorio-'+h+'.html',html,'text/html');toast('Relatório baixado')}
+function diaWeek(){const w=addD(wk(hoje()),-7*DW),ds=[0,1,2,3,4,5,6].map(i=>addD(w,i)).filter(d=>d<=hoje()),E=ds.map(d=>[d,(S.diary||{})[d]]).filter(x=>x[1]&&(x[1].t||x[1].m)),M=E.filter(x=>x[1].m);
+ const avg=M.length?M.reduce((a,x)=>a+x[1].m,0)/M.length:null,wd=E.reduce((a,x)=>a+(x[1].t||'').trim().split(/\s+/).filter(Boolean).length,0),hi=M.slice().sort((a,b)=>b[1].m-a[1].m)[0],lo=M.slice().sort((a,b)=>a[1].m-b[1].m)[0],sn=x=>esc((x[1].t||'').slice(0,70))+((x[1].t||'').length>70?'…':'');
+ return `<section class="win"><div class="row"><h2 style="margin:0">📖 Resumo da semana</h2><span><button class="${DW==0?'btn':'ghost'}" style="padding:6px 10px" onclick="DW=0;render()">Esta</button> <button class="${DW==1?'btn':'ghost'}" style="padding:6px 10px" onclick="DW=1;render()">Passada</button></span></div><small>${brD(w)} a ${brD(addD(w,6))}</small>
+ ${E.length?`<p style="margin:8px 0 4px">${E.length} dia${E.length>1?'s':''} com diário · humor médio ${fmtMood(avg)} · ${wd} palavra${wd==1?'':'s'}</p>${hi&&lo&&hi[1].m!=lo[1].m?`<small style="display:block">Melhor dia: ${brD(hi[0])}${hi[1].t?' — "'+sn(hi)+'"':''}</small><small style="display:block">Dia mais difícil: ${brD(lo[0])}${lo[1].t?' — "'+sn(lo)+'"':''}</small>`:''}`:'<p class="mute" style="margin:8px 0 0">Nenhum registro no diário nesta semana.</p>'}</section>`}
+function diaLine(w){const E=[0,1,2,3,4,5,6].map(i=>(S.diary||{})[addD(w,i)]).filter(x=>x&&(x.t||x.m)),M=E.filter(x=>x.m);if(!E.length)return '';return `<small style="display:block;margin-bottom:8px">📖 Diário: ${E.length} dia${E.length>1?'s':''} com registro${M.length?' · humor médio '+fmtMood(M.reduce((a,x)=>a+x.m,0)/M.length):''}</small>`}
+function qtyAsk(id,d){const q=S.quests.find(x=>x.id==id);if(!q)return;modal('Quanto você fez?','<p style="margin-top:0">'+esc(q.t)+'<br><small>Meta: '+q.mq+(q.mu?' '+esc(q.mu):'')+'. Fazendo '+(2*q.mq)+' ou mais, vira ✨ Quest Secreta.</small></p><input id="qamt" type="number" min="0" inputmode="decimal" value="'+q.mq+'">','<button class="ghost" onclick="fechaMod()">Cancelar</button><button class="btn" onclick="qtyOk(\''+id+'\',\''+d+'\')">Confirmar</button>')}
+function qtyOk(id,d){const v=+document.getElementById('qamt').value;MOD='';toggle(id,d,v);render()}
+/* ---- Corrida com GPS ---- */
+let RUNW=null,RUNT=null,WL=null,RUNQ=null,RUND=null,RUNS=0;
+const hav=(a,b)=>{const R=6371000,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]),h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+const runEl=r=>Math.round((r.t||0)+(r.r0?(Date.now()-r.r0)/1000:0)),fmtKm=m=>(m/1000).toFixed(2).replace('.',',');
+const pace=(sec,m)=>{if(m<50)return '—';const p=sec/(m/1000);return Math.floor(p/60)+':'+String(Math.round(p%60)).padStart(2,'0')+' /km'};
+function gpsOk(){if(!('geolocation' in navigator))return 'Este navegador não tem acesso ao GPS.';if(!window.isSecureContext)return 'O GPS só funciona no app hospedado (endereço https). Abra o G-Line pelo site do GitHub.';return ''}
+async function wake(){try{if('wakeLock' in navigator&&(!WL||WL.released))WL=await navigator.wakeLock.request('screen')}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.run&&S.run.r0)wake()});
+function runStart(){const m=gpsOk();if(m)return toast(m);S.run={id:uid(),a:new Date().toISOString(),d:hoje(),t:0,r0:Date.now(),ls:Date.now(),dist:0,pts:[],q:RUNQ||null,acc:null,err:''};runWatch();wake();save(true);render();toast('Corrida iniciada. Mantenha a tela ligada.')}
+function runWatch(){if(RUNW!=null)navigator.geolocation.clearWatch(RUNW);RUNW=navigator.geolocation.watchPosition(runPos,runErr,{enableHighAccuracy:true,maximumAge:0,timeout:20000});clearInterval(RUNT);RUNT=setInterval(runTick,1000)}
+function runPos(p){const r=S.run;if(!r)return;r.acc=Math.round(p.coords.accuracy);r.err='';if(!r.r0)return runTick();if(p.coords.accuracy>35)return runTick();
+ const pt=[+p.coords.latitude.toFixed(6),+p.coords.longitude.toFixed(6),runEl(r)],l=r.pts[r.pts.length-1];
+ if(l&&!r.brk){const d=hav(l,pt),dt=Math.max(1,pt[2]-l[2]);if(d<3||d/dt>12)return runTick();r.dist+=d}
+ if(r.brk){pt.push(1);r.brk=false}if(r.pts.length<4000)r.pts.push(pt);runTick()}
+function runErr(e){if(!S.run)return;S.run.err=e.code==1?'Permissão de localização negada: libere a localização para este site nas configurações do Chrome.':'Procurando sinal de GPS…';runTick()}
+function runTick(){const r=S.run;if(!r)return;const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set('rt',fmtT(runEl(r)));set('rd',fmtKm(r.dist)+' km');set('rp',pace(runEl(r),r.dist));set('ra',(r.r0?'● Gravando':'Pausada')+(r.acc?' · precisão '+r.acc+' m':''));set('rerr',r.err||'');
+ const g=document.querySelector('.gpill2 span');if(g)g.textContent=fmtKm(r.dist)+' km · '+fmtT(runEl(r));if(++RUNS%10==0){r.ls=Date.now();save(true)}}
+function runPause(){const r=S.run;if(!r)return;if(r.r0){r.t+=(Date.now()-r.r0)/1000;r.r0=null;toast('Corrida pausada')}else{r.r0=Date.now();r.brk=true;r.err='';if(RUNW==null)runWatch();wake();toast('Corrida retomada')}r.ls=Date.now();save(true);render()}
+function runStop(){const r=S.run;if(!r)return;if(r.r0){r.t+=(Date.now()-r.r0)/1000;r.r0=null}if(RUNW!=null)navigator.geolocation.clearWatch(RUNW);RUNW=null;clearInterval(RUNT);try{WL&&WL.release()}catch(e){}WL=null;save(true);
+ if(r.dist<10)return modal('Corrida sem deslocamento','<p>O GPS não registrou distância nesta corrida.</p>','<button class="ghost" onclick="runSave(1)">Descartar</button><button class="btn" onclick="runSave()">Salvar mesmo assim</button>');runSave()}
+function runSave(dis){const r=S.run;S.run=null;MOD='';if(dis){save(true);render();return toast('Corrida descartada')}
+ const x={id:r.id,a:r.a,d:r.d,dur:Math.round(r.t),dist:Math.round(r.dist),pts:r.pts,q:r.q};S.runs.unshift(x);led('corrida','Corrida: '+fmtKm(x.dist)+' km em '+fmtT(x.dur),0,0,{d:x.d,run:x.id});save();
+ const q=S.quests.find(y=>y.id==x.q&&!y.arch),km=Math.round(x.dist/10)/100;
+ if(q&&!q.log.includes(x.d)&&km>0)return modal('Registrar na quest?','<p>Registrar <b>'+String(km).replace('.',',')+' km</b> em <b>'+esc(q.t)+'</b> (meta '+q.mq+' '+esc(q.mu||'')+')?</p>'+(km>=2*q.mq?'<p style="color:var(--gold)">✨ Você fez o dobro da meta: vira Quest Secreta!</p>':km<q.mq?'<p class="mute">Abaixo da meta: a quest não será concluída.</p>':''),'<button class="ghost" onclick="fechaMod()">Agora não</button><button class="btn" onclick="MOD=\'\';toggle(\''+q.id+'\',\''+x.d+'\','+km+');render()">Registrar</button>');
+ render();toast('Corrida salva: '+fmtKm(x.dist)+' km')}
+function runSvg(pts){if(!pts||pts.length<2)return '<div class="mute">Trajeto sem pontos suficientes.</div>';const la=pts.map(p=>p[0]),lo=pts.map(p=>p[1]),mla=(Math.min(...la)+Math.max(...la))/2,k=Math.cos(mla*Math.PI/180),X=pts.map(p=>p[1]*k),Y=pts.map(p=>-p[0]),x0=Math.min(...X),y0=Math.min(...Y),w=Math.max(1e-6,Math.max(...X)-x0),h=Math.max(1e-6,Math.max(...Y)-y0),W=320,H=220,sc=Math.min((W-20)/w,(H-20)/h),P=(i)=>[(10+(X[i]-x0)*sc+((W-20)-w*sc)/2).toFixed(1),(10+(Y[i]-y0)*sc+((H-20)-h*sc)/2).toFixed(1)];
+ let seg=[],segs=[];pts.forEach((p,i)=>{if(p[3]&&seg.length){segs.push(seg);seg=[]}seg.push(P(i).join(','))});segs.push(seg);const a=P(0),b=P(pts.length-1);
+ return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;background:color-mix(in srgb,var(--acc) 6%,transparent);border:1px solid var(--line)" role="img" aria-label="Trajeto da corrida">${segs.map(sg=>`<polyline points="${sg.join(' ')}" style="fill:none;stroke:var(--acc);stroke-width:3;stroke-linejoin:round;stroke-linecap:round"/>`).join('')}<circle cx="${a[0]}" cy="${a[1]}" r="5" style="fill:var(--ok)"/><circle cx="${b[0]}" cy="${b[1]}" r="5" style="fill:var(--bad)"/></svg><small>● verde = início · ● vermelho = fim</small>`}
+let LPROM=null;
+function loadL(){if(window.L)return Promise.resolve();if(LPROM)return LPROM;LPROM=new Promise((ok,no)=>{const c=document.createElement('link');c.rel='stylesheet';c.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(c);const j=document.createElement('script');j.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';j.onload=ok;j.onerror=()=>{LPROM=null;no()};document.head.appendChild(j)});return LPROM}
+function runMap(id){const x=S.runs.find(y=>y.id==id),el=document.getElementById('rmap');if(!x||!el)return;el.style.display='block';el.textContent='Carregando mapa…';
+ loadL().then(()=>{el.textContent='';const m=L.map(el),segs=[];let sg=[];x.pts.forEach(p=>{if(p[3]&&sg.length){segs.push(sg);sg=[]}sg.push([p[0],p[1]])});segs.push(sg);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);const ls=segs.filter(z=>z.length>1).map(z=>L.polyline(z,{color:'#4da3ff',weight:4}).addTo(m));if(ls.length)m.fitBounds(L.featureGroup(ls).getBounds(),{padding:[20,20]})})
+ .catch(()=>{el.style.display='none';toast('Sem internet para o mapa: o trajeto continua no desenho acima')})}
+function runDel(id){if(!confirm('Apagar esta corrida?'))return;S.runs=S.runs.filter(x=>x.id!=id);RUND=null;save();render();toast('Corrida apagada')}
+function runCard(){const r=S.run;return r?`<section class="win" style="border-color:var(--acc)"><div class="row"><b>🏃 Corrida ${r.r0?'em andamento':'pausada'}: ${fmtKm(r.dist)} km · ${fmtT(runEl(r))}</b><button class="btn" onclick="go('tab','g')">Abrir</button></div></section>`:''}
+function corrida(){const r=S.run,m=gpsOk(),Q=S.quests.filter(q=>!q.arch&&q.f=='d'&&q.mq>0&&/km/i.test(q.mu||''));
+ if(RUND){const x=S.runs.find(y=>y.id==RUND);if(x)return `<section class="win"><button class="ghost" onclick="RUND=null;render()">‹ Corridas</button><h2 style="margin-top:10px">🏃 ${fmtKm(x.dist)} km</h2><div class="kp"><div class="win"><small>Tempo</small><b>${fmtT(x.dur)}</b></div><div class="win"><small>Ritmo médio</small><b>${pace(x.dur,x.dist)}</b></div><div class="win"><small>Data</small><b style="font-size:20px">${brD(x.d)}</b></div><div class="win"><small>Velocidade</small><b>${x.dur?(x.dist/x.dur*3.6).toFixed(1).replace('.',','):'0'} km/h</b></div></div>${runSvg(x.pts)}<button class="ghost" style="width:100%;margin-top:10px" onclick="runMap('${x.id}')">🗺 Ver no mapa</button><div id="rmap" style="display:none;height:320px;border:1px solid var(--line);margin-top:10px"></div>${x.q&&S.quests.find(q=>q.id==x.q)?'<small style="display:block;margin-top:8px">Quest: '+esc(S.quests.find(q=>q.id==x.q).t)+'</small>':''}<button class="ghost" style="color:var(--bad);border-color:var(--bad);margin-top:12px" onclick="runDel('${x.id}')">Apagar corrida</button></section>`;RUND=null}
+ if(RUNQ===null&&Q.length)RUNQ=(Q.find(q=>!q.log.includes(hoje()))||Q[0]).id;
+ const wkm=S.runs.filter(x=>wk(x.d)==wk(hoje())).reduce((a,x)=>a+x.dist,0),mkm=S.runs.filter(x=>mesK(x.d)==mesK(hoje())).reduce((a,x)=>a+x.dist,0);
+ return `<section class="win"><h2>🏃 Corrida com GPS</h2>${m&&!r?`<p style="color:var(--gold)">${m}</p>`:''}
+ ${r?`<div style="text-align:center"><small id="ra">${r.r0?'● Gravando':'Pausada'}${r.acc?' · precisão '+r.acc+' m':''}</small><div id="rt" style="font-size:52px;font-weight:700;line-height:1.1">${fmtT(runEl(r))}</div><div class="row" style="justify-content:space-around;margin-top:6px"><div><small>Distância</small><b id="rd" style="display:block;font-size:28px">${fmtKm(r.dist)} km</b></div><div><small>Ritmo</small><b id="rp" style="display:block;font-size:28px">${pace(runEl(r),r.dist)}</b></div></div>
+ <div class="row" style="justify-content:center;gap:10px;margin-top:14px"><button class="btn" style="padding:12px 20px" onclick="runPause()">${r.r0?'⏸ Pausar':'▶ Continuar'}</button><button class="ghost" style="padding:12px 20px" onclick="runStop()">⏹ Finalizar</button></div><small id="rerr" style="display:block;color:var(--gold);margin-top:8px">${r.err||''}</small><small style="display:block;margin-top:6px">Mantenha a tela ligada e o G-Line aberto enquanto corre.</small></div>`
+ :`${Q.length?F('Registrar na quest',`<select onchange="RUNQ=this.value">${Q.map(q=>`<option value="${q.id}" ${RUNQ==q.id?'selected':''}>${esc(q.t)} (meta ${q.mq} ${esc(q.mu)})</option>`).join('')}<option value="" ${RUNQ===''?'selected':''}>Nenhuma</option></select>`):'<small style="display:block;margin-bottom:10px">Dica: crie uma quest diária com meta numérica em "km" para a corrida contar nela (e virar Quest Secreta se fizer o dobro).</small>'}
+ <button class="btn" style="width:100%;font-size:20px;padding:14px" ${m?'disabled':''} onclick="runStart()">▶ Iniciar corrida</button><small style="display:block;margin-top:8px">O GPS só grava com a tela ligada e o app aberto. Na primeira vez, o Chrome pede permissão de localização.</small>`}</section>
+ <section class="win"><h2>Histórico de corridas</h2><small>Esta semana: <b>${fmtKm(wkm)} km</b> · Este mês: <b>${fmtKm(mkm)} km</b></small>${S.runs.length?S.runs.slice(0,30).map(x=>`<div class="item" style="cursor:pointer" onclick="RUND='${x.id}';render()"><span style="font-size:22px">🏃</span><div class="t"><b>${fmtKm(x.dist)} km · ${fmtT(x.dur)}</b><small>${brD(x.d)} · ritmo ${pace(x.dur,x.dist)}</small></div><span>›</span></div>`).join(''):'<div class="mute" style="margin-top:8px">Suas corridas aparecem aqui.</div>'}</section>`}
+// se a corrida estava aberta, volta a ouvir o GPS ao abrir o app (fica pausada até tocar em Continuar)
+function perfil(){const subs=[['s','Status'],['a','Conquistas'],['r','Rotina'],['q','Histórico'],['t','Títulos'],['c','Aparência'],['b','Backup']];let c='';if(!subs.some(x=>x[0]==S.sub))S.sub='s';
+ if(S.sub=='q')c=histView();
+ if(S.sub=='t')c=ACH.filter(a=>a[9]&&S.ach[a[0]]).map(a=>`<div class="item"><div class="t"><b>${a[9]}</b><small>Conquista: ${a[3]}</small></div><button class="${S.title=='a:'+a[0]?'btn':'ghost'}" onclick="go('title','a:${a[0]}')">${S.title=='a:'+a[0]?'Equipado':'Equipar'}</button></div>`).join('')+(S.ct||[]).map(x=>`<div class="item"><div class="t"><b>${esc(x.n)}</b><small>Título de campanha</small></div><button class="${S.title=='c:'+x.id?'btn':'ghost'}" onclick="go('title','c:${x.id}')">${S.title=='c:'+x.id?'Equipado':'Equipar'}</button></div>`).join('')+TT.map(t=>{const ok=t[3](S);return `<div class="item"><div class="t"><b>${t[1]}</b><small>${t[2]}</small></div>${ok?`<button class="${S.title==t[0]?'btn':'ghost'}" onclick="go('title','${t[0]}')">${S.title==t[0]?'Equipado':'Equipar'}</button>`:'<small>🔒</small>'}</div>`}).join('');
+ if(S.sub=='s')c=stView();
+ if(S.sub=='a')c=achView();
+ if(S.sub=='r')c=rotView();
+ let tema='';if(S.sub=='c')tema=`<b>Temas prontos</b><div class="tabs" style="flex-wrap:wrap;margin:6px 0 12px">${Object.keys(PRE).map(k=>`<button onclick="preset('${k}')">${PRE[k].n}</button>`).join('')}</div><b>Cores personalizadas</b><div class="f2" style="margin:6px 0 12px">${[['bg','Fundo'],['panel','Painéis'],['line','Bordas'],['ink','Texto'],['acc','Destaque'],['gold','Ouro']].map(c=>F(c[1],`<input type="color" value="${tcol(c[0])}" onchange="setCor('${c[0]}',this.value)" style="height:46px;padding:2px">`)).join('')}</div><button class="ghost" onclick="resetTema()">Restaurar padrão</button>`;
+ if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>14.1</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
+ if(S.sub=='c')c=F('Nome',`<input value="${esc(S.name)}" maxlength="24" onchange="S.name=this.value.trim()||'Caçador';save();render()">`)+F('Sobre mim',`<textarea rows="3" maxlength="140" onchange="S.bio=this.value;save();render()">${esc(S.bio)}</textarea>`)+`<div class="f"><span>Foto de perfil</span><div class="row" style="justify-content:flex-start;gap:12px">${av(64)}<button class="btn" onclick="document.getElementById('fp').click()">📷 Escolher foto</button><input id="fp" class="vh" type="file" accept="image/*" onchange="foto(this)" tabindex="-1">${S.photo?`<button class="ghost" onclick="S.photo='';save();render()">Remover</button>`:''}</div></div>`+`<div class="f"><span>Banner (ideal: 1500 × 500 px, proporção 3:1)</span><div class="row" style="justify-content:flex-start;gap:12px"><button class="btn" onclick="document.getElementById('fb').click()">🖼 Enviar banner</button><input id="fb" class="vh" type="file" accept="image/*" onchange="bn(this)" tabindex="-1">${S.bannerImg?`<button class="ghost" onclick="S.bannerImg='';save();render()">Remover</button>`:''}</div></div>`+F('Cor do banner',`<div class="row" style="justify-content:flex-start">${BAN.map(b=>`<button class="chk" aria-label="Cor" style="background:${b};border-color:${S.banner==b?'var(--gold)':'transparent'}" onclick="S.bannerImg='';go('banner','${b}')"></button>`).join('')}</div>`);
+ if(S.sub=='c')c+='<h2 style="margin-top:16px">Tema</h2>'+tema;
+ return `<section class="win"><div class="ban" style="background:${S.bannerImg?`center/cover url(${S.bannerImg})`:S.banner}"></div><div style="display:flex;gap:14px;align-items:flex-start;margin-top:-48px;position:relative">${av(96)}<div style="padding-top:56px"><b style="font-size:26px">${emb()}${esc(S.name)}</b> <span class="chip gd" style="vertical-align:middle">${title()}</span><br><span class="chip">Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl}</span></div></div><p class="mute">${esc(S.bio)}</p></section>
+ <div class="pf"><nav>${subs.map(s=>`<button class="ghost ${S.sub==s[0]?'btn':''}" onclick="go('sub','${s[0]}')">${s[1]}</button>`).join('')}</nav><section class="win">${c}</section></div>`}
+function popup(){const h=hoje(),wd=new Date().getDay(),ts=S.quests.filter(q=>!q.arch&&!pausada(q,h)&&!(q.skip||[]).includes(h)&&(q.f=='d'?q.days.includes(wd):cnt(q,h)<tgt(q)||q.log.includes(h))),dn=ts.filter(q=>q.log.includes(h)||cnt(q,h)>=tgt(q)).length,k=ri(S.lvl);
+ const ws=S.wish.map(id=>S.shop.find(i=>i.id==id)).filter(Boolean);
+ return `<div class="ov" onclick="if(event.target==this)closePop()"><section class="win pu"><button class="x" aria-label="Fechar" onclick="closePop()">✕</button><h2>Resumo do dia</h2><div class="mute" style="margin:-6px 0 10px">${hojeTxt()}</div>${bkTxt()}${emDescanso(hoje())?'<p style="color:var(--gold)">🌙 Hoje é dia de descanso.</p>':''}${recOn(hoje())?'<p style="color:var(--gold)">🛡 Modo recuperação ativo.</p>':''}${S.ret&&S.ret.d==hoje()&&!S.ret.cl?'<p style="color:var(--gold)">🔄 Missão de Retomada: conclua 1 quest hoje.</p>':''}${penOn()?'<p style="color:var(--bad)">⚠ Penalty Quest pendente: '+esc(S.pen.t)+'</p>':''}${S.dg&&!S.dg.cl?'<p>🏰 Dungeon: '+Math.min(S.dg.n,wcat(S.dg.c))+'/'+S.dg.n+' quests de '+(CAT[S.dg.c]?CAT[S.dg.c][0]:'')+'</p>':''}
+ <div class="prof" style="margin-bottom:12px">${rk()}<div style="flex:1"><b>Nível ${S.lvl} · ${title()}</b>${xpbar()}</div></div>
+ <div class="cols"><div><b>Quests (${dn}/${ts.length})</b>${ts.length?ts.slice(0,7).map(q=>`<div class="item ${q.log.includes(h)||cnt(q,h)>=tgt(q)?'done':''}"><div class="t"><b>${esc(q.t)}</b><small>${FQ[q.f]}${tgt(q)>1?' · '+cnt(q,h)+'/'+tgt(q):''}</small></div><span>${q.log.includes(h)?'✓':''}</span></div>`).join(''):'<div class="mute">Sem quests hoje.</div>'}</div>
+ <div><b>Lista de desejos</b>${ws.length?ws.map(i=>{const p=price(i,k),l=lock(i);return `<div class="item"><div class="t"><b>${esc(i.t)}</b><small>${p} ouro · ${l.length?'Bloqueado':S.gold>=p?'Disponível!':'Faltam '+(p-S.gold)}</small></div></div>`}).join(''):'<div class="mute">Marque ♡ na loja.</div>'}</div></div></section></div>`}
+let POP=true;const closePop=()=>{POP=false;render()};
+const PRE={azul:{n:'Azul Sistema',bg:'#070b16',panel:'#0d1630',line:'#2a4a9c',ink:'#e6edff',acc:'#4da3ff',gold:'#ffc857'},roxo:{n:'Roxo Sombra',bg:'#0b0714',panel:'#161026',line:'#6b3fc4',ink:'#efe8ff',acc:'#a97bff',gold:'#ffc857'},verde:{n:'Verde Esmeralda',bg:'#06100d',panel:'#0c1c17',line:'#1f7a5c',ink:'#e4fff4',acc:'#3ee0a0',gold:'#ffd166'},vermelho:{n:'Vermelho Monarca',bg:'#12070a',panel:'#1f0d12',line:'#9c2a3f',ink:'#ffe8ec',acc:'#ff5a73',gold:'#ffc857'},claro:{n:'Claro',bg:'#eef2fb',panel:'#ffffff',line:'#3b64c9',ink:'#0c1634',acc:'#1f6fe0',gold:'#b97a00'}};
+const TK=['bg','panel','line','ink','acc','gold'];
+const tcol=k=>(S.theme&&S.theme[k])||getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+function applyTheme(){const r=document.documentElement.style,t=S.theme;TK.forEach(k=>t&&t[k]?r.setProperty('--'+k,t[k]):r.removeProperty('--'+k));
+ if(t&&t.ink&&t.bg)r.setProperty('--mute','color-mix(in srgb,'+t.ink+' 62%,'+t.bg+')');else r.removeProperty('--mute')}
+function preset(k){const p=PRE[k],t={};TK.forEach(c=>t[c]=p[c]);S.theme=t;save();applyTheme();render();toast('Tema "'+p.n+'" aplicado')}
+function setCor(k,v){const t={};TK.forEach(c=>t[c]=(S.theme&&S.theme[c])||tcol(c));t[k]=v;S.theme=t;save();applyTheme();render();toast('Cor atualizada')}
+function resetTema(){S.theme=null;save();applyTheme();render();toast('Tema restaurado')}
+function render(){try{_render()}catch(e){showErr(e)}}
+function _render(){NEGC={};if(SAFE)return recScreen();applyTheme();runFails();cmpUpd();achCheck();const T=[['p','Painel'],['l','Plano'],['c','Criar'],['m','Metas'],['s','Loja'],['a','Análise'],['d','Diário'],['g','Corrida'],['u','Perfil']];
+ document.getElementById('nav').innerHTML=T.map(t=>`<button class="${S.tab==t[0]?'on':''}" onclick="go('tab','${t[0]}')"><i>${TI[t[0]]}</i>${t[1]}${t[0]=='u'&&spFree()>0?' •':''}</button>`).join('')+`<button onclick="POP=true;render()"><i>📜</i>Resumo</button>`;
+ const y=document.getElementById('app'),sc=y.scrollTop;y.innerHTML=({p:panel,l:plano,c:criar,m:metasTab,s:loja,a:analise,d:diario,g:corrida,u:perfil})[S.tab]();y.scrollTop=sc;const on=document.querySelector&&document.querySelector('#nav .on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
+ document.getElementById('pop').innerHTML=(POP?popup():'')+MOD;const gt=document.getElementById('gt');if(gt)gt.innerHTML=S.ses&&S.ses.run&&S.tab!='s'?`<button class="gpill" onclick="go('tab','s')" aria-label="Ver gameplay">🎮 <span class="gtm">${fmtT(Math.min(gLeft().saldo,gLeft().hoje))}</span></button>`:''}
+/* ---- Backup local ---- */
+let MOD='',PEND=null,INFO='';
+const dt=x=>{const d=new Date(x);return isNaN(d)?'—':d.toLocaleString('pt-BR')};
+const modal=(t,b,btns)=>{MOD=`<div class="ov"><section class="win pu" style="width:min(520px,100%)"><h2>${t}</h2>${b}<div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap">${btns}</div></section></div>`;render()};
+const fechaMod=()=>{MOD='';render()};
+function copiar(){try{navigator.clipboard.writeText(INFO).then(()=>toast('Copiado'),()=>toast('Não consegui copiar'))}catch(e){toast('Não consegui copiar')}}
+function exportar(){const at=new Date().toISOString(),o={app:'sistema-cacador',versaoArquivo:1,versaoDados:VER,exportadoEm:at,dados:S};
+ const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));
+ a.href=u;a.download='g-line-backup-'+at.slice(0,16).replace(/[:T]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);S.lastExp=Date.now();save(true);
+ INFO='Backup do G-Line\nData e hora: '+dt(at)+'\nVersão dos dados: '+VER;
+ modal('Backup exportado','<p>O arquivo foi baixado no seu aparelho.</p><p class="mute" style="white-space:pre-line">'+esc(INFO)+'</p>','<button class="ghost" onclick="copiar()">Copiar informações</button><button class="btn" onclick="fechaMod()">OK</button>')}
+function impLer(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{try{const o=JSON.parse(r.result);
+  if(!o||o.app!='sistema-cacador'||!o.dados||!Array.isArray(o.dados.quests)||!Array.isArray(o.dados.shop))throw new Error('Este arquivo não é um backup do Sistema do Caçador.');
+  if((o.versaoDados||1)>VER)throw new Error('Este backup é de uma versão mais nova do app (versão '+o.versaoDados+').');
+  PEND=o;const ult=o.dados.ts||Date.parse(o.exportadoEm)||0,novo=(S.ts||0)>ult;
+  modal('Carregar backup?','<p>Última atualização: <b>'+dt(ult)+'</b><br>Versão dos dados: <b>'+(o.versaoDados||1)+'</b></p>'+(novo?'<p style="color:var(--bad)">Atenção: os dados deste aparelho são mais novos que os do arquivo. Carregar vai substituí-los.</p>':'')+'<p>Deseja carregar? Se der erro, seus dados atuais são restaurados.</p>','<button class="ghost" onclick="PEND=null;fechaMod()">Não</button><button class="btn" onclick="impAplica()">Sim</button>')}
+ catch(e){modal('Arquivo inválido','<p>'+esc(e.message||'Não consegui ler o arquivo.')+'</p>','<button class="btn" onclick="fechaMod()">OK</button>')}};
+ r.onerror=()=>toast('Falha ao ler o arquivo');r.readAsText(f);inp.value=''}
+function impAplica(){const old=S,bkp=JSON.stringify(S);
+ try{const n=migra(Object.assign(def(),PEND.dados));if(!Array.isArray(n.quests)||!Array.isArray(n.shop)||typeof n.lvl!='number')throw new Error('Dados incompletos no arquivo.');
+  try{localStorage.setItem(KEY+'-bkp',bkp)}catch(e){}
+  SAFE=null;S=n;save();PEND=null;MOD='';render();toast('Backup carregado com sucesso!')}
+ catch(e){S=old;PEND=null;modal('Erro ao carregar','<p>'+esc(e.message||'Falha ao aplicar o backup.')+'</p><p>Seus dados anteriores foram restaurados.</p>','<button class="btn" onclick="fechaMod()">OK</button>')}}
+function sched(){}
+function dlTxt(name,text){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+function bkTxt(){const d=S.lastExp?Math.floor((Date.now()-S.lastExp)/864e5):null;return (S.total>0||S.quests.length)&&(d===null||d>=7)?`<p style="color:var(--gold)">💾 ${d===null?'Você ainda não fez nenhum backup.':'Seu último backup foi há '+d+' dias.'} <button class="ghost" style="padding:4px 10px" onclick="exportar()">Exportar agora</button></p>`:''}
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+function recScreen(){const snap=lsGet(KEY+'-snap'),sd=lsGet(KEY+'-snapd');document.getElementById('nav').innerHTML='';document.getElementById('pop').innerHTML=MOD||'';
+ document.getElementById('app').innerHTML=`<section class="win" style="border-color:var(--bad)"><h2>⚠ Não consegui ler seus dados</h2><p>Os dados salvos neste navegador parecem danificados. <b>Nada foi apagado</b>: o app entrou em modo seguro e não grava por cima.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">Erro: ${esc(SAFE.err)}</p>
+ <div style="display:grid;gap:8px;margin-bottom:10px"><button class="btn" onclick="dlTxt('g-line-dados-danificados.json',SAFE.raw)">⬇ Baixar os dados danificados</button>${snap?`<button class="btn" onclick="recSnap()">↩ Restaurar a cópia automática${sd?' de '+parse(sd).toLocaleDateString('pt-BR'):''}</button>`:''}<button class="ghost" onclick="document.getElementById('fk2').click()">⬆ Importar um backup</button><input id="fk2" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"><button class="ghost" onclick="recNew()">Começar do zero</button></div><small>Na dúvida, baixe os dados danificados e mande um print desta tela no chat.</small></section>`}
+function recSnap(){try{const o=JSON.parse(lsGet(KEY+'-snap'));if(!o||!Array.isArray(o.quests||[]))throw 0;SAFE=null;S=migra(Object.assign(def(),o));save();render();toast('Cópia automática restaurada')}catch(e){toast('A cópia automática também está danificada')}}
+function recNew(){if(confirm('Começar do zero? Uma cópia dos dados danificados continua guardada no navegador.')){SAFE=null;S=def();save();render()}}
+function showErr(e){const m=(e&&(e.stack||e.message))||String(e),a=document.getElementById('app');if(!a)return;
+ a.innerHTML=`<section class="win" style="border-color:var(--bad)"><h2>Algo deu errado</h2><p>O app encontrou um erro ao mostrar esta tela. Seus dados continuam salvos.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">${esc(m).slice(0,600)}</p><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><button class="btn" onclick="try{exportar()}catch(x){alert('Não consegui exportar')}">⬇ Exportar backup</button><button class="ghost" onclick="S.tab='p';S.sub='s';POP=false;MOD='';render()">Voltar ao Painel</button></div><small>Mande um print desta tela no chat.</small></section>`}
+window.addEventListener('error',e=>showErr(e.error||e.message));
+if(!SAFE&&S.ts&&Date.now()<S.ts-6e5)setTimeout(()=>modal('⚠ Relógio do aparelho','<p>A data e a hora do aparelho estão <b>antes</b> da última alteração salva ('+dt(S.ts)+').</p><p class="mute">Confira o relógio do aparelho. Enquanto ele estiver atrasado, falhas, Dungeon e cronômetro podem ficar errados.</p>','<button class="btn" onclick="fechaMod()">Entendi</button>'),300);
+let LASTD=hoje();setInterval(()=>{if(hoje()!=LASTD){LASTD=hoje();if(!MOD)render()}},30000);
+render();setInterval(gtick,1000);
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
