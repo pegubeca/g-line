@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>G-Line</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#070b16">
+<meta name="theme-color" content="#060a14">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#070b16;--panel:#0d1630;--line:#2a4a9c;--ink:#e6edff;--mute:#8a9ac4;--acc:#4da3ff;--gold:#ffc857;--ok:#5ee0b0;--bad:#ff6b81}
@@ -105,6 +105,53 @@ input,select,textarea{width:100%;background:var(--bg);color:var(--ink);border:1p
 .mood .on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--ink)}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
+
+/* ---- Visual v16 (canvas G-Line · componentes) ---- */
+:root{--bg:#060a14;--panel:#0c1530;--line:#1e3a78;--ink:#e6edff;--mute:#8fa0c8;--acc:#4da3ff;--gold:#ffc857;--ok:#3ee0a0;--bad:#ff6b81}
+:root[data-theme="dark"]{--bg:#060a14;--panel:#0c1530;--line:#1e3a78;--ink:#e6edff;--mute:#8fa0c8;--acc:#4da3ff;--gold:#ffc857;--ok:#3ee0a0;--bad:#ff6b81}
+:root{--panel2:color-mix(in srgb,var(--panel) 70%,var(--bg));--fd:'Chakra Petch',Rajdhani,system-ui,sans-serif}
+.win{clip-path:none;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+h2{font-family:var(--fd);font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--mute);font-weight:700;margin:0 0 12px}
+.pu h2{font-size:22px;letter-spacing:.5px;text-transform:none;color:var(--ink)}
+.pu>h2::before{content:"[ SISTEMA ]";display:block;font-size:11px;letter-spacing:4px;color:var(--acc);margin-bottom:6px}
+.btn{border-radius:12px;min-height:44px;padding:10px 18px;font-family:var(--fd);letter-spacing:.5px}
+.ghost{border-radius:12px;min-height:40px;background:var(--panel2);border-color:var(--line);color:color-mix(in srgb,var(--ink) 82%,var(--mute));font-weight:700}
+.tabs{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.tabs button{background:transparent;border:0;border-radius:10px;color:var(--mute);font-weight:700;min-height:38px}
+.tabs button.on{background:var(--acc);color:var(--bg)}
+.chip{border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;background:var(--panel2)}
+.chip.gd{background:color-mix(in srgb,var(--gold) 10%,var(--panel))}.chip.bad{background:color-mix(in srgb,var(--bad) 10%,var(--panel))}
+.bar{height:8px;border-radius:999px;background:color-mix(in srgb,var(--acc) 14%,var(--panel))}
+.bar i{border-radius:999px;background:var(--acc)}
+.chk{width:34px;height:34px;border-radius:10px;font-size:18px;font-weight:700}
+.chk.on{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.item{border-top-color:color-mix(in srgb,var(--line) 70%,transparent)}
+.item.qrow{border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:12px;margin-top:8px}
+.item.qrow.done{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.item.qrow.sec{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 8%,var(--panel))}
+.item.qrow.sec .chk.on{background:var(--gold);border-color:var(--gold)}
+.item.qrow.opt{border-style:dashed;border-color:#4b3394}
+.item.qrow.skp{opacity:.6}
+input:not([type=checkbox]):not([type=color]):not([type=file]),select,textarea{border-radius:12px;background:var(--panel2);min-height:44px;padding:10px 14px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);outline:none;box-shadow:0 0 0 1px var(--acc)}
+.days label{border-radius:10px;background:var(--panel2)}
+.rank{border-radius:10px;background:color-mix(in srgb,var(--acc) 10%,var(--panel));font-family:var(--fd)}
+.prof b,.kp b,.gtm,#rt,#rd,#rp,.fx b{font-family:var(--fd)}
+aside{background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(10px);padding:6px}
+aside button{border-radius:12px;font-weight:700}
+aside button.on{background:color-mix(in srgb,var(--acc) 16%,transparent);border-color:transparent}
+#toast{border-radius:999px;font-weight:700}
+.ov{backdrop-filter:blur(3px)}
+.cal button{border-radius:10px}
+.mood button{border-radius:12px;background:var(--panel2)}
+.win.pen{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 9%,var(--panel))}
+.win.dg{border-color:color-mix(in srgb,var(--gold) 55%,var(--line));background:color-mix(in srgb,var(--gold) 6%,var(--panel))}
+.win.ret{border-color:color-mix(in srgb,var(--ok) 55%,var(--line));background:color-mix(in srgb,var(--ok) 6%,var(--panel))}
+.win.rec{border-color:color-mix(in srgb,var(--acc) 60%,var(--line))}
+.win.rest{border-color:#4b3394;background:color-mix(in srgb,#a98bff 8%,var(--panel))}
+.tabs button{flex:1 1 auto;padding:8px 10px;font-size:15px}
+#toast{transform:translateX(-50%) translateY(calc(-100% - 40px))}
+#toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -232,7 +279,7 @@ const xpbar=()=>`<div class="bar"><i style="width:${S.xp/need(S.lvl)*100}%"></i>
 const rk=()=>`<div class="rank"><span>${RK[ri(S.lvl)]}</span></div>`;
 
 function qrow(q,d){const c=cnt(q,d),t=tgt(q,d),on=q.log.includes(d),full=c>=t,wd=q.log.filter(l=>wk(l)==wk(d)).length,bn=2*(wd-(on?1:0));
- return `<div class="item ${full?'done':''}"><button class="chk ${on?'on':''}" aria-label="Marcar" onclick="${q.mq&&!on?`qtyAsk('${q.id}','${d}')`:`toggle('${q.id}','${d}')`}">${on?'✓':''}</button>
+ return `<div class="item qrow ${full?'done':''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' sec':''}${q.pr=='o'?' opt':''}${(q.skip||[]).includes(d)?' skp':''}"><button class="chk ${on?'on':''}" aria-label="Marcar" onclick="${q.mq&&!on?`qtyAsk('${q.id}','${d}')`:`toggle('${q.id}','${d}')`}">${on?'✓':''}</button>
  <div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''}${q.mq?' · meta '+q.mq+(q.mu?' '+esc(q.mu):''):''}${on&&q.amt&&q.amt[d]!=null?' · fez '+q.amt[d]:''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' · <span class="gold">✨ secreta</span>':''}${d==hoje()&&!on&&negCats(7).includes(q.cat)?' · <span class="gold">equilíbrio +10%</span>':''}${q.pr=='o'?' · opcional':''}${(q.skip||[]).includes(d)?' · dispensada':''} · +${q.xp} XP · +${q.g} ouro${t>1?' · '+c+'/'+t+' '+(q.f=='w'?'na semana':'no mês'):''}${q.f=='d'?' · semana '+wd+'/'+q.days.length+' · bônus +'+bn+'%':''}</small>${t>1||q.f=='d'?`<div class="bar"><i style="width:${Math.min(100,(q.f=='d'?wd/q.days.length:c/t)*100)}%"></i></div>`:''}</div>
  ${q.mq&&/km/i.test(q.mu||'')&&d==hoje()&&!on?`<button class="ghost" aria-label="Correr com GPS" onclick="RUNQ='${q.id}';go('tab','g')">🏃</button>`:''}<button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">✎</button>${q.f=='d'&&d==hoje()&&!on?((q.skip||[]).includes(d)?`<button class="ghost" aria-label="Desfazer dispensa" onclick="skipQ('${q.id}')">↺</button>`:`<button class="ghost" aria-label="Dispensar hoje" onclick="skipQ('${q.id}')">⏭</button>`):''}</div>`}
 function calHtml(){const y=CV.getFullYear(),m=CV.getMonth(),n=new Date(y,m+1,0).getDate(),o=CV.getDay(),h=hoje();
@@ -370,11 +417,11 @@ function runFails(){const y=ontem();if(!S.chk||S.chk>=y)return;
  {const ld=[];S.quests.forEach(q=>q.log.forEach(x=>{if(x<=y)ld.push(x)}));if(ld.length){let gap=0,c=addD(ld.sort().pop(),1);while(c<=y){if(!emDescanso(c))gap++;c=addD(c,1)}if(gap>=3&&!(S.ret&&S.ret.d==hoje()))S.ret={d:hoje(),gap,cl:false}}}
  S.chk=y;if(S.cfg.pen.on&&last>=Math.max(1,S.cfg.pen.min)&&!emDescanso(hoje())&&!recOn(hoje())&&!(S.ret&&S.ret.d==hoje())&&!(S.pen&&S.pen.d==hoje()))S.pen={d:hoje(),t:PEN[Math.floor(Math.random()*PEN.length)],n:last,done:false};save()}
 function penDone(){if(!penOn())return;S.pen.done=true;addXp(10);led('pen-ok','Penalty Quest cumprida',10,0);toast('Penalidade cumprida! Debuff removido');save();render()}
-function penCard(){return penOn()?`<section class="win" style="border-color:var(--bad)"><h2 style="color:var(--bad)">⚠ Penalty Quest</h2><p style="margin-top:0">Você deixou ${S.pen.n} quest${S.pen.n>1?'s':''} diária${S.pen.n>1?'s':''} sem fazer ontem.</p><p><b>${esc(S.pen.t)}</b></p><small>Até concluir: −${S.cfg.pen.deb}% de XP e ouro. Se não fizer hoje, você perde ${S.cfg.pen.loss}% do seu ouro.</small><div style="margin-top:10px"><button class="btn" onclick="penDone()">Concluí a penalidade</button></div></section>`:''}
+function penCard(){return penOn()?`<section class="win pen"><h2 style="color:var(--bad)">⚠ Penalty Quest</h2><p style="margin-top:0">Você deixou ${S.pen.n} quest${S.pen.n>1?'s':''} diária${S.pen.n>1?'s':''} sem fazer ontem.</p><p><b>${esc(S.pen.t)}</b></p><small>Até concluir: −${S.cfg.pen.deb}% de XP e ouro. Se não fizer hoje, você perde ${S.cfg.pen.loss}% do seu ouro.</small><div style="margin-top:10px"><button class="btn" onclick="penDone()">Concluí a penalidade</button></div></section>`:''}
 /* ---- Dungeon semanal ---- */
 function dgEnsure(){const w=wk(hoje());if(S.dg&&S.dg.w==w)return;const cs=Object.keys(CAT).filter(c=>S.quests.some(q=>q.cat==c&&!q.arch)),pool=cs.length?cs:Object.keys(CAT),c=pool[Math.floor(Math.random()*pool.length)],n=3+Math.floor(Math.random()*4);S.dg={w,c,n,xp:40*n,g:25*n,cl:false};save(true)}
 function dgCard(){dgEnsure();const d=S.dg,p=Math.min(d.n,wcat(d.c)),r=7-new Date().getDay();
- return `<section class="win"><div class="row"><h2 style="margin:0">🏰 Dungeon da semana</h2><small>${r} dia${r>1?'s':''}</small></div><p>Conclua <b>${d.n} quests de ${CAT[d.c]?CAT[d.c][0]:d.c}</b> até sábado.</p><div class="bar"><i style="width:${p/d.n*100}%"></i></div><div class="row"><small>${p}/${d.n}</small><small class="gold">+${d.xp} XP · +${d.g} ouro</small></div>${d.cl?'<p class="mute" style="margin-bottom:0">✓ Recompensa resgatada</p>':p>=d.n?'<button class="btn" style="margin-top:8px" onclick="dgClaim()">Resgatar recompensa</button>':''}</section>`}
+ return `<section class="win dg"><div class="row"><h2 style="margin:0">🏰 Dungeon da semana</h2><small>${r} dia${r>1?'s':''}</small></div><p>Conclua <b>${d.n} quests de ${CAT[d.c]?CAT[d.c][0]:d.c}</b> até sábado.</p><div class="bar"><i style="width:${p/d.n*100}%"></i></div><div class="row"><small>${p}/${d.n}</small><small class="gold">+${d.xp} XP · +${d.g} ouro</small></div>${d.cl?'<p class="mute" style="margin-bottom:0">✓ Recompensa resgatada</p>':p>=d.n?'<button class="btn" style="margin-top:8px" onclick="dgClaim()">Resgatar recompensa</button>':''}</section>`}
 function dgClaim(){const d=S.dg;if(!d||d.cl||wcat(d.c)<d.n)return;d.cl=true;const o=ri(S.lvl),up=addXp(d.xp);S.gold+=d.g;led('dungeon','Dungeon: '+d.n+' quests de '+(CAT[d.c]?CAT[d.c][0]:d.c),d.xp,d.g,{sp:5});
  fx(up?(ri(S.lvl)!=o?'RANK UP':'LEVEL UP'):'DUNGEON CLEAR','+'+d.xp+' XP · +'+d.g+' ouro · +5 pontos');toast('Dungeon concluída! +5 pontos de status');save();render()}
 /* ---- Mochila ---- */
@@ -426,7 +473,7 @@ function histView(){const ck=ledCheck(),all=S.lg.filter(e=>HF=='all'||(HF=='xp'?
  ${all.length>HN?'<button class="ghost" style="width:100%;margin-top:8px" onclick="HN+=40;render()">Ver mais</button>':''}`}
 function qAll(){const A=S.quests.filter(q=>!q.arch),na=S.quests.length-A.length;
  return `<section class="win"><h2>Quests configuradas (${A.length})</h2>${A.length?[['d','Diárias'],['w','Semanais'],['m','Mensais']].map(([f,n])=>{const L=A.filter(q=>q.f==f);return L.length?`<p style="margin:12px 0 2px"><b>${n}</b> <small>(${L.length})</small></p>${L.map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''} · ${f=='d'?(q.days.length==7?'todos os dias':q.days.slice().sort().join()=='1,2,3,4,5'?'seg a sex':q.days.slice().sort().map(i=>['dom','seg','ter','qua','qui','sex','sáb'][i]).join(', ')):(q.n==1?'única':q.n+'x '+(f=='w'?'na semana':'no mês'))} · +${q.xp} XP · +${q.g} ouro${q.pr=='o'?' · opcional':''}${pausada(q,hoje())?' · <b style="color:var(--gold)">pausada</b>':''}</small></div><button class="ghost" aria-label="${pausada(q,hoje())?'Retomar':'Pausar'}" onclick="pauseQ('${q.id}')">${pausada(q,hoje())?'▶':'⏸'}</button><button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">✎</button><button class="ghost" aria-label="Arquivar ou apagar" onclick="delQuest('${q.id}')">×</button></div>`).join('')}`:''}).join(''):'<div class="mute">Nenhuma quest configurada ainda. Crie a primeira acima.</div>'}${na?`<p class="mute" style="margin:12px 0 0">${na} quest${na>1?'s':''} arquivada${na>1?'s':''}: veja em Perfil → Backup.</p>`:''}</section>`}
-function restCard(){return emDescanso(hoje())?'<section class="win" style="border-color:var(--gold)"><b>🌙 Dia de descanso</b><br><small>Sem falhas e sem Penalty Quest hoje. Se quiser fazer quests, o XP vale normalmente.</small></section>':''}
+function restCard(){return emDescanso(hoje())?'<section class="win rest"><b>🌙 Dia de descanso</b><br><small>Sem falhas e sem Penalty Quest hoje. Se quiser fazer quests, o XP vale normalmente.</small></section>':''}
 function skipQ(id){const q=S.quests.find(x=>x.id==id),h=hoje();q.skip=q.skip||[];if(q.skip.includes(h)){q.skip=q.skip.filter(x=>x!=h);toast('Dispensa desfeita')}else{q.skip.push(h);led('skip','Dispensou hoje: '+q.t,0,0,{q:id,cat:q.cat});toast('Dispensada hoje: não conta como falha')}save();render()}
 function pauseQ(id){const q=S.quests.find(x=>x.id==id),h=hoje();q.pz=q.pz||[];const o=q.pz.find(p=>!p[1]||p[1]>=h);
  if(o&&pausada(q,h)){if(o[0]>=h)q.pz=q.pz.filter(p=>p!==o);else o[1]=addD(h,-1);toast('Quest retomada')}else{q.pz.push([h,null]);toast('Quest pausada: não aparece nem gera falha')}save();render()}
@@ -448,10 +495,10 @@ function recStart(n){S.rec={a:hoje(),b:addD(hoje(),n-1)};if(S.pen&&!S.pen.done)S
 function recEnd(){if(S.rec){S.rec.b=addD(hoje(),-1);if(S.rec.b<S.rec.a)S.rec=null}save();render();toast('Modo recuperação encerrado')}
 function retClaim(){S.ret.cl=true;addXp(50);S.gold+=30;led('retomada','Missão de Retomada ('+S.ret.gap+' dias fora)',50,30);setTimeout(()=>fx('RETOMADA','+50 XP · +30 ouro'),2600)}
 const brD=d=>parse(d).toLocaleDateString('pt-BR');
-function recCard(){if(recOn(hoje()))return `<section class="win" style="border-color:var(--gold)"><b>🛡 Modo recuperação até ${brD(S.rec.b)}</b><br><small>Metas semanais e mensais pela metade e sem Penalty Quest. Vá no seu ritmo.</small></section>`;
- if(recF(hoje())<1)return `<section class="win" style="border-color:var(--gold)"><b>↗ Retorno gradual até ${brD(addD(S.rec.b,7))}</b><br><small>Metas semanais e mensais em 75% enquanto você retoma o ritmo.</small></section>`;return ''}
-function retCard(){const r=S.ret;if(!r||r.d!=hoje())return '';if(r.cl)return '<section class="win" style="border-color:var(--ok)"><b>✓ Retomada concluída!</b><br><small>Bem-vindo de volta. Um passo de cada vez.</small></section>';
- return `<section class="win" style="border-color:var(--gold)"><h2 style="margin-top:0">🔄 Missão de Retomada</h2><p style="margin-top:0">Você ficou ${r.gap} dias sem concluir quests. Tudo bem: conclua <b>1 quest hoje</b> para ganhar <span class="gold">+50 XP e +30 de ouro</span>. Hoje não há Penalty Quest.</p>${recOn(hoje())?'':'<button class="ghost" onclick="recStart(7)">Ativar modo recuperação (7 dias)</button>'}</section>`}
+function recCard(){if(recOn(hoje()))return `<section class="win rec"><b>🛡 Modo recuperação até ${brD(S.rec.b)}</b><br><small>Metas semanais e mensais pela metade e sem Penalty Quest. Vá no seu ritmo.</small></section>`;
+ if(recF(hoje())<1)return `<section class="win rec"><b>↗ Retorno gradual até ${brD(addD(S.rec.b,7))}</b><br><small>Metas semanais e mensais em 75% enquanto você retoma o ritmo.</small></section>`;return ''}
+function retCard(){const r=S.ret;if(!r||r.d!=hoje())return '';if(r.cl)return '<section class="win ret"><b>✓ Retomada concluída!</b><br><small>Bem-vindo de volta. Um passo de cada vez.</small></section>';
+ return `<section class="win ret"><h2 style="margin-top:0">🔄 Missão de Retomada</h2><p style="margin-top:0">Você ficou ${r.gap} dias sem concluir quests. Tudo bem: conclua <b>1 quest hoje</b> para ganhar <span class="gold">+50 XP e +30 de ouro</span>. Hoje não há Penalty Quest.</p>${recOn(hoje())?'':'<button class="ghost" onclick="recStart(7)">Ativar modo recuperação (7 dias)</button>'}</section>`}
 let RCD=7;
 function recSec(){const r=S.rec,on=recOn(hoje()),gr=!on&&recF(hoje())<1;
  return `<h2>🛡 Modo recuperação</h2><small>Para fases difíceis: metas semanais e mensais pela metade e sem Penalty Quest. Ao terminar, mais 7 dias de retorno gradual com as metas em 75%.</small><div style="margin:10px 0">${on?`<p style="color:var(--gold);margin:0 0 8px">Ativo até ${brD(r.b)}.</p><button class="ghost" onclick="recEnd()">Encerrar agora</button>`:gr?`<p style="color:var(--gold);margin:0">Retorno gradual até ${brD(addD(r.b,7))} (metas em 75%).</p>`:`<div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><select style="width:auto" onchange="RCD=+this.value">${[3,7,14].map(n=>`<option value="${n}" ${RCD==n?'selected':''}>${n} dias</option>`).join('')}</select><button class="btn" onclick="recStart(RCD)">Ativar modo recuperação</button></div>`}</div>`}
@@ -761,7 +808,7 @@ function perfil(){const subs=[['s','Status'],['a','Conquistas'],['r','Rotina'],[
  if(S.sub=='a')c=achView();
  if(S.sub=='r')c=rotView();
  let tema='';if(S.sub=='c')tema=`<b>Temas prontos</b><div class="tabs" style="flex-wrap:wrap;margin:6px 0 12px">${Object.keys(PRE).map(k=>`<button onclick="preset('${k}')">${PRE[k].n}</button>`).join('')}</div><b>Cores personalizadas</b><div class="f2" style="margin:6px 0 12px">${[['bg','Fundo'],['panel','Painéis'],['line','Bordas'],['ink','Texto'],['acc','Destaque'],['gold','Ouro']].map(c=>F(c[1],`<input type="color" value="${tcol(c[0])}" onchange="setCor('${c[0]}',this.value)" style="height:46px;padding:2px">`)).join('')}</div><button class="ghost" onclick="resetTema()">Restaurar padrão</button>`;
- if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>15</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${sySec()}${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
+ if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>16</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${sySec()}${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
  if(S.sub=='c')c=F('Nome',`<input value="${esc(S.name)}" maxlength="24" onchange="S.name=this.value.trim()||'Caçador';save();render()">`)+F('Sobre mim',`<textarea rows="3" maxlength="140" onchange="S.bio=this.value;save();render()">${esc(S.bio)}</textarea>`)+`<div class="f"><span>Foto de perfil</span><div class="row" style="justify-content:flex-start;gap:12px">${av(64)}<button class="btn" onclick="document.getElementById('fp').click()">📷 Escolher foto</button><input id="fp" class="vh" type="file" accept="image/*" onchange="foto(this)" tabindex="-1">${S.photo?`<button class="ghost" onclick="S.photo='';save();render()">Remover</button>`:''}</div></div>`+`<div class="f"><span>Banner (ideal: 1500 × 500 px, proporção 3:1)</span><div class="row" style="justify-content:flex-start;gap:12px"><button class="btn" onclick="document.getElementById('fb').click()">🖼 Enviar banner</button><input id="fb" class="vh" type="file" accept="image/*" onchange="bn(this)" tabindex="-1">${S.bannerImg?`<button class="ghost" onclick="S.bannerImg='';save();render()">Remover</button>`:''}</div></div>`+F('Cor do banner',`<div class="row" style="justify-content:flex-start">${BAN.map(b=>`<button class="chk" aria-label="Cor" style="background:${b};border-color:${S.banner==b?'var(--gold)':'transparent'}" onclick="S.bannerImg='';go('banner','${b}')"></button>`).join('')}</div>`);
  if(S.sub=='c')c+='<h2 style="margin-top:16px">Tema</h2>'+tema;
  return `<section class="win"><div class="ban" style="background:${S.bannerImg?`center/cover url(${S.bannerImg})`:S.banner}"></div><div style="display:flex;gap:14px;align-items:flex-start;margin-top:-48px;position:relative">${av(96)}<div style="padding-top:56px"><b style="font-size:26px">${emb()}${esc(S.name)}</b> <span class="chip gd" style="vertical-align:middle">${title()}</span><br><span class="chip">Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl}</span></div></div><p class="mute">${esc(S.bio)}</p></section>
@@ -773,7 +820,7 @@ function popup(){const h=hoje(),wd=new Date().getDay(),ts=S.quests.filter(q=>!q.
  <div class="cols"><div><b>Quests (${dn}/${ts.length})</b>${ts.length?ts.slice(0,7).map(q=>`<div class="item ${q.log.includes(h)||cnt(q,h)>=tgt(q)?'done':''}"><div class="t"><b>${esc(q.t)}</b><small>${FQ[q.f]}${tgt(q)>1?' · '+cnt(q,h)+'/'+tgt(q):''}</small></div><span>${q.log.includes(h)?'✓':''}</span></div>`).join(''):'<div class="mute">Sem quests hoje.</div>'}</div>
  <div><b>Lista de desejos</b>${ws.length?ws.map(i=>{const p=price(i,k),l=lock(i);return `<div class="item"><div class="t"><b>${esc(i.t)}</b><small>${p} ouro · ${l.length?'Bloqueado':S.gold>=p?'Disponível!':'Faltam '+(p-S.gold)}</small></div></div>`}).join(''):'<div class="mute">Marque ♡ na loja.</div>'}</div></div></section></div>`}
 let POP=true;const closePop=()=>{POP=false;render()};
-const PRE={azul:{n:'Azul Sistema',bg:'#070b16',panel:'#0d1630',line:'#2a4a9c',ink:'#e6edff',acc:'#4da3ff',gold:'#ffc857'},roxo:{n:'Roxo Sombra',bg:'#0b0714',panel:'#161026',line:'#6b3fc4',ink:'#efe8ff',acc:'#a97bff',gold:'#ffc857'},verde:{n:'Verde Esmeralda',bg:'#06100d',panel:'#0c1c17',line:'#1f7a5c',ink:'#e4fff4',acc:'#3ee0a0',gold:'#ffd166'},vermelho:{n:'Vermelho Monarca',bg:'#12070a',panel:'#1f0d12',line:'#9c2a3f',ink:'#ffe8ec',acc:'#ff5a73',gold:'#ffc857'},claro:{n:'Claro',bg:'#eef2fb',panel:'#ffffff',line:'#3b64c9',ink:'#0c1634',acc:'#1f6fe0',gold:'#b97a00'}};
+const PRE={azul:{n:'Azul Sistema',bg:'#060a14',panel:'#0c1530',line:'#1e3a78',ink:'#e6edff',acc:'#4da3ff',gold:'#ffc857'},roxo:{n:'Roxo Sombra',bg:'#0b0714',panel:'#161026',line:'#6b3fc4',ink:'#efe8ff',acc:'#a97bff',gold:'#ffc857'},verde:{n:'Verde Esmeralda',bg:'#06100d',panel:'#0c1c17',line:'#1f7a5c',ink:'#e4fff4',acc:'#3ee0a0',gold:'#ffd166'},vermelho:{n:'Vermelho Monarca',bg:'#12070a',panel:'#1f0d12',line:'#9c2a3f',ink:'#ffe8ec',acc:'#ff5a73',gold:'#ffc857'},claro:{n:'Claro',bg:'#eef2fb',panel:'#ffffff',line:'#3b64c9',ink:'#0c1634',acc:'#1f6fe0',gold:'#b97a00'}};
 const TK=['bg','panel','line','ink','acc','gold'];
 const tcol=k=>(S.theme&&S.theme[k])||getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
 function applyTheme(){const r=document.documentElement.style,t=S.theme;TK.forEach(k=>t&&t[k]?r.setProperty('--'+k,t[k]):r.removeProperty('--'+k));
@@ -876,12 +923,12 @@ function dlTxt(name,text){const a=document.createElement('a'),u=URL.createObject
 function bkTxt(){const d=S.lastExp?Math.floor((Date.now()-S.lastExp)/864e5):null;return (S.total>0||S.quests.length)&&(d===null||d>=7)?`<p style="color:var(--gold)">💾 ${d===null?'Você ainda não fez nenhum backup.':'Seu último backup foi há '+d+' dias.'} <button class="ghost" style="padding:4px 10px" onclick="exportar()">Exportar agora</button></p>`:''}
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 function recScreen(){const snap=lsGet(KEY+'-snap'),sd=lsGet(KEY+'-snapd');document.getElementById('nav').innerHTML='';document.getElementById('pop').innerHTML=MOD||'';
- document.getElementById('app').innerHTML=`<section class="win" style="border-color:var(--bad)"><h2>⚠ Não consegui ler seus dados</h2><p>Os dados salvos neste navegador parecem danificados. <b>Nada foi apagado</b>: o app entrou em modo seguro e não grava por cima.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">Erro: ${esc(SAFE.err)}</p>
+ document.getElementById('app').innerHTML=`<section class="win pen"><h2>⚠ Não consegui ler seus dados</h2><p>Os dados salvos neste navegador parecem danificados. <b>Nada foi apagado</b>: o app entrou em modo seguro e não grava por cima.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">Erro: ${esc(SAFE.err)}</p>
  <div style="display:grid;gap:8px;margin-bottom:10px"><button class="btn" onclick="dlTxt('g-line-dados-danificados.json',SAFE.raw)">⬇ Baixar os dados danificados</button>${snap?`<button class="btn" onclick="recSnap()">↩ Restaurar a cópia automática${sd?' de '+parse(sd).toLocaleDateString('pt-BR'):''}</button>`:''}<button class="ghost" onclick="document.getElementById('fk2').click()">⬆ Importar um backup</button><input id="fk2" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"><button class="ghost" onclick="recNew()">Começar do zero</button></div><small>Na dúvida, baixe os dados danificados e mande um print desta tela no chat.</small></section>`}
 function recSnap(){try{const o=JSON.parse(lsGet(KEY+'-snap'));if(!o||!Array.isArray(o.quests||[]))throw 0;SAFE=null;S=migra(Object.assign(def(),o));save();render();toast('Cópia automática restaurada')}catch(e){toast('A cópia automática também está danificada')}}
 function recNew(){if(confirm('Começar do zero? Uma cópia dos dados danificados continua guardada no navegador.')){SAFE=null;S=def();save();render()}}
 function showErr(e){const m=(e&&(e.stack||e.message))||String(e),a=document.getElementById('app');if(!a)return;
- a.innerHTML=`<section class="win" style="border-color:var(--bad)"><h2>Algo deu errado</h2><p>O app encontrou um erro ao mostrar esta tela. Seus dados continuam salvos.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">${esc(m).slice(0,600)}</p><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><button class="btn" onclick="try{exportar()}catch(x){alert('Não consegui exportar')}">⬇ Exportar backup</button><button class="ghost" onclick="S.tab='p';S.sub='s';POP=false;MOD='';render()">Voltar ao Painel</button></div><small>Mande um print desta tela no chat.</small></section>`}
+ a.innerHTML=`<section class="win pen"><h2>Algo deu errado</h2><p>O app encontrou um erro ao mostrar esta tela. Seus dados continuam salvos.</p><p class="mute" style="font-size:13px;overflow-wrap:anywhere">${esc(m).slice(0,600)}</p><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><button class="btn" onclick="try{exportar()}catch(x){alert('Não consegui exportar')}">⬇ Exportar backup</button><button class="ghost" onclick="S.tab='p';S.sub='s';POP=false;MOD='';render()">Voltar ao Painel</button></div><small>Mande um print desta tela no chat.</small></section>`}
 window.addEventListener('error',e=>showErr(e.error||e.message));
 if(!SAFE&&S.ts&&Date.now()<S.ts-6e5)setTimeout(()=>modal('⚠ Relógio do aparelho','<p>A data e a hora do aparelho estão <b>antes</b> da última alteração salva ('+dt(S.ts)+').</p><p class="mute">Confira o relógio do aparelho. Enquanto ele estiver atrasado, falhas, Dungeon e cronômetro podem ficar errados.</p>','<button class="btn" onclick="fechaMod()">Entendi</button>'),300);
 let LASTD=hoje();setInterval(()=>{if(hoje()!=LASTD){LASTD=hoje();if(!MOD)render()}},30000);
