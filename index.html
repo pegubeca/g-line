@@ -227,6 +227,9 @@ body.navc .jvt{height:calc(100dvh - 140px)}
 .jch button{flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
 .jin{display:flex;gap:8px;flex:none}
 .jin input{flex:1;min-width:0}
+.jmic.on{background:var(--bad);border-color:var(--bad);color:#fff;animation:jpulse 1.2s ease-in-out infinite}
+.jsep{align-self:center;font-size:12px;letter-spacing:2px;color:var(--mute);padding:6px 0}
+#jvb.jdot::after{content:'';position:absolute;top:3px;right:3px;width:13px;height:13px;border-radius:50%;background:var(--gold);border:2px solid var(--panel)}
 </style>
 </head>
 <body>
@@ -911,7 +914,7 @@ function perfil(){const subs=[['s','Status'],['a','Conquistas'],['r','Rotina'],[
  if(S.sub=='a')c=achView();
  if(S.sub=='r')c=rotView();
  let tema='';if(S.sub=='c')tema=`<b>Temas prontos</b><div class="tabs" style="flex-wrap:wrap;margin:6px 0 12px">${Object.keys(PRE).map(k=>`<button onclick="preset('${k}')">${PRE[k].n}</button>`).join('')}</div><b>Cores personalizadas</b><div class="f2" style="margin:6px 0 12px">${[['bg','Fundo'],['panel','Painéis'],['line','Bordas'],['ink','Texto'],['acc','Destaque'],['gold','Ouro']].map(c=>F(c[1],`<input type="color" value="${tcol(c[0])}" onchange="setCor('${c[0]}',this.value)" style="height:46px;padding:2px">`)).join('')}</div><button class="ghost" onclick="resetTema()">Restaurar padrão</button>`;
- if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>18</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${sySec()}${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
+ if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>21</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${sySec()}${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
  if(S.sub=='c')c=navSel()+jvSet()+F('Nome',`<input value="${esc(S.name)}" maxlength="24" onchange="S.name=this.value.trim()||'Caçador';save();render()">`)+F('Sobre mim',`<textarea rows="3" maxlength="140" onchange="S.bio=this.value;save();render()">${esc(S.bio)}</textarea>`)+`<div class="f"><span>Foto de perfil</span><div class="row" style="justify-content:flex-start;gap:12px">${av(64)}<button class="btn" onclick="document.getElementById('fp').click()">📷 Escolher foto</button><input id="fp" class="vh" type="file" accept="image/*" onchange="foto(this)" tabindex="-1">${S.photo?`<button class="ghost" onclick="S.photo='';save();render()">Remover</button>`:''}</div></div>`+`<div class="f"><span>Banner (ideal: 1500 × 500 px, proporção 3:1)</span><div class="row" style="justify-content:flex-start;gap:12px"><button class="btn" onclick="document.getElementById('fb').click()">🖼 Enviar banner</button><input id="fb" class="vh" type="file" accept="image/*" onchange="bn(this)" tabindex="-1">${S.bannerImg?`<button class="ghost" onclick="S.bannerImg='';save();render()">Remover</button>`:''}</div></div>`+F('Cor do banner',`<div class="row" style="justify-content:flex-start">${BAN.map(b=>`<button class="chk" aria-label="Cor" style="background:${b};border-color:${S.banner==b?'var(--gold)':'transparent'}" onclick="S.bannerImg='';go('banner','${b}')"></button>`).join('')}</div>`);
  if(S.sub=='c')c+='<h2 style="margin-top:16px">Tema</h2>'+tema;
  return `<section class="win"><div class="ban" style="background:${S.bannerImg?`center/cover url(${S.bannerImg})`:S.banner}"></div><div style="display:flex;gap:14px;align-items:flex-start;margin-top:-48px;position:relative">${av(96)}<div style="padding-top:56px"><b style="font-size:26px">${emb()}${esc(S.name)}</b> <span class="chip gd" style="vertical-align:middle">${title()}</span><br><span class="chip">Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl}</span></div></div><p class="mute">${esc(S.bio)}</p></section>
@@ -1045,7 +1048,7 @@ const jNum=n=>Number(n).toLocaleString('pt-BR');
 function jvQuestsHoje(){const h=hoje(),wd=new Date().getDay();if(emDescanso(h))return {ts:[],dn:[],pd:[]};
  const ts=S.quests.filter(q=>!q.arch&&!pausada(q,h)&&!(q.skip||[]).includes(h)&&(!q.cr||q.cr<=h)&&(q.f=='d'?q.days.includes(wd):cnt(q,h)<tgt(q)||q.log.includes(h)));
  const ok=q=>q.log.includes(h)||cnt(q,h)>=tgt(q);return {ts,dn:ts.filter(ok),pd:ts.filter(q=>!ok(q))}}
-function jvSaud(){const hr=new Date().getHours(),n=esc(S.name||'Caçador');return (hr<5?'Ainda acordado, ':hr<12?'Bom dia, ':hr<18?'Boa tarde, ':'Boa noite, ')+n+'.'}
+function jvSaud(){const hr=new Date().getHours(),n=esc((S.jv&&S.jv.ap)||S.name||'Caçador');return (hr<5?'Ainda acordado, ':hr<12?'Bom dia, ':hr<18?'Boa tarde, ':'Boa noite, ')+n+'.'}
 function jvDia(){const h=hoje(),Q=jvQuestsHoje(),L=[],A=[];
  if(emDescanso(h))L.push('🌙 Hoje é dia de descanso. Nada de falhas nem Penalty Quest.');
  else if(!Q.ts.length)L.push('Você não tem quests para hoje.');
@@ -1103,7 +1106,7 @@ const JI=[
 {k:['quanto ouro','meu ouro','posso comprar','da pra comprar','consigo comprar'],r:()=>({t:jvOuro(),a:[['Abrir Loja',"jvGo('s')"]]})},
 {k:['que horas','horas sao','que dia','data de hoje','dia e hoje'],r:()=>({t:jP(['Agora são <b>'+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</b> de '+hojeTxt().toLowerCase()+'.'])})},
 {k:['obrigado','obrigada','valeu','vlw','obg','brigado','agradeco'],r:()=>({t:jP(['Às ordens. É só chamar.'])})},
-{k:['quem e voce','o que voce faz','o que voce sabe','jarvis','ajuda','help','como voce funciona','comandos'],r:()=>({t:jP(['Sou o <b>Jarvis</b>, o assistente do Sistema. Por enquanto eu:','<ul><li>digo como está o seu dia, nível e ouro;</li><li>explico qualquer parte do G-Line;</li><li>abro abas: diga “abrir loja” ou “ir para análise”.</li></ul>','Nas próximas atualizações vou analisar seu uso, dar recomendações pelo clima e conversar por voz.']),a:[['Ver tudo que eu explico',"jvTopics()"]]})}
+{k:['quem e voce','o que voce faz','o que voce sabe','jarvis','ajuda','help','como voce funciona','comandos'],r:()=>({t:jP(['Sou o <b>Jarvis</b>, o assistente do Sistema. Hoje eu:','<ul>'+JV_CAP.map(x=>'<li>'+x+'</li>').join('')+'</ul>',JV_NEXT].filter(Boolean)),a:[['Ver tudo que eu explico',"jvTopics()"]]})}
 ];
 /* Abas que posso abrir: [chave, nome, palavras] */
 const JNAV=[['p','Painel',['painel','inicio','home','tela inicial']],['l','Plano',['plano']],['c','Criar quest',['criar','criar quest','nova quest']],['m','Metas',['metas','meta']],['camp','Campanhas',['campanha']],['s','Loja',['loja','mochila']],['a','Análise',['analise','grafico','sugestoes']],['g','Corrida',['corrida','gps','mapa']],['d','Diário',['diario']],['u','Perfil',['perfil','status']],['ach','Conquistas',['conquista','titulo']],['cfg','Aparência',['aparencia','ajustes','configuracao','configuracoes','tema']],['rot','Rotina',['rotina','descanso']],['bk','Backup',['backup','sincronizacao']],['res','Resumo do dia',['resumo']]];
@@ -1116,29 +1119,29 @@ function jvModGuia(n,w){let best=null,bs=0;const sc=k=>jvHas(w,k)?(JLOW.includes
  JI.forEach(it=>{const s=it.k.reduce((a,k)=>a+sc(k),0);if(s>bs){bs=s;best={r:it.r}}});
  JG.forEach(g=>{const s=g[2].reduce((a,k)=>a+sc(k),0);if(s>bs){bs=s;best={g}}});
  if(!best)return null;if(best.r)return best.r();return jvTopicR(best.g)}
-function jvTopicR(g){const t=g[3]();return {t:'<p><b>'+g[1]+'</b></p>'+t,a:(g[4]||[]).map(b=>[b[0],"jvGo('"+b[1]+"')"])}}
+function jvTopicR(g){const t=g[3]();return {t:'<p><b>'+g[1]+'</b></p>'+t,a:(g[4]||[]).map(b=>[b[0],"jvGo('"+b[1]+"')"]),g:g[0]}}
 function jvFall(n){const ws=n.split(' ').filter(x=>x.length>=4),c=JG.filter(g=>g[2].some(k=>ws.some(x=>k.startsWith(x.slice(0,4))||x.startsWith(k.slice(0,4))))).slice(0,3);
  if(c.length)return {t:jP(['Não tenho certeza do que você quis dizer. Talvez seja sobre:']),a:c.map(g=>[g[1],"jvT('"+g[0]+"')"])};
  return {t:jP(['Ainda não sei responder isso. Posso explicar qualquer parte do G-Line, dizer como está o seu dia ou abrir uma aba.','Experimente: “o que tenho hoje?”, “como funciona a loja?” ou “abrir análise”.']),a:[['Ver tudo que eu explico',"jvTopics()"]]}}
-function jvBrain(raw){const n=jnorm(raw),w=' '+n+' ';if(!n)return jvFall('');for(const m of JV_MOD){const r=m(n,w);if(r)return r}return jvFall(n)}
+function jvBrain(raw){JV.raw=raw;const n=typeof jvFix=='function'?jvFix(jnorm(raw)):jnorm(raw),w=' '+n+' ';if(!n)return jvFall('');for(const m of JV_MOD){const r=m(n,w);if(r)return r}return jvFall(n)}
 /* Conversa */
 function jvPush(m){JV.msgs.push(m);if(JV.msgs.length>60)JV.msgs.splice(0,JV.msgs.length-60)}
 function jvSend(txt){if(JV.busy)return;const inp=document.getElementById('jvin');txt=String(txt==null?(inp?inp.value:''):txt).trim();if(!txt)return;JV.draft='';if(inp)inp.value='';
  jvPush({u:1,t:esc(txt)});JV.busy=true;jvPush({typ:1,t:'•••'});jvPaint();
- setTimeout(()=>{JV.msgs=JV.msgs.filter(m=>!m.typ);let r;try{r=jvBrain(txt)}catch(e){r={t:jP(['Tive um problema para responder isso. Tente de outro jeito.'])}}jvPush(r);JV.busy=false;jvPaint()},380)}
+ setTimeout(()=>{let r;try{r=jvBrain(txt)}catch(e){r=null}Promise.resolve(r).catch(()=>null).then(r=>{JV.msgs=JV.msgs.filter(m=>!m.typ);r=r||{t:jP(['Tive um problema para responder isso. Tente de outro jeito.'])};jvPush(r);JV.busy=false;jvPaint();jvAfter(r)})},380)}
 function jvT(id){const g=JG.find(x=>x[0]==id);if(!g)return;jvPush({u:1,t:esc(g[1])});jvPush(jvTopicR(g));jvPaint()}
 function jvTopics(){jvPush({t:jP(['Toque no assunto que quer entender:']),a:JG.filter(g=>g[0]!='ouro'&&g[0]!='res').map(g=>[g[1],"jvT('"+g[0]+"')"])});jvPaint()}
 function jvGo(k){JV.open=false;if(k=='rot'){DRW=false;S.tab='u';S.sub='r';save(true);render();return}if(k=='bk'){DRW=false;S.tab='u';S.sub='b';save(true);render();return}navGo(k)}
-function jvStart(){if(!JV.msgs.length){const d=jvDia();jvPush({t:'<p>'+jvSaud()+'</p>'+d.t,a:d.a})}}
+function jvStart(){if(JV.msgs.length&&JV.gd==hoje())return;if(JV.msgs.length)jvPush({sep:1,t:'Hoje'});JV.gd=hoje();const d=jvDia();jvPush({t:'<p>'+jvSaud()+'</p>'+d.t,a:d.a});JV_START.forEach(f=>{try{f()}catch(e){}})}
 function jvOpen(){if(S.tab=='j')return;jvStart();JV.open=true;render();setTimeout(()=>{const l=document.getElementById('jvlog');if(l)l.scrollTop=l.scrollHeight},30)}
 function jvClose(){JV.open=false;render()}
-const JQ=[['O que tenho hoje?','o que tenho hoje'],['Meu nível','quanto falta pro proximo nivel'],['Meu ouro','quanto ouro eu tenho'],['Como funciona a loja?','como funciona a loja'],['O que são status?','o que sao status'],['Penalty Quest','penalty quest'],['Tudo que você explica','__topics'],['O que você faz?','o que voce faz']];
+const JQ=[['O que tenho hoje?','o que tenho hoje'],['Como foi minha semana?','como foi minha semana'],['Me analisa','me analisa'],['Meu ponto fraco','qual meu ponto fraco'],['O que faço agora?','o que faco agora'],['Vai chover?','vai chover'],['Me motiva','me motiva'],['Meu nível','quanto falta pro proximo nivel'],['Meu ouro','quanto ouro eu tenho'],['Como funciona a loja?','como funciona a loja'],['O que são status?','o que sao status'],['Penalty Quest','penalty quest'],['Tudo que você explica','__topics'],['O que você faz?','o que voce faz']];
 function jvQ(i){const q=JQ[i];if(!q)return;if(q[1]=='__topics')return jvTopics();jvSend(q[1])}
-const jvLog=()=>JV.msgs.map(m=>`<div class="jm ${m.u?'u':'j'}${m.typ?' typ':''}">${m.t}${m.a&&m.a.length?`<div class="jact">${m.a.map(b=>`<button class="ghost" onclick="${b[1]}">${b[0]}</button>`).join('')}</div>`:''}</div>`).join('');
-function jvHead(sheet){return `<div class="jhd"><div class="jav">${NI.j}</div><div class="t"><b>JARVIS</b><small>Assistente do Sistema</small></div>${sheet?`<button class="hb" aria-label="Abrir em tela cheia" onclick="jvGo('j')">${SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')}</button><button class="hb" aria-label="Fechar o Jarvis" onclick="jvClose()">${NI.x}</button>`:`<button class="ghost" onclick="jvClear()">Limpar</button>`}</div>`}
-function jvBody(){return `<div class="jlog" id="jvlog" aria-live="polite">${jvLog()}</div><div class="jch">${JQ.map((q,i)=>`<button onclick="jvQ(${i})">${q[0]}</button>`).join('')}</div><div class="jin"><input id="jvin" type="text" placeholder="Pergunte ao Jarvis…" enterkeyhint="send" autocomplete="off" maxlength="200" value="${esc(JV.draft)}" oninput="JV.draft=this.value" onkeydown="if(event.key=='Enter'){event.preventDefault();jvSend()}"><button class="btn" aria-label="Enviar" onclick="jvSend()">${SV('<path d="M4 12l16-8-6 16-2.5-6.5z"/>')}</button></div>`}
+const jvLog=()=>JV.msgs.map(m=>m.sep?`<div class="jsep">${m.t}</div>`:`<div class="jm ${m.u?'u':'j'}${m.typ?' typ':''}">${m.t}${m.a&&m.a.length?`<div class="jact">${m.a.map(b=>`<button class="ghost" onclick="${typeof JOK!='undefined'&&!JOK.test(b[1])?'':b[1]}">${b[0]}</button>`).join('')}</div>`:''}</div>`).join('');
+function jvHead(sheet){return `<div class="jhd"><div class="jav">${NI.j}</div><div class="t"><b>JARVIS</b><small>Assistente do Sistema</small></div>${jvVozBtn()}${sheet?`<button class="hb" aria-label="Abrir em tela cheia" onclick="jvGo('j')">${SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')}</button><button class="hb" aria-label="Fechar o Jarvis" onclick="jvClose()">${NI.x}</button>`:`<button class="ghost" onclick="jvClear()">Limpar</button>`}</div>`}
+function jvBody(){return `<div class="jlog" id="jvlog" aria-live="polite">${jvLog()}</div><div class="jch">${JQ.map((q,i)=>`<button onclick="jvQ(${i})">${q[0]}</button>`).join('')}</div><div class="jin"><input id="jvin" type="text" placeholder="Pergunte ao Jarvis…" enterkeyhint="send" autocomplete="off" maxlength="200" value="${esc(JV.draft)}" oninput="JV.draft=this.value" onkeydown="if(event.key=='Enter'){event.preventDefault();jvSend()}">${jvMicBtn()}<button class="btn" aria-label="Enviar" onclick="jvSend()">${SV('<path d="M4 12l16-8-6 16-2.5-6.5z"/>')}</button></div>`}
 function jvTab(){jvStart();return `<section class="win jvt">${jvHead(false)}${jvBody()}</section>`}
-function jvPaint(){const l=document.getElementById('jvlog');if(l){l.innerHTML=jvLog();l.scrollTop=l.scrollHeight}}
+function jvPaint(){const l=document.getElementById('jvlog');if(l){l.innerHTML=jvLog();l.scrollTop=l.scrollHeight}if(typeof jvMemSave=='function')jvMemSave()}
 function jvClear(){JV.msgs=[];jvStart();jvPaint();toast('Conversa reiniciada')}
 /* Botão flutuante: toque abre; arraste para mudar de lugar (ele gruda no lado mais próximo) */
 function jvPos(){const b=document.getElementById('jvb');if(!b)return;const c=jvCfg();b.style.left=c.x=='r'?'auto':'18px';b.style.right=c.x=='r'?'18px':'auto';if(c.y==null){b.style.top='';b.style.bottom=''}else{b.style.top=Math.round(Math.max(.08,Math.min(.82,c.y))*innerHeight)+'px';b.style.bottom='auto'}}
@@ -1150,14 +1153,189 @@ function jvFabInit(){const b=document.getElementById('jvb');if(!b||b._i)return;b
  b.addEventListener('click',e=>{if(e.detail===0)jvOpen()});
  addEventListener('resize',jvPos)}
 function jvRender(af){const c=jvCfg(),b=document.getElementById('jvb'),w=document.getElementById('jvw');if(S.tab=='j')JV.open=false;
- if(b){jvFabInit();b.hidden=!!(SAFE||!c.fab||S.tab=='j'||S.tab=='g'||DRW||POP||MOD||JV.open);jvPos()}
+ if(b){jvFabInit();b.classList.toggle('jdot',jvTemAviso());b.hidden=!!(SAFE||!c.fab||S.tab=='j'||S.tab=='g'||DRW||POP||MOD||JV.open);jvPos()}
  if(w)w.innerHTML=JV.open?`<div class="jbk" onclick="jvClose()"></div><section class="jvs" role="dialog" aria-label="Jarvis">${jvHead(true)}${jvBody()}</section>`:'';
  const l=document.getElementById('jvlog');if(l)l.scrollTop=l.scrollHeight;
  if(af=='jvin'){const i=document.getElementById('jvin');if(i){i.focus();const n=i.value.length;try{i.setSelectionRange(n,n)}catch(e){}}}}
 function jvFab(on){jvCfg().fab=on;save();render();toast(on?'Botão do Jarvis ligado':'Jarvis só pelo menu')}
 function jvResetPos(){const c=jvCfg();c.x='l';c.y=null;save();render();toast('Botão do Jarvis voltou para o canto')}
-function jvSet(){const c=jvCfg();return `<div class="f"><span>Jarvis</span><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${c.fab?'on':''}" onclick="jvFab(true)">Botão flutuante</button><button class="${!c.fab?'on':''}" onclick="jvFab(false)">Só pelo menu</button></div><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><button class="ghost" onclick="jvResetPos()">Voltar o botão para o canto</button><button class="ghost" onclick="jvClear()">Limpar conversa</button></div></div>`}
+function jvSet(){const c=jvCfg();return `<div class="f"><span>Jarvis</span><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${c.fab?'on':''}" onclick="jvFab(true)">Botão flutuante</button><button class="${!c.fab?'on':''}" onclick="jvFab(false)">Só pelo menu</button></div><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><button class="ghost" onclick="jvResetPos()">Voltar o botão para o canto</button><button class="ghost" onclick="jvClear()">Limpar conversa</button></div></div>${JV_SET.map(f=>f()).join('')}`}
 document.addEventListener('keydown',e=>{if(e.key=='Escape'&&JV.open)jvClose()});
+/* ---- v19: Jarvis analisa o seu uso ----
+   Ganchos para as próximas versões: JV_START (ao abrir), JV_AV (avisos), JV_SET (ajustes), JV_AFTER (depois de cada resposta), JV_CAP (o que ele sabe fazer). */
+const JV_START=[],JV_AV=[],JV_SET=[],JV_AFTER=[];
+const JV_CAP=['digo como está o seu dia, nível e ouro;','explico qualquer parte do G-Line;','abro abas: diga “abrir loja” ou “ir para análise”;','analiso seu uso: semana, sequência, pontos fracos e horários;','dou até 2 avisos por dia quando algo merece atenção.'];
+let JV_NEXT='Nas próximas atualizações: recomendações pelo clima e conversa por voz.';
+function jvAfter(r){JV_AFTER.forEach(f=>{try{f(r)}catch(e){}})}
+function jvQd(d){let due=0,done=0;const h=hoje();S.quests.forEach(q=>{if(q.f=='d'&&q.pr!='o'&&devido(q,d)){const ok=q.log.includes(d);if(d==h&&!ok)return;due++;if(ok)done++}});return {due,done}}
+function jvPer(a,b){let due=0,done=0,d=a;for(let i=0;i<400&&d<=b;i++){const x=jvQd(d);due+=x.due;done+=x.done;d=addD(d,1)}
+ const E=S.lg.filter(e=>e.k=='quest'&&!e.rv&&e.d>=a&&e.d<=b);return {due,done,pc:due?Math.round(done/due*100):null,n:E.length,xp:E.reduce((s,e)=>s+(e.xp||0),0),g:E.reduce((s,e)=>s+(e.g||0),0)}}
+function jvStreak(){const A=actDays();let d=hoje(),n=0;if(!A.has(d))d=addD(d,-1);for(let i=0;i<2000;i++){if(A.has(d))n++;else if(!emDescanso(d))break;d=addD(d,-1)}return n}
+function jvPoucos(){return S.lg.filter(e=>e.k=='quest'&&!e.rv).length<5}
+function jvSemana(){const h=hoje(),w0=wk(h),el=Math.round((parse(h)-parse(w0))/864e5),a=jvPer(w0,h),pw=addD(w0,-7),b=jvPer(pw,addD(pw,el));
+ if(!a.n&&!b.n)return {t:jP(['Ainda não há conclusões nesta semana nem na passada para eu comparar.'])};
+ const L=['<b>Esta semana</b> até agora: '+a.n+' conclus'+(a.n==1?'ão':'ões')+', +'+jNum(a.xp)+' XP e +'+jNum(a.g)+' ouro.'];
+ if(a.pc!=null)L.push('Diárias cumpridas: <b>'+a.pc+'%</b>'+(b.pc!=null?' (semana passada, no mesmo ponto: '+b.pc+'%)':'')+'.');
+ if(b.n){const df=a.n-b.n;{const k=Math.abs(df),u=k==1?'1 conclusão':k+' conclusões';L.push(df>0?'<b>'+u+' a mais</b> que a semana passada. Ótimo ritmo.':df<0?u+' a menos que a semana passada. Ainda dá para recuperar.':'Mesmo ritmo da semana passada.')}}
+ const st=jvStreak();if(st>1)L.push('Sequência atual: <b>'+st+' dias</b> (recorde: '+bestStreak()+').');
+ return {t:jP(L),a:[['Ver Análise',"jvGo('a')"]]}}
+function jvFracoDados(){const h=hoje(),R=[];S.quests.filter(q=>!q.arch&&q.f=='d'&&q.pr!='o').forEach(q=>{let due=0,done=0;for(let i=1;i<=30;i++){const d=addD(h,-i);if(devido(q,d)){due++;if(q.log.includes(d))done++}}if(due>=5)R.push({q,due,done,pc:done/due})});return R.sort((a,b)=>a.pc-b.pc)}
+function jvFraco(){const R=jvFracoDados();if(!R.length)return {t:jP(['Ainda tenho poucos dados: preciso de pelo menos 5 dias de cada quest diária para apontar um ponto fraco.'])};
+ const w=R[0];if(w.pc>=.85)return {t:jP(['Nenhum ponto fraco claro: todas as suas diárias passam de 85% no último mês. Mandou bem.'])};
+ const q=w.q,dica=(q.dif=='dificil'||q.dif=='epico')?'A dificuldade pode estar alta: experimente uma versão menor dela por umas semanas.':q.days.length>=6?'Ela aparece quase todo dia: tente tirar 1 ou 2 dias da semana.':'Experimente colocá-la como foco do dia no Plano.';
+ const L=['A quest que mais escapa é <b>'+esc(q.t)+'</b>: feita em '+w.done+' de '+w.due+' dias ('+Math.round(w.pc*100)+'%) no último mês.',dica];
+ if(R[1]&&R[1].pc<.7)L.push('Depois dela vem <b>'+esc(R[1].q.t)+'</b> ('+Math.round(R[1].pc*100)+'%).');
+ return {t:jP(L),a:[['Editar no Painel',"jvGo('p')"],['Abrir Plano',"jvGo('l')"]]}}
+function jvPadroes(){const P=padroes();return {t:P.L.length?jP(P.L):jP(['Ainda não tenho dados suficientes para ver padrões. Com umas 2 a 4 semanas de uso eu já consigo dizer seus melhores dias e horários.']),a:[['Ver Análise',"jvGo('a')"]]}}
+function jvSeq(){const st=jvStreak(),bs=bestStreak();return {t:jP([st?'Sua sequência atual é de <b>'+st+' dia'+(st>1?'s':'')+'</b> com pelo menos 1 quest concluída.':'Você não está numa sequência agora. Conclua 1 quest hoje para começar uma.','Seu recorde é de <b>'+bs+' dias</b>. Dias de descanso planejado não quebram a sequência.'])}}
+function jvAnalise(){if(jvPoucos())return {t:jP(['Ainda tenho poucos dados para uma análise completa. Use o G-Line por alguns dias e me pergunte de novo.','Enquanto isso, posso te dizer como está o dia de hoje.']),a:[['Como está meu dia?',"jvQ(0)"]]};
+ const s=jvSemana(),f=jvFraco(),p=padroes(),ng=negCats(7);let t='<p><b>Relatório do Sistema</b></p>'+s.t+'<p><b>Ponto fraco</b></p>'+f.t;
+ if(p.L.length)t+='<p><b>Padrões</b></p>'+jP(p.L);
+ if(ng.length)t+='<p><b>Equilíbrio</b></p>'+jP(['Ficou de lado nos últimos 7 dias: '+ng.map(c=>'<b>'+CAT[c][0]+'</b>').join(', ')+'. Quests dessas áreas valem +10% de XP.']);
+ return {t,a:[['Ver Análise',"jvGo('a')"]]}}
+/* Avisos: até 2 por dia, ao abrir o Jarvis */
+function jvAvisos(){if(jvCfg().av===false)return [];const now=Date.now();if(JV.avc&&now-JV.avc.t<15000)return JV.avc.l;let L=[];JV_AV.forEach(f=>{try{L=L.concat(f()||[])}catch(e){}});L.sort((a,b)=>b.p-a.p);JV.avc={t:now,l:L};return L}
+const jvTemAviso=()=>jvCfg().av!==false&&jvCfg().avd!=hoje()&&jvAvisos().length>0;
+JV_AV.push(()=>{const L=[],h=hoje(),hr=new Date().getHours(),st=jvStreak(),Q=jvQuestsHoje(),dw=new Date().getDay();
+ if(st>=3&&!actDays().has(h)&&hr>=17&&Q.pd.length)L.push({p:9,t:jP(['Sua sequência de <b>'+st+' dias</b> acaba hoje se nenhuma quest for concluída.']),a:[['Ver quests',"jvGo('p')"]]});
+ if(!emDescanso(h))S.quests.filter(q=>!q.arch&&q.pr!='o'&&!pausada(q,h)&&(q.f=='w'||q.f=='m')).forEach(q=>{const f=tgt(q,h)-cnt(q,h);if(f<=0)return;const x=new Date(),dl=q.f=='w'?7-dw:new Date(x.getFullYear(),x.getMonth()+1,0).getDate()-x.getDate()+1;if(f>=dl||(q.f=='m'&&dl<=5&&f>1))L.push({p:7,t:jP([(q.f=='w'?'Semanal':'Mensal')+' <b>'+esc(q.t)+'</b>: faltam '+f+' em '+dl+' dia'+(dl>1?'s':'')+'.']),a:[['Ver no Painel',"jvGo('p')"]]})});
+ const ng=negCats(7);if(ng.length&&CAT[ng[0]])L.push({p:5,t:jP(['A área <b>'+CAT[ng[0]][0]+'</b> ficou de lado nos últimos 7 dias. Quests dela estão valendo +10% de XP.']),a:[['Ver na Análise',"jvGo('a')"]]});
+ if(st>=5&&st>=bestStreak())L.push({p:4,t:jP(['Você está no seu <b>recorde de sequência</b>: '+st+' dias seguidos. Continue.'])});
+ const n=sugs().length;if(n)L.push({p:3,t:jP(['O Sistema tem '+n+' sugest'+(n>1?'ões':'ão')+' para a sua rotina.']),a:[['Ver sugestões',"jvGo('a')"]]});
+ return L});
+JV_START.push(()=>{const c=jvCfg();if(c.av===false||c.avd==hoje())return;const L=jvAvisos().slice(0,2);if(!L.length)return;c.avd=hoje();save(true);L.forEach(x=>jvPush({t:'<p><b>Aviso do Sistema</b></p>'+x.t,a:x.a}))});
+function jvAvR(){const L=jvAvisos();return L.length?{t:'<p><b>Avisos de agora</b></p>'+L.slice(0,4).map(x=>x.t).join(''),a:(L[0].a||[])}:{t:jP(['Nenhum aviso agora. Tudo sob controle.'])}}
+JI.push(
+{k:['como foi minha semana','minha semana','como esta minha semana','resumo da semana','relatorio da semana'],r:()=>jvSemana()},
+{k:['analisa','analise meu','analisar','me analisa','meu desempenho','desempenho','como estou indo','estou indo bem','relatorio','avaliacao'],r:()=>jvAnalise()},
+{k:['sequencia','streak','dias seguidos','ofensiva','recorde'],r:()=>jvSeq()},
+{k:['onde estou falhando','mais falho','falhando','ponto fraco','pior quest','o que estou errando','mais deixo','mais esqueco'],r:()=>jvFraco()},
+{k:['melhor horario','meu horario','que horas eu','padrao','meus padroes','melhor dia','pior dia','dia mais forte'],r:()=>jvPadroes()},
+{k:['aviso','alerta','tem algo','algo importante'],r:()=>jvAvR()});
+JG.push(['jvan','O que o Jarvis analisa',['o que voce analisa','avisos do jarvis','analise do jarvis'],()=>jP(['Eu leio o seu histórico (cada conclusão e falha, com data e hora) e respondo coisas como “como foi minha semana?”, “qual meu ponto fraco?”, “qual meu melhor horário?” e “me analisa”.','Ao abrir, posso dar até 2 avisos por dia: sequência em risco, semanal atrasada, área esquecida, recorde e sugestões. Desligue em Perfil → Aparência.']),[['Abrir Aparência','cfg']]]);
+JV_SET.push(()=>{const c=jvCfg();return `<div class="f"><span>Avisos do Jarvis</span><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${c.av!==false?'on':''}" onclick="jvCfg().av=true;save();render()">Até 2 por dia</button><button class="${c.av===false?'on':''}" onclick="jvCfg().av=false;save();render()">Desligados</button></div></div>`});
+/* ---- v20: Jarvis recomenda pelo mundo real (clima, calendário e horário) ----
+   Clima: Open-Meteo, grátis e sem chave. Localização: GPS (com permissão, arredondada a ~1 km) ou cidade escolhida. */
+JV_CAP.push('vejo o clima e recomendo o que fazer: chuva, calor, frio, pôr do sol;','considero fim de semana, feriados, descanso e o horário do dia.');
+JV_NEXT='Na próxima atualização: conversa por voz.';
+const JWX={d:null,t:0,k:''};
+const JWC={0:'céu limpo',1:'poucas nuvens',2:'parcialmente nublado',3:'nublado',45:'neblina',48:'neblina',51:'garoa fraca',53:'garoa',55:'garoa forte',56:'garoa gelada',57:'garoa gelada',61:'chuva fraca',63:'chuva',65:'chuva forte',66:'chuva gelada',67:'chuva gelada',71:'neve',73:'neve',75:'neve forte',77:'neve',80:'pancadas de chuva',81:'pancadas de chuva',82:'temporal',85:'neve',86:'neve',95:'trovoadas',96:'trovoadas com granizo',99:'trovoadas com granizo'};
+const jvChuvoso=c=>(c>=51&&c<=67)||(c>=80&&c<=82)||c>=95;
+const jvFora=q=>q.cat=='ar'||/corr|caminh|bike|pedal|bicicl|trilha|ar livre|parque|futebol|skate/i.test(q.t);
+async function jvWx(force){const c=jvCfg(),L=c.loc;if(!L||c.clima===false)return null;const k=L.lat+','+L.lon;if(!force&&JWX.d&&JWX.k==k&&Date.now()-JWX.t<30*60e3)return JWX.d;
+ try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+L.lat+'&longitude='+L.lon+'&current=temperature_2m,apparent_temperature,weather_code,precipitation&hourly=precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max,sunset&timezone=auto&forecast_days=2');if(!r.ok)throw new Error(r.status);
+ const j=await r.json();if(!j.current)throw new Error('sem dados');JWX.d=j;JWX.t=Date.now();JWX.k=k;JV.avc=null;return j}catch(e){return null}}
+const jvHr=d=>{const x=d||new Date();return fmt(x)+'T'+String(x.getHours()).padStart(2,'0')+':00'};
+function jvChuvaPrev(wx){const H=wx.hourly;if(!H)return null;const i0=H.time.indexOf(jvHr());if(i0<0)return null;for(let i=i0;i<Math.min(H.time.length,i0+12);i++){if((H.precipitation_probability[i]||0)>=60||jvChuvoso(H.weather_code[i]))return {h:+H.time[i].slice(11,13),agora:i<=i0+1}}return null}
+function jvClimaCurto(wx){const c=wx.current,D=wx.daily;return Math.round(c.temperature_2m)+'° e '+(JWC[c.weather_code]||'tempo instável')+' em '+esc(jvCfg().loc.n)+'. Hoje: mín '+Math.round(D.temperature_2m_min[0])+'° e máx '+Math.round(D.temperature_2m_max[0])+'°, chuva '+(D.precipitation_probability_max[0]||0)+'%.'}
+function jvMundo(wx){const R=[],h=hoje(),Q=jvQuestsHoje(),fora=Q.pd.filter(jvFora),D=wx.daily,cv=jvChuvaPrev(wx),mx=D.temperature_2m_max[0],mn=D.temperature_2m_min[0],uv=D.uv_index_max[0]||0,hr=new Date().getHours();
+ if(cv&&fora.length){const q=fora[0];R.push({p:8,t:jP([(cv.agora?'Está chovendo ou vai chover agora':'Previsão de chuva a partir das '+cv.h+'h')+', e você tem <b>'+esc(q.t)+'</b> ao ar livre.',cv.agora?'Que tal trocar por um treino em casa hoje? Se preferir, posso dispensar essa quest só hoje, sem contar como falha.':'Se der, faça antes das '+cv.h+'h. Senão, dá para dispensar só hoje, sem contar como falha.']),a:[['Dispensar hoje',"jvSkip('"+q.id+"')"],['Ver no Painel',"jvGo('p')"]]})}
+ else if(cv)R.push({p:4,t:jP(['Se for sair, leve guarda-chuva.'])});
+ if(mx>=30)R.push({p:6,t:jP(['Dia quente: máxima de '+Math.round(mx)+'°. Beba água ao longo do dia'+(fora.length?' e deixe <b>'+esc(fora[0].t)+'</b> para antes das 9h ou depois das 17h':'')+'.'+(uv>=8?' O índice UV está muito alto: use protetor.':'')])});
+ else if(uv>=8&&fora.length)R.push({p:5,t:jP(['Índice UV muito alto hoje ('+Math.round(uv)+'). Para '+esc(fora[0].t)+', prefira começo da manhã ou fim da tarde e use protetor.'])});
+ if(mn<=12&&fora.length)R.push({p:5,t:jP(['Frio: mínima de '+Math.round(mn)+'°. Capriche no aquecimento antes de <b>'+esc(fora[0].t)+'</b>.'])});
+ if(!cv&&mx<30&&mx>=15&&fora.length)R.push({p:5,t:jP(['Tempo bom para <b>'+esc(fora[0].t)+'</b> hoje: '+Math.round(mx)+'° de máxima e sem chuva prevista.'])});
+ if(fora.length&&D.sunset&&D.sunset[0]){const ss=new Date(D.sunset[0]),f=(ss-new Date())/36e5;if(f>0&&f<=2)R.push({p:6,t:jP(['O sol se põe às '+ss.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'. Se for fazer <b>'+esc(fora[0].t)+'</b> com luz do dia, é agora.'])})}
+ return R}
+/* Calendário: feriados nacionais, fim de semana, descanso e fim do mês */
+function jvPascoa(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return fmt(new Date(y,mo-1,da))}
+function jvFeriado(ds){const F={'01-01':'Confraternização Universal','04-21':'Tiradentes','05-01':'Dia do Trabalho','09-07':'Independência','10-12':'Nossa Senhora Aparecida','11-02':'Finados','11-15':'Proclamação da República','11-20':'Dia da Consciência Negra','12-25':'Natal'};if(F[ds.slice(5)])return F[ds.slice(5)];
+ const p=jvPascoa(+ds.slice(0,4)),M={};M[addD(p,-48)]='Carnaval (ponto facultativo)';M[addD(p,-47)]='Carnaval (ponto facultativo)';M[addD(p,-2)]='Sexta-feira Santa';M[addD(p,60)]='Corpus Christi (ponto facultativo)';return M[ds]||''}
+function jvCal(){const R=[],h=hoje(),am=addD(h,1),dw=new Date().getDay(),fh=jvFeriado(h),fa=jvFeriado(am);
+ if(fh&&!emDescanso(h))R.push({p:6,t:jP(['Hoje é feriado: <b>'+fh+'</b>. Quer transformar em dia de descanso? Nada de falhas nem Penalty Quest hoje.']),a:[['Marcar descanso hoje',"jvRest()"]]});
+ else if(fa)R.push({p:4,t:jP(['Amanhã é feriado: <b>'+fa+'</b>. Se for descansar, agende em Perfil → Rotina.']),a:[['Abrir Rotina',"jvGo('rot')"]]});
+ if(emDescanso(am)&&!emDescanso(h))R.push({p:5,t:jP(['Amanhã é dia de descanso. Adiante hoje o que puder das semanais.'])});
+ if((dw==0||dw==6)&&!emDescanso(h)){const W=S.quests.filter(q=>!q.arch&&q.f=='w'&&!pausada(q,h)&&cnt(q,h)<tgt(q,h));if(W.length)R.push({p:dw==6?7:5,t:jP([(dw==6?'Sábado é o último dia da semana do Sistema.':'Fim de semana:')+' semanais em aberto: '+W.slice(0,3).map(q=>'<b>'+esc(q.t)+'</b> ('+cnt(q,h)+'/'+tgt(q,h)+')').join(', ')+'.']),a:[['Ver no Painel',"jvGo('p')"]]})}
+ return R}
+function jvHoraRec(){const hr=new Date().getHours(),Q=jvQuestsHoje();if(!Q.pd.length||emDescanso(hoje()))return [];const dv=q=>(DIF[q.dif]||DIF.medio)[1],o=Q.pd.slice().sort((a,b)=>dv(b)-dv(a));
+ if(hr<12)return [{p:4,t:jP(['Manhã é boa hora para o mais pesado: comece por <b>'+esc(o[0].t)+'</b>.'])}];
+ if(hr>=20){const f=o[o.length-1];return [{p:5,t:jP(['Já é noite. Para fechar o dia sem desgaste, vá na mais leve: <b>'+esc(f.t)+'</b>.'+(Q.pd.length>1?' Faltam '+Q.pd.length+' no total.':'')])}]}
+ return [{p:3,t:jP(['Próxima sugestão: <b>'+esc(o[0].t)+'</b>'+(Q.pd.length>1?', e depois as outras '+(Q.pd.length-1)+'.':'.')])}]}
+function jvSkip(id){const q=S.quests.find(x=>x.id==id);if(!q)return;if(!(q.skip||[]).includes(hoje()))skipQ(id);jvPush({t:jP(['Feito: <b>'+esc(q.t)+'</b> dispensada hoje. Não conta como falha.'])});jvPaint()}
+function jvRest(){if(emDescanso(hoje()))return toast('Hoje já é dia de descanso');restHoje();jvPush({t:jP(['Hoje virou dia de descanso. Aproveite.'])});jvPaint()}
+const jvSemLoc=()=>({t:jP(['Para falar do clima, preciso saber onde você está. Posso usar sua localização (arredondada, só para o clima) ou você escolhe a cidade em Aparência.']),a:[['Usar minha localização',"jvGps()"],['Escolher cidade',"jvGo('cfg')"]]});
+async function jvClimaR(){const c=jvCfg();if(!c.loc||c.clima===false)return jvSemLoc();const wx=await jvWx();if(!wx)return {t:jP(['Não consegui consultar o clima agora. Confira a internet e tente de novo.'])};
+ const R=jvMundo(wx).sort((a,b)=>b.p-a.p),D=wx.daily,am=['Amanhã: '+(JWC[D.weather_code[1]]||'tempo instável')+', '+Math.round(D.temperature_2m_min[1])+'° a '+Math.round(D.temperature_2m_max[1])+'°, chuva '+(D.precipitation_probability_max[1]||0)+'%.'];
+ const cv=jvChuvaPrev(wx),ch=cv?(cv.agora?'🌧 Chuva agora ou na próxima hora.':'🌧 Chuva prevista a partir das '+cv.h+'h.'):'Sem chuva prevista nas próximas 12 horas.';
+ return {t:jP(['☁ Agora: '+jvClimaCurto(wx)].concat(R.some(x=>x.p==8)?[]:[ch]))+R.slice(0,2).map(x=>x.t).join('')+jP(am),a:R.reduce((a,x)=>a.concat(x.a||[]),[]).slice(0,2)}}
+async function jvRecsR(){const c=jvCfg(),wx=c.loc&&c.clima!==false?await jvWx():null,R=[].concat(wx?jvMundo(wx):[],jvCal(),jvHoraRec()).sort((a,b)=>b.p-a.p).slice(0,3);
+ if(!R.length)return {t:jP(['Tudo em dia por aqui. Sem recomendações agora: aproveite.'])};
+ return {t:'<p><b>Recomendações de agora</b></p>'+R.map(x=>x.t).join('')+(!wx&&!c.loc?jP(['Dica: se você ligar o clima em Aparência, eu também recomendo pela previsão do tempo.']):''),a:R.reduce((a,x)=>a.concat(x.a||[]),[]).slice(0,3)}}
+function jvCalR(){const R=jvCal(),h=hoje();let nx='';for(let i=1;i<=120;i++){const d=addD(h,i),f=jvFeriado(d);if(f){nx='Próximo feriado: <b>'+f+'</b>, '+parse(d).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+'.';break}}
+ return {t:(R.length?R.map(x=>x.t).join(''):'')+jP([nx||'Nenhum feriado nacional nos próximos 4 meses.']),a:R.reduce((a,x)=>a.concat(x.a||[]),[])}}
+/* Localização */
+function jvGps(){if(!navigator.geolocation)return toast('Este aparelho não informa a localização');toast('Pedindo sua localização…');
+ navigator.geolocation.getCurrentPosition(p=>{const c=jvCfg();c.loc={lat:+p.coords.latitude.toFixed(2),lon:+p.coords.longitude.toFixed(2),n:'sua região',m:'gps',t:Date.now()};c.clima=true;JWX.d=null;save();render();toast('Localização salva para o clima');if(JV.open||S.tab=='j')jvSend('como está o clima')},
+ e=>toast(e.code==1?'Localização negada. Escolha a cidade em Perfil → Aparência.':'Não consegui pegar a localização agora'),{enableHighAccuracy:false,timeout:15000,maximumAge:36e5})}
+let JCQ='',JCR=null;
+function jvCidBusca(){const i=document.getElementById('jvcid');JCQ=(i?i.value:'').trim();if(JCQ.length<2)return toast('Digite o nome da cidade');JCR='...';render();
+ fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(JCQ)+'&count=5&language=pt&format=json').then(r=>r.json()).then(j=>{JCR=(j.results||[]).map(x=>({lat:+(+x.latitude).toFixed(2),lon:+(+x.longitude).toFixed(2),n:[x.name,x.admin1,x.country_code].filter(Boolean).join(', ')}));if(!JCR.length){JCR=null;toast('Nenhuma cidade encontrada')}render()}).catch(()=>{JCR=null;toast('Sem conexão para buscar a cidade');render()})}
+function jvCid(i){const x=Array.isArray(JCR)&&JCR[i];if(!x)return;const c=jvCfg();c.loc={lat:x.lat,lon:x.lon,n:x.n,m:'cid'};c.clima=true;JCR=null;JCQ='';JWX.d=null;save();render();toast('Cidade salva: '+x.n)}
+function jvClimaOff(){jvCfg().clima=false;JWX.d=null;save();render();toast('Clima desligado')}
+JV_SET.push(()=>{const c=jvCfg(),L=c.loc,on=c.clima!==false&&L;return `<div class="f"><span>Clima do Jarvis</span><small>${on?'Usando: <b>'+esc(L.m=='gps'?'sua localização (aprox.)':L.n)+'</b>':'Desligado. Escolha como o Jarvis sabe onde você está:'}</small><div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="ghost" onclick="jvGps()">📍 Usar minha localização</button>${on?'<button class="ghost" onclick="jvClimaOff()">Desligar clima</button>':''}</div><div class="jin" style="margin-top:8px"><input id="jvcid" placeholder="Ou digite sua cidade" value="${esc(JCQ)}" onkeydown="if(event.key=='Enter'){event.preventDefault();jvCidBusca()}"><button class="btn" onclick="jvCidBusca()">Buscar</button></div>${JCR==='...'?'<small>Buscando…</small>':Array.isArray(JCR)?JCR.map((x,i)=>`<button class="dit" onclick="jvCid(${i})">${esc(x.n)}</button>`).join(''):''}</div>`});
+/* Ao abrir: atualiza a localização (se o GPS já tiver permissão) e mostra o clima com a melhor recomendação */
+JV_START.push(()=>{const c=jvCfg();if(!c.loc||c.clima===false)return;
+ if(c.loc.m=='gps'&&Date.now()-(c.loc.t||0)>6*36e5&&navigator.permissions&&navigator.geolocation)navigator.permissions.query({name:'geolocation'}).then(p=>{if(p.state=='granted')navigator.geolocation.getCurrentPosition(x=>{c.loc.lat=+x.coords.latitude.toFixed(2);c.loc.lon=+x.coords.longitude.toFixed(2);c.loc.t=Date.now();save(true)},()=>{},{timeout:15000,maximumAge:36e5})}).catch(()=>{});
+ jvWx().then(wx=>{if(!wx)return;const R=jvMundo(wx).concat(jvCal()).sort((a,b)=>b.p-a.p);jvPush({t:jP(['☁ '+jvClimaCurto(wx)])+(R[0]&&R[0].p>=5?R[0].t:''),a:R[0]&&R[0].p>=5?R[0].a:[]});jvPaint()})});
+JV_AV.push(()=>{const wx=JWX.d;return [].concat(wx?jvMundo(wx).filter(x=>x.p>=8):[],jvCal().filter(x=>x.p>=6))});
+JI.push(
+{k:['clima','como esta o tempo','tempo hoje','tempo amanha','vai chover','chover','chuva','temperatura','calor','frio','previsao','guarda chuva','sol'],r:()=>jvClimaR()},
+{k:['o que faco agora','o que eu faco','o que fazer agora','me recomenda','recomenda','sugere','sugira','dica do dia','por onde comeco','qual quest primeiro','qual faco primeiro'],r:()=>jvRecsR()},
+{k:['feriado','proximo feriado','fim de semana','final de semana'],r:()=>jvCalR()});
+JG.push(['jvmr','Recomendações do Jarvis',['recomendacoes do jarvis','como o jarvis recomenda','localizacao do jarvis'],()=>jP(['Eu cruzo o clima (Open-Meteo), o calendário (feriados, fim de semana, descanso) e o horário com as suas quests de hoje. Pergunte “o que faço agora?” ou “vai chover?”.','Para o clima, escolha em Perfil → Aparência: sua localização (arredondada a cerca de 1 km) ou uma cidade. Nada muda sozinho: dispensar uma quest ou marcar descanso só acontece se você tocar no botão.']),[['Abrir Aparência','cfg']]]);
+/* ---- v21: Jarvis conversa melhor e por voz ----
+   Voz: fala com a voz do navegador (grátis) e escuta pelo reconhecimento de voz do Chrome (precisa de internet).
+   Conversa: entende continuações (“sim”, “abre”, “explica melhor”), corrige erros de digitação e lembra a conversa neste aparelho. */
+JV_CAP.push('converso por voz: toque no microfone para falar comigo;','entendo continuações como “sim”, “abre” e “explica melhor”, e erros de digitação.');
+JV_NEXT='';
+/* Erros de digitação: compara cada palavra com o vocabulário que eu conheço */
+let JVOC=null;
+function jvVoc(){if(JVOC)return JVOC;const s=new Set(),add=k=>k.split(' ').forEach(x=>{if(x.length>=4)s.add(x)});JG.forEach(g=>g[2].forEach(add));JI.forEach(i=>i.k.forEach(add));JNAV.forEach(x=>x[2].forEach(add));return JVOC=[...s]}
+function jvLev(a,b){if(Math.abs(a.length-b.length)>2)return 9;let p=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]==b[j-1]?0:1));p=c}return p[b.length]}
+function jvFix(n){const V=jvVoc(),K=new Set(V);return n.split(' ').map(x=>{if(x.length<5||K.has(x)||K.has(x.replace(/e?s$/,'')))return x;const lim=x.length>=8?2:1;let b=x,bd=lim+1;V.forEach(v=>{const d=jvLev(x,v);if(d<bd){bd=d;b=v}});return bd<=lim?b:x}).join(' ')}
+/* Contexto: lembra a última resposta para entender continuações */
+const JOK=/^jv[A-Za-z]+\([^()]*\)$/;
+function jvRun(code){if(!JOK.test(code))return;const m=code.match(/^(jv[A-Za-z]+)\((.*)\)$/),f=window[m[1]];if(typeof f!='function')return;const arg=m[2].trim();f(arg?(/^'.*'$/.test(arg)?arg.slice(1,-1):+arg):undefined)}
+function jvModCtx(n){const c=JV.ctx||{};
+ if(/^(sim|pode|pode ser|abre|abre ai|abrir|abre isso|leva la|me leva|bora|manda|vai|ok|blz|beleza|claro|isso|quero|faz isso|faca isso)( (sim|por favor|pf|pfv|jarvis))?$/.test(n)){if(c.a&&c.a.length){const b=c.a[0];setTimeout(()=>jvRun(b[1]),500);return {t:jP(['Certo: '+esc(b[0].toLowerCase())+'.']),ack:1}}return {t:jP(['Combinado. Me diga o que você quer fazer.']),ack:1}}
+ if(/^(nao|agora nao|deixa|deixa pra la|deixa quieto|depois|nao precisa|nada)( (obrigado|valeu|jarvis))?$/.test(n))return {t:jP(['Tudo bem. Se precisar, é só chamar.']),ack:1};
+ if(/^(explica melhor|explica de novo|como assim|nao entendi|mais detalhes|detalha|e como faco|como faco isso|onde fica|onde fica isso)$/.test(n)){const g=c.g&&JG.find(x=>x[0]==c.g);if(!g)return null;const t=g[3](),p1=(t.match(/<p>(.*?)<\/p>/)||[])[1]||'';
+  return {t:jP(['Vou por partes. O principal sobre <b>'+g[1]+'</b>:',p1,(g[4]&&g[4][0]?'Quer que eu te leve até lá? É só tocar no botão ou dizer “sim”.':'Pergunte de outro jeito que eu tento de novo.')]),a:(g[4]||[]).map(b=>[b[0],"jvGo('"+b[1]+"')"]),g:g[0]}}
+ return null}
+JV_MOD.unshift(jvModCtx);
+JV_AFTER.push(r=>{if(r&&!r.ack)JV.ctx={a:r.a||[],g:r.g||null}});
+/* Conversa curta e apelido */
+JI.push(
+{k:['tudo bem','como voce esta','como vai','tudo certo','beleza jarvis'],r:()=>({t:jP(['Tudo certo por aqui, sistemas operando. E o seu dia, como está indo?']),a:[['Ver meu dia',"jvQ(0)"]]})},
+{k:['bom trabalho','voce e bom','gostei','mandou bem','muito bom'],r:()=>({t:jP(['Obrigado. Mas quem sobe de nível é você.'])})},
+{k:['piada','me faz rir','conta uma'],r:()=>({t:jP([['Por que o caçador rank E levou uma escada para a Dungeon? Disseram que era para subir de nível.','Qual o portal favorito do caçador preguiçoso? O portal de descanso planejado.','O Sistema me pediu um relatório de humor. Escrevi: “carregando… 100%”.'][Math.floor(Math.random()*3)]])})},
+{k:['sem vontade','preguica','desanimado','desanimada','cansado','cansada','me motiva','motivacao','nao quero fazer'],r:()=>{const Q=jvQuestsHoje(),dv=q=>(DIF[q.dif]||DIF.medio)[1],f=Q.pd.slice().sort((a,b)=>dv(a)-dv(b))[0];return {t:jP(['Acontece com todo caçador. A regra é simples: faça só a menor coisa possível agora.',f?'A mais leve de hoje é <b>'+esc(f.t)+'</b>. Comece só por ela.':'Você já fez tudo de hoje. Descansar também conta.','Se a semana estiver pesada, o modo recuperação deixa as metas pela metade, sem penalidade.']),a:[['Ver quests',"jvGo('p')"],['Modo recuperação',"jvGo('rot')"]]}}},
+{k:['me chama de','pode me chamar de','meu nome e','me chame de'],r:()=>{const m=String(JV.raw||'').match(/(?:me chama de|me chame de|pode me chamar de|meu nome [ée])\s+(.{1,20})/i),ap=m?m[1].replace(/[.!?,;]+$/,'').trim():'';if(!ap)return {t:jP(['Como você quer que eu te chame?'])};jvCfg().ap=ap;save();return {t:jP(['Combinado, <b>'+esc(ap)+'</b>. Vou te chamar assim.'])}}});
+/* Voz: fala */
+function jvTxt(h){const d=document.createElement('div');d.innerHTML=String(h).replace(/<li>/g,'<li>. ').replace(/<\/p>/g,'. ');return d.textContent.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}◈✦]/gu,'').replace(/\s*\.\s*\./g,'.').replace(/\s+/g,' ').trim()}
+function jvFala(h,cb){const done=()=>{cb&&cb()};if(!window.speechSynthesis)return done();const t=jvTxt(h);if(!t)return done();try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';const v=speechSynthesis.getVoices().find(x=>/pt[-_]BR/i.test(x.lang));if(v)u.voice=v;u.rate=1.05;u.onend=done;u.onerror=done;speechSynthesis.speak(u)}catch(e){done()}}
+function jvVoz(){const c=jvCfg();c.voz=!c.voz;save();if(!c.voz&&window.speechSynthesis)speechSynthesis.cancel();toast(c.voz?'Jarvis vai falar as respostas':'Jarvis sem voz');document.querySelectorAll('.jvoz').forEach(b=>{b.innerHTML=jvVozIc();b.setAttribute('aria-label',c.voz?'Desligar a voz do Jarvis':'Ligar a voz do Jarvis')})}
+const jvVozIc=()=>jvCfg().voz?SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>'):SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/>');
+function jvVozBtn(){return `<button class="hb jvoz" aria-label="${jvCfg().voz?'Desligar':'Ligar'} a voz do Jarvis" onclick="jvVoz()">${jvVozIc()}</button>`}
+JV_AFTER.push(r=>{const c=jvCfg(),vv=JV.viaVoz;JV.viaVoz=false;if(!r||!c.voz)return;jvFala(r.t,()=>{if(vv&&c.mf&&(JV.open||S.tab=='j'))setTimeout(jvMic,350)})});
+/* Voz: escuta */
+let JREC=null;
+function jvMicBtn(){return `<button class="ghost jmic${JV.ouvindo?' on':''}" aria-label="Falar com o Jarvis" onclick="jvMic()">${SV('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>')}</button>`}
+function jvMicUI(){document.querySelectorAll('.jmic').forEach(b=>b.classList.toggle('on',!!JV.ouvindo));const i=document.getElementById('jvin');if(i)i.placeholder=JV.ouvindo?'Ouvindo… pode falar':'Pergunte ao Jarvis…'}
+function jvMic(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return toast('Este navegador não reconhece voz. Use o Chrome.');if(JREC){try{JREC.stop()}catch(e){}return}
+ if(window.speechSynthesis)speechSynthesis.cancel();const r=new SR();r.lang='pt-BR';r.interimResults=true;r.maxAlternatives=1;let fin='';JREC=r;JV.ouvindo=true;jvMicUI();
+ r.onresult=e=>{let t='';for(const x of e.results)t+=x[0].transcript;const i=document.getElementById('jvin');if(i)i.value=t;JV.draft=t;if(e.results[e.results.length-1].isFinal)fin=t};
+ r.onerror=e=>{if(e.error=='not-allowed'||e.error=='service-not-allowed')toast('Permita o microfone para o G-Line nas configurações do navegador');else if(e.error=='network')toast('O reconhecimento de voz precisa de internet');else if(e.error=='no-speech')toast('Não ouvi nada. Toque no microfone e fale.')};
+ r.onend=()=>{JREC=null;JV.ouvindo=false;jvMicUI();const t=(fin||'').trim();if(t){JV.viaVoz=true;jvSend(t)}};
+ try{r.start()}catch(e){JREC=null;JV.ouvindo=false;jvMicUI();toast('Não consegui ligar o microfone')}}
+/* Memória da conversa neste aparelho (não vai para a nuvem) */
+const JVK=KEY+'-jarvis';
+function jvMemSave(){try{if(jvCfg().mem===false){localStorage.removeItem(JVK);return}localStorage.setItem(JVK,JSON.stringify({d:JV.gd||hoje(),m:JV.msgs.filter(m=>!m.typ).slice(-40)}))}catch(e){}}
+(function(){try{const o=JSON.parse(localStorage.getItem(JVK)||'null');if(!o||!Array.isArray(o.m))return;JV.gd=o.d;JV.msgs=o.m.filter(m=>m&&typeof m.t=='string').map(m=>({u:m.u?1:0,sep:m.sep?1:0,t:m.t,a:(m.a||[]).filter(b=>Array.isArray(b)&&typeof b[0]=='string'&&JOK.test(b[1]))}))}catch(e){}})();
+JV_SET.push(()=>{const c=jvCfg(),B=(k,v,l)=>`<button class="${(k=='mem'?c.mem!==false:!!c[k])==v?'on':''}" onclick="jvCfg().${k}=${v};save();render()">${l}</button>`;
+ return `<div class="f"><span>Voz do Jarvis</span><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr))">${B('voz',true,'Fala as respostas')}${B('voz',false,'Só texto')}</div><small>Mãos livres: depois de responder em voz, ele volta a ouvir sozinho.</small><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-top:6px">${B('mf',true,'Mãos livres')}${B('mf',false,'Toco no microfone')}</div></div><div class="f"><span>Memória da conversa</span><small>A conversa fica salva só neste aparelho.</small><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-top:6px">${B('mem',true,'Lembrar conversa')}${B('mem',false,'Apagar ao fechar')}</div></div>`});
+JG.push(['jvvoz','Voz do Jarvis',['voz','falar com voce','microfone','mãos livres','maos livres','falar','ouvir'],()=>jP(['Toque no <b>microfone</b> ao lado do campo de texto e fale. Eu respondo por escrito e, com a voz ligada (o alto-falante no topo da conversa), também em voz alta.','No modo <b>mãos livres</b>, depois de responder eu volto a ouvir sozinho. O reconhecimento de voz do Chrome precisa de internet; a fala funciona offline na maioria dos aparelhos.']),[['Ajustes de voz','cfg']]]);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(JREC)try{JREC.stop()}catch(e){}if(window.speechSynthesis)speechSynthesis.cancel()}});
 let LASTD=hoje();setInterval(()=>{if(hoje()!=LASTD){LASTD=hoje();if(!MOD)render()}},30000);
 render();setInterval(gtick,1000);syAuto();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
