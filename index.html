@@ -230,6 +230,34 @@ body.navc .jvt{height:calc(100dvh - 140px)}
 .jmic.on{background:var(--bad);border-color:var(--bad);color:#fff;animation:jpulse 1.2s ease-in-out infinite}
 .jsep{align-self:center;font-size:12px;letter-spacing:2px;color:var(--mute);padding:6px 0}
 #jvb.jdot::after{content:'';position:absolute;top:3px;right:3px;width:13px;height:13px;border-radius:50%;background:var(--gold);border:2px solid var(--panel)}
+
+/* ---- v23: tema Neon Tóquio (cyberpunk, igual ao canvas da aba Treino) ---- */
+:root.neon{--pk:#ff3d8b;--ok:#3ee0a0;--bad:#ff5a73;--panel2:#0d0f22}
+:root.neon .win{border-radius:14px;box-shadow:0 0 22px color-mix(in srgb,var(--acc) 7%,transparent)}
+:root.neon .win:not(.pu)>h2:first-child{color:var(--acc)}
+:root.neon .win:not(.pu)>h2:first-child::before{content:'[ '}
+:root.neon .win:not(.pu)>h2:first-child::after{content:' ]'}
+:root.neon .pu{box-shadow:0 0 40px color-mix(in srgb,var(--acc) 16%,transparent)}
+:root.neon .btn{text-transform:uppercase;letter-spacing:1.5px;box-shadow:0 0 18px color-mix(in srgb,var(--acc) 35%,transparent)}
+:root.neon .tabs button.on{box-shadow:0 0 14px color-mix(in srgb,var(--acc) 40%,transparent)}
+:root.neon .bar{border-radius:3px;background:color-mix(in srgb,var(--acc) 12%,var(--panel))}
+:root.neon .bar i{border-radius:3px;background:var(--acc);box-shadow:0 0 10px color-mix(in srgb,var(--acc) 60%,transparent)}
+:root.neon .chk.on{box-shadow:0 0 12px color-mix(in srgb,var(--ok) 50%,transparent)}
+:root.neon .item.qrow{border-radius:14px}
+:root.neon .item.qrow.sec{border-color:var(--pk);background:color-mix(in srgb,var(--pk) 8%,var(--panel));box-shadow:0 0 16px color-mix(in srgb,var(--pk) 25%,transparent)}
+:root.neon .item.qrow.sec .chk.on{background:var(--pk);border-color:var(--pk)}
+:root.neon .rank{border:1px solid var(--pk);color:var(--pk);background:color-mix(in srgb,var(--pk) 10%,var(--panel));box-shadow:0 0 14px color-mix(in srgb,var(--pk) 35%,transparent)}
+:root.neon .htl b{text-shadow:0 0 12px color-mix(in srgb,var(--acc) 70%,transparent)}
+:root.neon .hav{border-color:var(--pk);box-shadow:0 0 12px color-mix(in srgb,var(--pk) 40%,transparent)}
+:root.neon .dlb{color:var(--pk)}
+:root.neon .dit.on,:root.neon .dtl button.on,:root.neon .navs button.on{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 50%,transparent),0 0 14px color-mix(in srgb,var(--acc) 18%,transparent)}
+:root.neon aside button.on{color:var(--acc);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 40%,transparent)}
+:root.neon #fab{border-radius:16px;box-shadow:0 0 24px color-mix(in srgb,var(--acc) 45%,transparent)}
+:root.neon #toast{border:1px solid var(--acc);box-shadow:0 0 18px color-mix(in srgb,var(--acc) 30%,transparent)}
+:root.neon input:focus,:root.neon select:focus,:root.neon textarea:focus{box-shadow:0 0 0 1px var(--acc),0 0 14px color-mix(in srgb,var(--acc) 30%,transparent)}
+:root.neon .fx b{text-shadow:0 0 24px var(--acc)}
+:root.neon .win.dg{border-color:var(--gold);box-shadow:0 0 22px color-mix(in srgb,var(--gold) 14%,transparent)}
+:root.neon .tmon{box-shadow:0 0 0 2px var(--acc)}
 </style>
 </head>
 <body>
@@ -898,11 +926,11 @@ const navOn=k=>k==S.tab&&!(k=='u'&&(S.sub=='a'||S.sub=='c'))||(k=='ach'&&S.tab==
 function navSync(){return `<div class="dft"><span style="color:${SY.u?'var(--ok)':'var(--mute)'}">${NI.cloud}</span>${SY.u?esc(SY.st||'Sincronizado'):'Sem conta conectada'}</div>`}
 function drawerHtml(){if(!DRW)return '';const f=spFree(),bd=f>0?`<span class="dbg">${f}</span>`:'';
  const head=`<div class="row" style="gap:12px;flex-wrap:nowrap"><div class="hav" style="width:48px;height:48px">${avH()}</div><div class="t"><b style="font-family:var(--fd);font-size:18px">${esc(S.name)} · Rank ${RK[ri(S.lvl)]}</b><div class="bar"><i style="width:${S.xp/need(S.lvl)*100}%"></i></div><small>Nível ${S.lvl} · ${S.xp}/${need(S.lvl)} XP · <span class="gold">${S.gold} ouro</span></small></div></div>`;
- if(navMode()=='apps'){const T=[['p','Painel'],['l','Plano'],['c','Criar'],['m','Metas'],['camp','Campanhas'],['s','Loja'],['a','Análise'],['g','Corrida'],['d','Diário'],['j','Jarvis'],['u','Perfil'],['ach','Conquistas'],['cfg','Ajustes']];
+ if(navMode()=='apps'){const T=[['p','Painel'],['l','Plano'],['c','Criar'],['m','Metas'],['camp','Campanhas'],['s','Loja'],['a','Análise'],['t','Treino'],['g','Corrida'],['d','Diário'],['j','Jarvis'],['u','Perfil'],['ach','Conquistas'],['cfg','Ajustes']];
   return `<div class="dgr" role="dialog" aria-label="Menu do Sistema"><div class="row"><div><b style="font-family:var(--fd);font-size:20px;letter-spacing:4px;color:var(--acc)">MENU DO SISTEMA</b><br><small style="letter-spacing:2px">TOQUE PARA ABRIR</small></div><button class="hb" aria-label="Fechar menu" onclick="DRW=false;render()">${NI.x}</button></div>
   <div class="win" style="margin:0;padding:12px">${head}</div><div class="dtl">${T.map(t=>`<button class="${navOn(t[0])?'on':''}" onclick="navGo('${t[0]}')">${t[0]=='u'?bd:''}${NI[t[0]]}${t[1]}</button>`).join('')}</div>
   <button class="btn" style="width:100%;margin-top:auto" onclick="navGo('res')">RESUMO DO DIA</button>${navSync()}</div>`}
- const G=[['ROTINA',[['p','Painel'],['l','Plano do dia'],['c','Criar quest'],['m','Metas'],['camp','Campanhas']]],['PROGRESSO',[['a','Análise'],['g','Corrida'],['d','Diário']]],['RECOMPENSAS',[['s','Loja e mochila']]],['ASSISTENTE',[['j','Jarvis']]],['CONTA',[['u','Perfil e status'],['ach','Conquistas'],['cfg','Aparência e backup'],['res','Resumo do dia']]]];
+ const G=[['ROTINA',[['p','Painel'],['l','Plano do dia'],['c','Criar quest'],['m','Metas'],['camp','Campanhas']]],['TREINO',[['t','Treino'],['g','Corrida']]],['PROGRESSO',[['a','Análise'],['d','Diário']]],['RECOMPENSAS',[['s','Loja e mochila']]],['ASSISTENTE',[['j','Jarvis']]],['CONTA',[['u','Perfil e status'],['ach','Conquistas'],['cfg','Aparência e backup'],['res','Resumo do dia']]]];
  return `<div class="dbk" onclick="DRW=false;render()"></div><nav class="dpn" aria-label="Menu do Sistema"><div class="dpf">${head}</div>${G.map(g=>`<div class="dlb">${g[0]}</div>`+g[1].map(t=>`<button class="dit ${navOn(t[0])?'on':''}" onclick="navGo('${t[0]}')">${NI[t[0]]}${t[1]}${t[0]=='u'?bd:''}</button>`).join('')).join('')}${navSync()}</nav>`}
 function hdrHtml(){const dn=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'short'});return `<button class="hb" aria-label="Abrir menu" onclick="DRW=true;render()">${NI.menu}${spFree()>0?'<span class="hdot"></span>':''}</button><div class="htl"><b>G-LINE</b><small>${dn}</small></div><button class="hav" aria-label="Abrir perfil" onclick="navGo('u')">${avH()}</button>`}
 function navSel(){const m=navMode(),O=[['lateral','Gaveta lateral'],['apps','Gaveta de apps'],['classico','Barra de baixo']];return `<div class="f"><span>Estilo do menu</span><div class="navs">${O.map(o=>`<button class="${m==o[0]?'on':''}" onclick="S.nav='${o[0]}';save();render();toast('Menu: ${o[1]}')">${o[1]}</button>`).join('')}</div></div>`}
@@ -913,7 +941,7 @@ function perfil(){const subs=[['s','Status'],['a','Conquistas'],['r','Rotina'],[
  if(S.sub=='s')c=stView();
  if(S.sub=='a')c=achView();
  if(S.sub=='r')c=rotView();
- let tema='';if(S.sub=='c')tema=`<b>Temas prontos</b><div class="tabs" style="flex-wrap:wrap;margin:6px 0 12px">${Object.keys(PRE).map(k=>`<button onclick="preset('${k}')">${PRE[k].n}</button>`).join('')}</div><b>Cores personalizadas</b><div class="f2" style="margin:6px 0 12px">${[['bg','Fundo'],['panel','Painéis'],['line','Bordas'],['ink','Texto'],['acc','Destaque'],['gold','Ouro']].map(c=>F(c[1],`<input type="color" value="${tcol(c[0])}" onchange="setCor('${c[0]}',this.value)" style="height:46px;padding:2px">`)).join('')}</div><button class="ghost" onclick="resetTema()">Restaurar padrão</button>`;
+ let tema='';if(S.sub=='c')tema=`<b>Temas prontos</b><div class="tabs" style="flex-wrap:wrap;margin:6px 0 12px">${Object.keys(PRE).map(k=>`<button class="${S.theme&&TK.every(c=>S.theme[c]==PRE[k][c])?'on':''}" onclick="preset('${k}')">${PRE[k].n}</button>`).join('')}</div><b>Cores personalizadas</b><div class="f2" style="margin:6px 0 12px">${[['bg','Fundo'],['panel','Painéis'],['line','Bordas'],['ink','Texto'],['acc','Destaque'],['gold','Ouro']].map(c=>F(c[1],`<input type="color" value="${tcol(c[0])}" onchange="setCor('${c[0]}',this.value)" style="height:46px;padding:2px">`)).join('')}</div><button class="ghost" onclick="resetTema()">Restaurar padrão</button>`;
  if(S.sub=='b')c=`<p class="mute">Guarde uma cópia dos seus dados num arquivo no aparelho e restaure quando precisar.</p><p>Última alteração neste aparelho: <b>${S.ts?dt(S.ts):'—'}</b><br>Último backup exportado: <b>${S.lastExp?dt(S.lastExp):'nunca'}</b><br>Versão do app: <b>21.2</b>${window.matchMedia&&matchMedia('(display-mode: standalone)').matches?' · instalado':''}<br>Versão dos dados: <b>${VER}</b></p><div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn" onclick="exportar()">⬇ Exportar backup</button><button class="ghost" onclick="document.getElementById('fk').click()">⬆ Importar backup</button><input id="fk" class="vh" type="file" accept=".json,application/json" onchange="impLer(this)" tabindex="-1"></div><p style="margin-top:20px"><b>Quests</b></p><button class="ghost" style="color:var(--bad);border-color:var(--bad)" onclick="zeraQ()">Apagar todas as quests</button>${sySec()}${S.quests.some(q=>q.arch)?'<p style="margin-top:20px"><b>Quests arquivadas</b></p>'+S.quests.filter(q=>q.arch).map(q=>`<div class="item"><div class="t"><b>${esc(q.t)}</b><small>${q.log.length} conclusões guardadas</small></div><button class="ghost" onclick="qRest('${q.id}')">Restaurar</button><button class="ghost" style="color:var(--bad)" onclick="qApaga('${q.id}')">Apagar</button></div>`).join(''):''}`;
  if(S.sub=='c')c=navSel()+jvSet()+F('Nome',`<input value="${esc(S.name)}" maxlength="24" onchange="S.name=this.value.trim()||'Caçador';save();render()">`)+F('Sobre mim',`<textarea rows="3" maxlength="140" onchange="S.bio=this.value;save();render()">${esc(S.bio)}</textarea>`)+`<div class="f"><span>Foto de perfil</span><div class="row" style="justify-content:flex-start;gap:12px">${av(64)}<button class="btn" onclick="document.getElementById('fp').click()">📷 Escolher foto</button><input id="fp" class="vh" type="file" accept="image/*" onchange="foto(this)" tabindex="-1">${S.photo?`<button class="ghost" onclick="S.photo='';save();render()">Remover</button>`:''}</div></div>`+`<div class="f"><span>Banner (ideal: 1500 × 500 px, proporção 3:1)</span><div class="row" style="justify-content:flex-start;gap:12px"><button class="btn" onclick="document.getElementById('fb').click()">🖼 Enviar banner</button><input id="fb" class="vh" type="file" accept="image/*" onchange="bn(this)" tabindex="-1">${S.bannerImg?`<button class="ghost" onclick="S.bannerImg='';save();render()">Remover</button>`:''}</div></div>`+F('Cor do banner',`<div class="row" style="justify-content:flex-start">${BAN.map(b=>`<button class="chk" aria-label="Cor" style="background:${b};border-color:${S.banner==b?'var(--gold)':'transparent'}" onclick="S.bannerImg='';go('banner','${b}')"></button>`).join('')}</div>`);
  if(S.sub=='c')c+='<h2 style="margin-top:16px">Tema</h2>'+tema;
@@ -926,18 +954,18 @@ function popup(){const h=hoje(),wd=new Date().getDay(),ts=S.quests.filter(q=>!q.
  <div class="cols"><div><b>Quests (${dn}/${ts.length})</b>${ts.length?ts.slice(0,7).map(q=>`<div class="item ${q.log.includes(h)||cnt(q,h)>=tgt(q)?'done':''}"><div class="t"><b>${esc(q.t)}</b><small>${FQ[q.f]}${tgt(q)>1?' · '+cnt(q,h)+'/'+tgt(q):''}</small></div><span>${q.log.includes(h)?'✓':''}</span></div>`).join(''):'<div class="mute">Sem quests hoje.</div>'}</div>
  <div><b>Lista de desejos</b>${ws.length?ws.map(i=>{const p=price(i,k),l=lock(i);return `<div class="item"><div class="t"><b>${esc(i.t)}</b><small>${p} ouro · ${l.length?'Bloqueado':S.gold>=p?'Disponível!':'Faltam '+(p-S.gold)}</small></div></div>`}).join(''):'<div class="mute">Marque ♡ na loja.</div>'}</div></div></section></div>`}
 let POP=true;const closePop=()=>{POP=false;render()};
-const PRE={azul:{n:'Azul Sistema',bg:'#060a14',panel:'#0c1530',line:'#1e3a78',ink:'#e6edff',acc:'#4da3ff',gold:'#ffc857'},roxo:{n:'Roxo Sombra',bg:'#0b0714',panel:'#161026',line:'#6b3fc4',ink:'#efe8ff',acc:'#a97bff',gold:'#ffc857'},verde:{n:'Verde Esmeralda',bg:'#06100d',panel:'#0c1c17',line:'#1f7a5c',ink:'#e4fff4',acc:'#3ee0a0',gold:'#ffd166'},vermelho:{n:'Vermelho Monarca',bg:'#12070a',panel:'#1f0d12',line:'#9c2a3f',ink:'#ffe8ec',acc:'#ff5a73',gold:'#ffc857'},claro:{n:'Claro',bg:'#eef2fb',panel:'#ffffff',line:'#3b64c9',ink:'#0c1634',acc:'#1f6fe0',gold:'#b97a00'}};
+const PRE={neon:{n:'Neon Tóquio ✦ novo',bg:'#07080f',panel:'#12142a',line:'#2a2f55',ink:'#e8ecff',acc:'#22e5ff',gold:'#ffc94d',nt:1},azul:{n:'Azul Sistema',bg:'#060a14',panel:'#0c1530',line:'#1e3a78',ink:'#e6edff',acc:'#4da3ff',gold:'#ffc857'},roxo:{n:'Roxo Sombra',bg:'#0b0714',panel:'#161026',line:'#6b3fc4',ink:'#efe8ff',acc:'#a97bff',gold:'#ffc857'},verde:{n:'Verde Esmeralda',bg:'#06100d',panel:'#0c1c17',line:'#1f7a5c',ink:'#e4fff4',acc:'#3ee0a0',gold:'#ffd166'},vermelho:{n:'Vermelho Monarca',bg:'#12070a',panel:'#1f0d12',line:'#9c2a3f',ink:'#ffe8ec',acc:'#ff5a73',gold:'#ffc857'},claro:{n:'Claro',bg:'#eef2fb',panel:'#ffffff',line:'#3b64c9',ink:'#0c1634',acc:'#1f6fe0',gold:'#b97a00'}};
 const TK=['bg','panel','line','ink','acc','gold'];
 const tcol=k=>(S.theme&&S.theme[k])||getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
-function applyTheme(){const r=document.documentElement.style,t=S.theme;TK.forEach(k=>t&&t[k]?r.setProperty('--'+k,t[k]):r.removeProperty('--'+k));
- if(t&&t.ink&&t.bg)r.setProperty('--mute','color-mix(in srgb,'+t.ink+' 62%,'+t.bg+')');else r.removeProperty('--mute')}
-function preset(k){const p=PRE[k],t={};TK.forEach(c=>t[c]=p[c]);S.theme=t;save();applyTheme();render();toast('Tema "'+p.n+'" aplicado')}
-function setCor(k,v){const t={};TK.forEach(c=>t[c]=(S.theme&&S.theme[c])||tcol(c));t[k]=v;S.theme=t;save();applyTheme();render();toast('Cor atualizada')}
+function applyTheme(){const r=document.documentElement.style,t=S.theme;document.documentElement.classList.toggle('neon',!!(t&&t.nt));try{const m=document.querySelector('meta[name=theme-color]');if(m)m.content=(t&&t.bg)||'#060a14'}catch(e){}TK.forEach(k=>t&&t[k]?r.setProperty('--'+k,t[k]):r.removeProperty('--'+k));
+ if(t&&t.nt&&t.ink=='#e8ecff')r.setProperty('--mute','#9aa3c7');else if(t&&t.ink&&t.bg)r.setProperty('--mute','color-mix(in srgb,'+t.ink+' 62%,'+t.bg+')');else r.removeProperty('--mute')}
+function preset(k){const p=PRE[k],t={};TK.forEach(c=>t[c]=p[c]);if(p.nt)t.nt=1;S.theme=t;save();applyTheme();render();toast('Tema "'+p.n+'" aplicado')}
+function setCor(k,v){const t={};TK.forEach(c=>t[c]=(S.theme&&S.theme[c])||tcol(c));if(S.theme&&S.theme.nt)t.nt=1;t[k]=v;S.theme=t;save();applyTheme();render();toast('Cor atualizada')}
 function resetTema(){S.theme=null;save();applyTheme();render();toast('Tema restaurado')}
 function render(){const af=document.activeElement&&document.activeElement.id;try{_render();jvRender(af);if(S.tab=='g')setTimeout(gMaps,0)}catch(e){showErr(e)}}
-function _render(){NEGC={};if(SAFE)return recScreen();{const md=navMode(),dr=md!='classico';document.body.classList.toggle('navd',dr);document.body.classList.toggle('navc',!dr);const h=document.getElementById('hdr');if(h)h.innerHTML=dr?hdrHtml():'';const dw=document.getElementById('drw');if(dw)dw.innerHTML=dr?drawerHtml():'';const fb=document.getElementById('fab');if(fb)fb.hidden=!(dr&&S.tab=='p'&&!DRW)}applyTheme();runFails();cmpUpd();achCheck();const T=[['p','Painel'],['l','Plano'],['c','Criar'],['m','Metas'],['s','Loja'],['a','Análise'],['d','Diário'],['g','Corrida'],['j','Jarvis'],['u','Perfil']];
+function _render(){NEGC={};if(SAFE)return recScreen();{const md=navMode(),dr=md!='classico';document.body.classList.toggle('navd',dr);document.body.classList.toggle('navc',!dr);const h=document.getElementById('hdr');if(h)h.innerHTML=dr?hdrHtml():'';const dw=document.getElementById('drw');if(dw)dw.innerHTML=dr?drawerHtml():'';const fb=document.getElementById('fab');if(fb)fb.hidden=!(dr&&S.tab=='p'&&!DRW)}applyTheme();runFails();cmpUpd();achCheck();const T=[['p','Painel'],['l','Plano'],['c','Criar'],['m','Metas'],['s','Loja'],['a','Análise'],['d','Diário'],['t','Treino'],['g','Corrida'],['j','Jarvis'],['u','Perfil']];
  document.getElementById('nav').innerHTML=T.map(t=>`<button class="${S.tab==t[0]?'on':''}" onclick="go('tab','${t[0]}')"><i>${TI[t[0]]}</i>${t[1]}${t[0]=='u'&&spFree()>0?' •':''}</button>`).join('')+`<button onclick="POP=true;render()"><i>📜</i>Resumo</button>`;
- const y=document.getElementById('app'),sc=y.scrollTop;y.innerHTML=({p:panel,l:plano,c:criar,m:metasTab,s:loja,a:analise,d:diario,g:corrida,j:jvTab,u:perfil})[S.tab]();y.scrollTop=sc;const on=document.querySelector&&document.querySelector('#nav .on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
+ const y=document.getElementById('app'),sc=y.scrollTop;y.innerHTML=({p:panel,l:plano,c:criar,m:metasTab,s:loja,a:analise,d:diario,g:corrida,t:treinoTab,j:jvTab,u:perfil})[S.tab]();y.scrollTop=sc;const on=document.querySelector&&document.querySelector('#nav .on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});
  document.getElementById('pop').innerHTML=(POP?popup():'')+MOD;const gt=document.getElementById('gt');if(gt)gt.innerHTML=S.ses&&S.ses.run&&S.tab!='s'?`<button class="gpill" onclick="go('tab','s')" aria-label="Ver gameplay">🎮 <span class="gtm">${fmtT(Math.min(gLeft().saldo,gLeft().hoje))}</span></button>`:''}
 /* ---- Backup local ---- */
 let MOD='',PEND=null,INFO='';
@@ -1368,6 +1396,316 @@ function jvNOn(v){const c=jvCfg();jvNuLe();if(v&&!/^https:\/\//.test(c.nu||''))r
 function jvTesteN(){const c=jvCfg();jvNuLe();if(!/^https:\/\//.test(c.nu||''))return toast('Cole o endereço do servidor de voz');save(true);JNERR=0;jvFalaNuvem('<p>Olá. Esta é a minha voz natural. Sistemas prontos.</p>')}
 JV_SET.push(()=>{const c=jvCfg(),g=c.vg||'m',L=JNV.filter(x=>x[2]==g),sel=(L.find(x=>x[0]==c.nv)||L[0])[0];
  return `<div class="f"><span>Voz natural (nuvem)</span><small>${c.nOn&&c.nu?'Ligada: vozes neurais da Microsoft pelo seu servidor de voz. Sem internet, volta para a voz do aparelho.':'Desligada. Cole o endereço do seu servidor de voz (Cloudflare Worker) para ligar.'}</small><input id="jvnu" style="margin-top:8px" type="url" inputmode="url" autocomplete="off" placeholder="https://gline-voz.seunome.workers.dev" value="${esc(c.nu||'')}" oninput="jvCfg().nu=this.value.trim()" onchange="jvNuLe();save()"><small style="display:block;margin-top:8px">Voz ${g=='f'?'feminina':'masculina'} (muda com o Tipo de voz acima)</small><select style="width:100%;margin-top:6px" onchange="jvCfg().nv=this.value;save();if(jvCfg().nOn)jvTesteN()">${L.map(x=>`<option value="${x[0]}"${sel==x[0]?' selected':''}>${x[1]}</option>`).join('')}</select><div class="navs" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px"><button class="${c.nOn?'on':''}" onclick="jvNOn(true)">Ligada</button><button class="${!c.nOn?'on':''}" onclick="jvNOn(false)">Desligada</button></div><div style="margin-top:8px"><button class="ghost" onclick="jvTesteN()">▶ Testar voz natural</button></div></div>`});
+/* ---- v22: aba Treino (Academia, Aeróbico e Básico) ----
+   Dados novos ficam em S.tr (sincroniza junto com o estado): h = histórico de treinos,
+   my = treinos criados pela pessoa, cam = caminho do iniciante, wg = meta semanal, wb = bônus semanais resgatados.
+   O treino em andamento fica só neste aparelho (localStorage), para não pesar a sincronização. */
+(function(){const st=document.createElement('style');st.textContent=`
+:root{--pk:#ff3d8b}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]):not(.neon){--pk:#c2185b}}
+.trw{display:flex;flex-direction:column;gap:14px;padding-bottom:24px}
+.trhd{display:flex;align-items:center;gap:12px}
+.trhd .grow{flex:1;min-width:0}
+.trk0{display:block;font-family:var(--fd);font-size:11px;letter-spacing:3px;color:var(--mute)}
+.trh1{margin:0;font-family:var(--fd);font-size:28px;font-weight:700;letter-spacing:2px;line-height:1.05;color:var(--ink)}
+.trib{width:44px;height:44px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.trchip{display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--pk);border-radius:999px;color:var(--pk);font-family:var(--fd);font-size:13px;font-weight:700;white-space:nowrap}
+.trbox{border-radius:14px;background:var(--panel);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:12px}
+.trglow{border-color:var(--acc);box-shadow:0 0 24px color-mix(in srgb,var(--acc) 18%,transparent)}
+.trgold{border-color:var(--gold);box-shadow:0 0 22px color-mix(in srgb,var(--gold) 16%,transparent)}
+.trlb{font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--acc)}
+.trsec{font-family:var(--fd);font-size:12px;letter-spacing:3px;color:var(--mute);margin-top:4px}
+.trseg{display:grid;gap:6px}
+.trseg i{height:8px;border-radius:2px;background:color-mix(in srgb,var(--mute) 25%,transparent)}
+.trseg i.on{background:var(--acc);box-shadow:0 0 8px color-mix(in srgb,var(--acc) 60%,transparent)}
+.trrow{display:flex;align-items:center;gap:12px}
+.trrow .t{flex:1;min-width:0}
+.trrow .t b{display:block;font-size:17px}
+.trrow .t small{display:block;font-size:13px;line-height:1.3}
+.trrk{width:44px;height:44px;flex:none;border-radius:10px;border:1px solid currentColor;display:grid;place-items:center;font-family:var(--fd);font-weight:700;font-size:20px}
+.trrk.big{width:72px;height:72px;border-radius:16px;border-width:2px;font-size:36px}
+.trrk.glw{box-shadow:0 0 12px color-mix(in srgb,currentColor 45%,transparent)}
+.trcat{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:inherit;cursor:pointer}
+.trcat .ic{width:52px;height:52px;flex:none;border-radius:12px;border:1px solid currentColor;display:grid;place-items:center;background:color-mix(in srgb,currentColor 12%,transparent)}
+.trcat .t{flex:1;min-width:0}.trcat .t b{display:block;font-family:var(--fd);font-size:18px;color:var(--ink)}
+.trcat .t small{display:block;font-size:13px}
+.trcat .n{font-family:var(--fd);font-size:12px;font-weight:700;white-space:nowrap}
+.trit{display:flex;flex-direction:column;gap:10px;width:100%;text-align:left;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:inherit;cursor:pointer}
+.trit .xp{font-family:var(--fd);font-weight:700;color:var(--gold);white-space:nowrap}
+.trtags{display:flex;flex-wrap:wrap;gap:6px}
+.trtags span{font-size:12px;padding:4px 8px;border-radius:6px;background:color-mix(in srgb,var(--acc) 10%,transparent);color:var(--ink)}
+.trb1,.trb2,.trb3{min-height:48px;border-radius:12px;font-family:var(--fd);font-weight:700;font-size:15px;letter-spacing:1.5px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:0 16px}
+.trb1{background:var(--acc);color:var(--bg);border:0;box-shadow:0 0 22px color-mix(in srgb,var(--acc) 35%,transparent)}
+.trb2{background:none;border:1px solid var(--pk);color:var(--pk)}
+.trb3{background:none;border:1px solid var(--line);color:var(--mute)}
+.trb1.sm,.trb2.sm,.trb3.sm{min-height:44px;font-size:13px;padding:0 14px}
+.trb1:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.trpl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.trpl button{min-height:40px;border-radius:9px;border:0;background:none;color:var(--mute);font-family:var(--fd);font-weight:700;font-size:13px;cursor:pointer}
+.trpl button.on{background:var(--acc);color:var(--bg)}
+.trkp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.trkp div{padding:12px 6px;border-radius:12px;background:var(--panel);border:1px solid var(--line);text-align:center}
+.trkp b{display:block;font-family:var(--fd);font-size:20px}
+.trkp small{font-size:11px;letter-spacing:1px}
+.trex{border-radius:14px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.trex .r{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid color-mix(in srgb,var(--line) 55%,transparent)}
+.trex .r:first-child{border-top:0}
+.trex .r .n{font-family:var(--fd);font-size:13px;color:var(--mute);width:22px}
+.trex .r .s{font-family:var(--fd);font-weight:700;color:var(--acc);white-space:nowrap}
+.trex .hd{padding:10px 14px;font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--pk);background:color-mix(in srgb,var(--pk) 8%,transparent)}
+.trdash{border:1px dashed var(--line);border-radius:12px;padding:12px 14px}
+.trsecq{border:1px dashed var(--pk);color:var(--pk);border-radius:10px;padding:10px 12px;font-size:14px}
+.trring{position:relative;display:grid;place-items:center;height:220px}
+.trring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.trring .c b{font-family:var(--fd);font-size:46px;letter-spacing:2px;line-height:1}
+.trsr{display:grid;gap:8px}
+.trsr button{min-height:44px;border-radius:10px;font-family:var(--fd);font-weight:700;font-size:13px;cursor:pointer;border:1px solid var(--line);background:none;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:6px}
+.trsr button.on{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.trsr button.cur{border:2px solid var(--acc);color:var(--acc)}
+.trrest{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.trrest b{font-family:var(--fd);font-size:20px;color:var(--gold)}
+.trlive{width:8px;height:8px;border-radius:50%;background:var(--pk);box-shadow:0 0 10px var(--pk);display:inline-block}
+.trdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.trdays button{height:44px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--mute);font-family:var(--fd);font-weight:700;cursor:pointer}
+.trdays button.on{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.trstep{display:flex;align-items:flex-start}
+.trstep>div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12px;color:var(--mute)}
+.trstep i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:var(--fd);font-weight:700;border:2px solid color-mix(in srgb,var(--gold) 35%,transparent);color:var(--mute)}
+.trstep i.ok{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.trstep i.cur{border-color:var(--gold);color:var(--gold)}
+.trmap{height:92px;border-radius:10px;background:color-mix(in srgb,var(--acc) 6%,var(--bg));overflow:hidden}
+.trlock{opacity:.85}
+`;document.head.appendChild(st)})();
+
+const TRI={
+ back:SV('<path d="M15 5l-7 7 7 7"/>'),
+ acad:SV('<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>'),
+ aero:SV('<path d="M3 12h4l3-7 4 14 3-7h4"/>'),
+ bas:SV('<path d="M3 11l9-7 9 7v9H3z"/><path d="M10 20v-6h4v6"/>'),
+ play:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>',
+ plus:SV('<path d="M12 5v14M5 12h14"/>'),
+ lock:SV('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+ star:SV('<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>'),
+ fire:SV('<path d="M12 3c2 4 6 5 6 10a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 2 4 4 1-2 0-5 0-7z"/>'),
+ ok:SV('<path d="M5 12l5 5 9-10"/>'),
+ next:SV('<path d="M9 5l7 7-7 7"/>'),
+ trash:SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>')
+};
+NI.t=TRI.acad;TI.t='🏋';LK.treino='Treino';
+
+/* Catálogo. r = rank (0 E, 1 D, 2 C, 5 S). ex = [nome, séries, alvo]. q = como vira quest. */
+const TRC={acad:['Academia','Musculação para quem treina na academia','var(--pk)'],aero:['Aeróbico','Corrida, pular corda e bicicleta','var(--acc)'],bas:['Básico','Para iniciantes, em casa, sem equipamento','var(--gold)']};
+const TRN=[
+ {id:'fb',c:'acad',r:0,n:'Full Body',i:'3x por semana · 40 min',xp:60,g:25,rs:60,m:'3 treinos na semana',q:{f:'w',n:3},
+  ex:[['Agachamento',3,'10 reps'],['Supino',3,'10 reps'],['Remada',3,'10 reps'],['Desenvolvimento',3,'10 reps'],['Prancha',3,'30 s']]},
+ {id:'si',c:'acad',r:1,n:'Superior / Inferior',i:'4x por semana · 50 min',xp:80,g:35,rs:75,m:'4 treinos na semana',q:{f:'w',n:4},
+  ph:[['Dia A · superior',[['Supino',4,'10 reps'],['Remada',4,'10 reps'],['Desenvolvimento',3,'12 reps'],['Rosca direta',3,'12 reps'],['Tríceps na corda',3,'12 reps']]],
+      ['Dia B · inferior',[['Agachamento',4,'10 reps'],['Leg press',4,'12 reps'],['Stiff',3,'10 reps'],['Panturrilha',4,'15 reps'],['Abdominal',3,'15 reps']]]]},
+ {id:'abc',c:'acad',r:2,n:'ABC',i:'5x por semana · 60 min',xp:110,g:45,rs:90,m:'5 treinos na semana',q:{f:'w',n:5},
+  ph:[['A · peito e tríceps',[['Supino reto',4,'10 reps'],['Supino inclinado',3,'10 reps'],['Crucifixo',3,'12 reps'],['Tríceps testa',3,'12 reps'],['Tríceps na corda',3,'12 reps']]],
+      ['B · costas e bíceps',[['Puxada frontal',4,'10 reps'],['Remada curvada',4,'10 reps'],['Remada baixa',3,'12 reps'],['Rosca direta',3,'12 reps'],['Rosca martelo',3,'12 reps']]],
+      ['C · pernas e ombros',[['Agachamento',4,'10 reps'],['Leg press',4,'12 reps'],['Cadeira extensora',3,'12 reps'],['Desenvolvimento',4,'10 reps'],['Elevação lateral',3,'12 reps']]]]},
+ {id:'cam',c:'aero',s:'corrida',k:'gps',r:0,n:'Caminhada + trote',i:'2 min andando, 1 min trotando',xp:40,g:18,m:'2 km',q:{f:'d',days:[1,3,5],mq:2,mu:'km',cat:'ar'}},
+ {id:'cl',c:'aero',s:'corrida',k:'gps',r:1,n:'Corrida leve',i:'Ritmo confortável, sem parar',xp:70,g:30,m:'5 km',q:{f:'d',days:[1,3,5],mq:5,mu:'km',cat:'ar'}},
+ {id:'int',c:'aero',s:'corrida',k:'gps',r:2,n:'Intervalado',i:'8 tiros de 400 m forte + 200 m leve',xp:90,g:40,m:'8 tiros (cerca de 5 km)',q:{f:'d',days:[2,4],mq:5,mu:'km',cat:'ar'}},
+ {id:'cd1',c:'aero',s:'corda',r:0,n:'Corda iniciante',i:'30 s pulando, 30 s parado',xp:30,g:14,rs:30,m:'300 pulos',q:{f:'d',days:[1,3,5],mq:300,mu:'pulos'},ex:[['Pular corda',10,'30 s']]},
+ {id:'cd2',c:'aero',s:'corda',r:1,n:'Corda resistência',i:'1 min pulando, 30 s parado',xp:50,g:22,rs:30,m:'15 min',q:{f:'d',days:[1,3,5],mq:15,mu:'min de corda'},ex:[['Pular corda',15,'1 min']]},
+ {id:'cd3',c:'aero',s:'corda',r:2,n:'Mil pulos',i:'10 rounds de 100 pulos',xp:70,g:30,rs:45,m:'1000 pulos',q:{f:'d',days:[1,2,3,4,5],mq:1000,mu:'pulos'},ex:[['Pular corda',10,'100 pulos']]},
+ {id:'bk1',c:'aero',s:'bike',k:'bike',r:0,n:'Pedal leve',i:'Academia ou rua · ritmo tranquilo',xp:35,g:15,m:'30 min',q:{f:'d',days:[2,4,6],mq:30,mu:'min de bike'}},
+ {id:'bk2',c:'aero',s:'bike',k:'bike',r:1,n:'Pedal longo',i:'Academia ou rua · resistência',xp:60,g:26,m:'60 min',q:{f:'d',days:[6],mq:60,mu:'min de bike'}},
+ {id:'bk3',c:'aero',s:'bike',k:'bike',r:2,n:'Bike intervalada',i:'1 min forte + 2 min leve, 10 ciclos',xp:70,g:30,m:'30 min',q:{f:'d',days:[2,4],mq:30,mu:'min de bike'}},
+ {id:'desp',c:'bas',r:0,n:'Despertar',i:'Flexões, abdominais, agachamentos e 1 km',xp:40,g:18,rs:45,m:'1 treino no dia',q:{f:'d',days:[1,3,5]},
+  ex:[['Flexões',2,'10 reps'],['Abdominais',2,'10 reps'],['Agachamentos',2,'10 reps'],['Corrida ou caminhada',1,'1 km']]},
+ {id:'core',c:'bas',r:0,n:'Core',i:'Prancha, abdominal e elevação de pernas',xp:30,g:14,rs:40,m:'1 treino no dia',q:{f:'d',days:[2,4]},
+  ex:[['Prancha',3,'30 s'],['Abdominal',3,'15 reps'],['Elevação de pernas',3,'12 reps']]},
+ {id:'along',c:'bas',r:0,n:'Alongamento',i:'10 min · bom para dias de descanso',xp:15,g:8,rs:0,m:'2 vezes na semana',q:{f:'w',n:2},
+  ex:[['Pescoço e ombros',1,'2 min'],['Braços e costas',1,'2 min'],['Quadril',1,'2 min'],['Pernas',1,'2 min'],['Respiração',1,'2 min']]},
+ {id:'hiit',c:'bas',r:1,n:'HIIT 15 min',i:'40 s de esforço, 20 s de pausa',xp:50,g:22,rs:20,m:'3 vezes na semana',q:{f:'w',n:3},
+  ex:[['Polichinelo',3,'40 s'],['Burpee',3,'40 s'],['Escalador',3,'40 s'],['Agachamento com salto',3,'40 s']]},
+ {id:'mon',c:'bas',r:5,n:'Treino do Monarca',i:'100 flexões, 100 abdominais, 100 agachamentos e 10 km',xp:250,g:100,rs:60,m:'1 treino no dia',q:{f:'d',days:[0,1,2,3,4,5,6]},
+  ex:[['Flexões',10,'10 reps'],['Abdominais',10,'10 reps'],['Agachamentos',10,'10 reps'],['Corrida',1,'10 km']]}
+];
+const TRCAM=[['Alongar e core',['along','core']],['Despertar',['desp']],['HIIT 15',['hiit']],['Teste final',['desp','hiit']]];
+
+let TRV='home',TRA='corrida',TRD=null,TRB='home',TQ=null,TN=null,TS=null;
+try{const o=JSON.parse(localStorage.getItem(KEY+'-treino')||'null');if(o&&o.k&&Array.isArray(o.ex)&&Date.now()-o.t0<12*3600e3)TS=o}catch(e){}
+const trS=()=>{const s=S.tr||(S.tr={});s.h=s.h||[];s.my=s.my||[];s.wb=s.wb||{};if(!s.wg)s.wg=3;if(s.cam===undefined)s.cam=null;return s};
+const trAll=()=>TRN.concat(trS().my);
+const trGet=id=>trAll().find(t=>t.id==id);
+const trCor=r=>['var(--mute)','var(--acc)','var(--pk)','var(--gold)','var(--gold)','var(--gold)'][r]||'var(--mute)';
+const trRk=(r,big)=>`<div class="trrk${big?' big':''}${r>0?' glw':''}" style="color:${trCor(r)}">${RK[r]}</div>`;
+function trSave(){try{TS?localStorage.setItem(KEY+'-treino',JSON.stringify(TS)):localStorage.removeItem(KEY+'-treino')}catch(e){}}
+function trPh(t){if(!t.ph)return {lb:'',ex:t.ex||[],i:0};const i=trS().h.filter(h=>h.k==t.id).length%t.ph.length;return {lb:t.ph[i][0],ex:t.ph[i][1],i}}
+function trWk(w){return trS().h.filter(h=>wk(h.d)==w).length+(S.runs||[]).filter(r=>wk(r.d)==w).length}
+function trDias(){const s=new Set(trS().h.map(h=>h.d));(S.runs||[]).forEach(r=>s.add(r.d));return s}
+function trStreak(){const A=trDias();let d=hoje(),n=0;if(!A.has(d))d=addD(d,-1);for(let i=0;i<3000&&A.has(d);i++){n++;d=addD(d,-1)}return n}
+const trQs=id=>S.quests.filter(q=>!q.arch&&q.tr==id);
+function trQHoje(id){const h=hoje();return S.quests.find(q=>!q.arch&&q.tr==id&&!pausada(q,h)&&!q.log.includes(h)&&cnt(q,h)<tgt(q,h)&&(q.f!='d'||devido(q,h)))}
+function trCam(){const s=trS(),c=s.cam;if(!c)return null;const n=s.h.filter(h=>h.c=='bas'&&h.d>=c.a).length,et=Math.min(3,Math.floor(n/3));
+ if(n>=12&&!c.ok){c.ok=hoje();save();setTimeout(()=>fx('CAMINHO CONCLUÍDO','Treino do Monarca liberado'),50)}return {n,et,ok:!!c.ok,pr:n>=12?3:n%3}}
+function trLock(t){if(t.id!='mon')return '';const c=trS().cam;return (c&&c.ok)||ri(S.lvl)>=2?'':'Libera ao completar o Caminho do Despertar ou ao chegar no rank C'}
+function trRec(){const s=trS(),c=trCam();if(c&&!c.ok){const L=TRCAM[c.et][1];return {t:trGet(L[c.n%L.length]),w:'Caminho do Despertar · etapa '+(c.et+1)}}
+ if(!s.h.length)return {t:trGet('desp'),w:'Recomendado pelo sistema'};const t=trGet(s.h[0].k);return t&&!trLock(t)?{t,w:'Repetir o último treino'}:{t:trGet('desp'),w:'Recomendado pelo sistema'}}
+function trNav(v,x){TRV=v;if(x!==undefined)TRD=x;render();const a=document.getElementById('app');if(a)a.scrollTop=0}
+function trAbre(id){TRB=TRV=='det'?TRB:TRV;trNav('det',id)}
+const trHd=(k,t,back,right)=>`<div class="trhd">${back?`<button class="trib" aria-label="Voltar" onclick="${back}">${TRI.back}</button>`:''}<div class="grow"><span class="trk0">${k}</span>${t?`<h1 class="trh1">${t}</h1>`:''}</div>${right||''}</div>`;
+function trItem(t){const L=trLock(t),tags=t.ph?t.ph.map(p=>p[0]):(t.ex||[]).map(e=>e[0]),inQ=trQs(t.id).length;
+ return `<button class="trit${L?' trlock':''}" onclick="trAbre('${t.id}')"><div class="trrow">${trRk(t.r)}<div class="t"><b>${esc(t.n)}</b><small>${esc(t.i)}</small></div>${L?`<span style="color:var(--gold)">${TRI.lock}</span>`:`<span class="xp">+${t.xp} XP</span>`}</div>${tags.length&&t.c=='acad'?`<div class="trtags">${tags.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}${inQ?`<small style="color:var(--ok)">✓ Nas suas quests</small>`:''}</button>`}
+
+function treinoTab(){trS();if(TS)return trRunV();return `<div class="trw">${({acad:trAcad,aero:trAero,bas:trBas,det:trDet,novo:trNovo})[TRV]?({acad:trAcad,aero:trAero,bas:trBas,det:trDet,novo:trNovo})[TRV]():trHome()}</div>`}
+
+function trHome(){const s=trS(),w=wk(hoje()),n=trWk(w),g=s.wg,stk=trStreak(),R=trRec(),cl=s.wb[w],Q=S.quests.filter(q=>!q.arch&&q.tr);
+ const cnt3=c=>trAll().filter(t=>t.c==c).length;
+ const seg=`<div class="trseg" style="grid-template-columns:repeat(${g},minmax(0,1fr))">${Array.from({length:g},(_,i)=>`<i class="${i<n?'on':''}"></i>`).join('')}</div>`;
+ const bon=cl?`<small style="color:var(--ok)">✓ Bônus da semana resgatado</small>`:n>=g?`<button class="trb1 sm" onclick="trBonus()">RESGATAR BÔNUS · +150 XP · +60 OURO</button>`:`<small>Faltam <b style="color:var(--ink)">${g-n}</b> treino${g-n>1?'s':''} para liberar o bônus da semana: <b class="gold">+150 XP e +60 ouro</b></small>`;
+ return `${trHd('G-LINE // SISTEMA','TREINO','',stk?`<span class="trchip">${TRI.fire}${stk} DIA${stk>1?'S':''}</span>`:'')}
+ <section class="trbox trglow"><div class="row"><span class="trlb">[ MISSÃO SEMANAL DE TREINO ]</span><b style="font-family:var(--fd);font-size:20px">${n}<span class="mute" style="font-size:14px">/${g}</span></b></div>${seg}${bon}
+ <div class="row"><small>Meta: ${g} treinos por semana (corridas contam)</small><div class="row" style="gap:6px"><button class="trb3 sm" aria-label="Diminuir meta semanal" onclick="trMeta(-1)">−</button><button class="trb3 sm" aria-label="Aumentar meta semanal" onclick="trMeta(1)">+</button></div></div></section>
+ ${R.t?`<section class="trbox"><span class="trlb" style="color:var(--pk)">${esc(R.w).toUpperCase()}</span><div class="trrow">${trRk(R.t.r)}<div class="t"><b style="font-family:var(--fd);font-size:18px">${esc(R.t.n)}</b><small>${TRC[R.t.c][0]} · +${R.t.xp} XP</small></div><button class="trb1 sm" onclick="trStart('${R.t.id}')">${TRI.play}INICIAR</button></div></section>`:''}
+ <span class="trsec">CATEGORIAS</span>
+ ${['acad','aero','bas'].map(c=>`<button class="trcat" style="color:${TRC[c][2]}" onclick="trNav('${c}')"><span class="ic">${TRI[c]}</span><span class="t"><b>${TRC[c][0]}</b><small>${TRC[c][1]}</small></span><span class="n">${cnt3(c)} TREINOS</span></button>`).join('')}
+ <section class="trdash"><small style="letter-spacing:1px">NAS SUAS QUESTS</small>${Q.length?Q.map(q=>`<div class="row" style="margin-top:6px"><b style="font-size:15px">${esc(q.t)}</b><small>${q.f=='d'?q.days.map(d=>DIAS[d]).join(' '):q.n+'x na semana'}</small></div>`).join('')+`<button class="trb3 sm" style="width:100%;margin-top:10px" onclick="navGo('p')">VER NO PAINEL</button>`:`<p class="mute" style="margin:6px 0 0;font-size:14px">Nenhum treino nas quests ainda. Abra um treino e toque em <b>Adicionar às quests</b>.</p>`}</section>
+ ${s.h.length?`<span class="trsec">ÚLTIMOS TREINOS</span><div class="trex">${s.h.slice(0,4).map(h=>`<div class="r"><span class="t" style="flex:1"><b style="font-size:15px">${esc(h.n)}</b><small style="display:block">${brD(h.d)}${h.dur?' · '+fmtT(h.dur):''}${h.lb?' · '+esc(h.lb):''}</small></span><span class="s" style="color:var(--gold)">${h.q?'quest':h.xp?'+'+h.xp+' XP':'registrado'}</span></div>`).join('')}</div>`:''}
+ <small style="text-align:center">Tem algum problema de saúde? Procure orientação médica antes de começar treinos pesados.</small>`}
+
+function trMeta(v){const s=trS();s.wg=Math.max(2,Math.min(7,s.wg+v));save();render()}
+function trBonus(){const s=trS(),w=wk(hoje());if(s.wb[w]||trWk(w)<s.wg)return;s.wb[w]=1;const o=ri(S.lvl),up=addXp(150);S.gold+=60;led('treino','Bônus semanal de treino ('+s.wg+' treinos)',150,60,{d:hoje()});save();render();
+ fx(up?(ri(S.lvl)!=o?'RANK UP':'LEVEL UP'):'BÔNUS DE TREINO',up?(ri(S.lvl)!=o?RK[o]+' → '+RK[ri(S.lvl)]:'Nível '+S.lvl):'+150 XP · +60 ouro');toast('+150 XP · +60 ouro')}
+
+function trAcad(){const L=trAll().filter(t=>t.c=='acad');
+ return `${trHd('TREINO // CATEGORIA','ACADEMIA',"trNav('home')")}<p class="mute" style="margin:0;font-size:15px">Treinos de musculação para quem vai à academia. Escolha pelo rank: comece no E e suba quando ficar fácil.</p>
+ ${L.map(trItem).join('')}
+ <div style="display:grid;grid-template-columns:1fr;gap:10px"><button class="trb2" onclick="trNovoAbre('acad')">${TRI.plus}CRIAR MEU TREINO</button></div>`}
+
+function trAero(){const sub=[['corrida','CORRIDA'],['corda','PULAR CORDA'],['bike','BICICLETA']],L=trAll().filter(t=>t.c=='aero'&&t.s==TRA);
+ let top='';
+ if(TRA=='corrida')top=`<section class="trbox trglow" style="padding:0;overflow:hidden;gap:0"><div class="trmap"><svg width="100%" height="92" viewBox="0 0 354 92" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M0 30h354M0 64h354M60 0v92M150 0v92M250 0v92" stroke="currentColor" stroke-opacity=".12" stroke-width="6" style="color:var(--acc)"/><path d="M40 76 C 70 66, 80 38, 120 42 S 170 66, 210 48 S 260 14, 310 22" stroke="var(--acc)" stroke-width="3" stroke-linecap="round"/><circle cx="40" cy="76" r="5" fill="var(--pk)"/><circle cx="310" cy="22" r="7" fill="var(--acc)"/></svg></div>
+  <div class="trrow" style="padding:14px 16px"><div class="t"><b style="font-family:var(--fd)">Corrida livre com GPS</b><small>Mede km, ritmo e trajeto · soma na quest de km</small></div><button class="trb1 sm" onclick="navGo('g')">CORRER</button></div></section><span class="trsec">CIRCUITOS PRÉ-DEFINIDOS</span>`;
+ if(TRA=='corda')top=`<p class="mute" style="margin:0;font-size:15px">Rounds com cronômetro de descanso. No fim, você informa quantos pulos ou minutos fez.</p>`;
+ if(TRA=='bike')top=`<section class="trdash"><b style="font-size:15px">Academia ou rua, você escolhe</b><p class="mute" style="margin:4px 0 0;font-size:14px">O sistema não mede a bike sozinho: ao terminar, você anota os minutos (e os km, se souber).</p></section>`;
+ return `${trHd('TREINO // CATEGORIA','AERÓBICO',"trNav('home')")}<div class="trpl" style="grid-template-columns:repeat(3,minmax(0,1fr))">${sub.map(x=>`<button class="${TRA==x[0]?'on':''}" onclick="TRA='${x[0]}';render()">${x[1]}</button>`).join('')}</div>${top}${L.map(trItem).join('')}
+ ${TRA=='corrida'?`<div class="trdash trrow mute"><span>${TRI.lock}</span><div class="t"><b style="font-size:15px;color:var(--ink)">Rotas perto de você</b><small>Em breve: circuitos montados pelo GPS no seu bairro</small></div></div>`:''}`}
+
+function trBas(){const s=trS(),c=trCam(),L=trAll().filter(t=>t.c=='bas'&&t.id!='mon'),M=trGet('mon'),ml=trLock(M);
+ const path=`<div class="trstep">${TRCAM.map((e,i)=>`<div><i class="${c&&(c.ok||i<c.et)?'ok':c&&i==c.et?'cur':''}">${c&&(c.ok||i<c.et)?'✓':i+1}</i>${e[0]}</div>`).join('')}</div>`;
+ const cam=!c?`<p style="margin:0;font-size:15px">Ainda não treina? O sistema montou um caminho de 4 etapas, em casa e sem equipamento. Cada etapa pede 3 treinos básicos.</p>${path}<button class="trb1" style="background:var(--gold)" onclick="trCamOn()">ACEITAR O CAMINHO</button>`
+  :c.ok?`<p style="margin:0;font-size:15px"><b class="gold">Caminho concluído!</b> O Treino do Monarca está liberado.</p>${path}<button class="trb3 sm" onclick="trCamOff()">REFAZER O CAMINHO</button>`
+  :`<p style="margin:0;font-size:15px">Etapa <b>${c.et+1} de 4</b> · ${c.pr}/3 treinos. Faça: <b>${TRCAM[c.et][1].map(k=>trGet(k).n).join(' ou ')}</b>.</p>${path}<div class="row"><button class="trb1 sm" style="background:var(--gold);flex:1" onclick="trStart('${TRCAM[c.et][1][c.n%TRCAM[c.et][1].length]}')">${TRI.play}TREINAR AGORA</button><button class="trb3 sm" onclick="trCamOff()">SAIR</button></div>`;
+ return `${trHd('TREINO // CATEGORIA','BÁSICO',"trNav('home')")}
+ <section class="trbox trgold"><span class="trlb" style="color:var(--gold)">[ CAMINHO DO DESPERTAR ]</span>${cam}</section>
+ <span class="trsec">TREINOS BÁSICOS</span>${L.map(trItem).join('')}
+ <button class="trcat" style="color:var(--gold);border-color:var(--gold)" onclick="trAbre('mon')"><span class="ic" style="font-family:var(--fd);font-weight:700;font-size:24px">S</span><span class="t"><b>Treino do Monarca</b><small>${esc(M.i)}</small></span><span>${ml?TRI.lock:TRI.next}</span></button>
+ ${ml?`<small style="text-align:center">Desafio lendário · ${ml.toLowerCase()}</small>`:''}
+ <button class="trb2" onclick="trNovoAbre('bas')">${TRI.plus}CRIAR MEU TREINO</button>`}
+function trCamOn(){trS().cam={a:hoje()};save();render();toast('Caminho aceito! Comece pela etapa 1.')}
+function trCamOff(){if(!confirm('Sair do Caminho do Despertar? Seus treinos continuam no histórico.'))return;trS().cam=null;save();render()}
+
+function trDet(){const t=trGet(TRD);if(!t){TRV='home';return trHome()}const L=trLock(t),Q=trQs(t.id),P=trPh(t),bk=`trNav('${['acad','aero','bas'].includes(TRB)?TRB:t.c}')`;
+ const exs=t.ph?t.ph.map((p,i)=>`<div class="hd">${esc(p[0]).toUpperCase()}${i==P.i?' · PRÓXIMO':''}</div>`+p[1].map((e,j)=>`<div class="r"><span class="n">${String(j+1).padStart(2,'0')}</span><span style="flex:1">${esc(e[0])}</span><span class="s">${e[1]} × ${esc(e[2])}</span></div>`).join('')).join('')
+  :(t.ex||[]).map((e,j)=>`<div class="r"><span class="n">${String(j+1).padStart(2,'0')}</span><span style="flex:1">${esc(e[0])}</span><span class="s">${e[1]>1?e[1]+' × ':''}${esc(e[2])}</span></div>`).join('');
+ const go=t.k=='gps'?'CORRER AGORA':t.k=='bike'?'REGISTRAR PEDAL':'INICIAR AGORA';
+ return `${trHd(TRC[t.c][0].toUpperCase()+(t.s?' // '+({corrida:'CORRIDA',corda:'PULAR CORDA',bike:'BICICLETA'})[t.s]:''),'',bk)}
+ <div class="trrow" style="gap:16px">${trRk(t.r,1)}<div class="t"><h1 class="trh1" style="font-size:28px">${esc(t.n)}</h1><small style="font-size:14px">${esc(t.i)}</small></div></div>
+ <div class="trkp"><div><b style="color:var(--acc)">+${t.xp}</b><small>XP</small></div><div><b class="gold">+${t.g}</b><small>OURO</small></div><div><b style="color:var(--pk);font-size:15px;line-height:1.35">${esc(t.m||'—')}</b><small>META</small></div></div>
+ ${t.q&&t.q.mq?`<div class="trsecq">${TRI.star} Como quest diária: fazer <b>${t.q.mq*2} ${esc(t.q.mu)}</b> (o dobro da meta) vira <b>quest secreta</b>, com dobro de XP e ouro.</div>`:''}
+ ${t.k=='gps'?`<p class="mute" style="margin:0;font-size:15px">${esc(t.i)}. O GPS da aba Corrida mede tudo e, se o treino estiver nas suas quests, os km entram nela.</p>`:t.k=='bike'?`<p class="mute" style="margin:0;font-size:15px">Pedale na academia ou na rua. No fim, anote os minutos e, se souber, os km.</p>`:`<span class="trsec">EXERCÍCIOS</span><div class="trex">${exs}</div>`}
+ ${L?`<div class="trdash trrow" style="color:var(--gold)">${TRI.lock}<b style="font-size:15px">${L}</b></div>`:''}
+ <button class="trb1" ${L?'disabled':''} onclick="trStart('${t.id}')">${TRI.play}${go}</button>
+ ${Q.length?`<div class="trdash"><small style="color:var(--ok)">✓ Já está nas suas quests: ${Q.map(q=>esc(q.t)).join(', ')}</small><div class="row" style="margin-top:8px;justify-content:flex-start;gap:8px"><button class="trb3 sm" onclick="editQ('${Q[0].id}')">EDITAR QUEST</button></div></div>`:`<button class="trb2" ${L?'disabled':''} onclick="trQ('${t.id}')">${TRI.plus}ADICIONAR ÀS QUESTS</button>`}
+ ${t.my?`<button class="trb3 sm" style="color:var(--bad);border-color:var(--bad)" onclick="trDel('${t.id}')">${TRI.trash}APAGAR ESTE TREINO</button>`:''}`}
+
+/* ---- Começar um treino ---- */
+function trStart(id){const t=trGet(id);if(!t)return;if(trLock(t))return toast(trLock(t));
+ if(t.k=='gps'){const q=trQs(id).find(q=>q.mq>0&&/km/i.test(q.mu||''));if(q)RUNQ=q.id;toast('Meta: '+t.m+'. Bom treino!');return navGo('g')}
+ if(t.k=='bike')return trBike(id);
+ if(TS&&!confirm('Já tem um treino em andamento. Começar outro e descartar aquele?'))return;
+ const P=trPh(t);TS={k:id,n:t.n,c:t.c,lb:P.lb,rs:t.rs||0,ex:P.ex.map(e=>[e[0],e[1],e[2]]),dn:P.ex.map(e=>Array(e[1]).fill(0)),i:0,t0:Date.now(),ru:0};trSave();
+ S.tab='t';save(true);render();const a=document.getElementById('app');if(a)a.scrollTop=0}
+const trTot=()=>TS.dn.reduce((a,x)=>a+x.length,0),trFeitas=()=>TS.dn.reduce((a,x)=>a+x.filter(Boolean).length,0);
+function trRunV(){const tot=trTot(),f=trFeitas(),all=f>=tot,e=TS.ex[TS.i],sx=TS.dn[TS.i],nx=TS.ex.findIndex((x,j)=>j>TS.i&&TS.dn[j].some(v=>!v)),q=trQHoje(TS.k),t=trGet(TS.k),off=Math.round(603*(1-f/Math.max(1,tot))),rest=TS.ru>Date.now(),cur=sx.findIndex(v=>!v),inc=TS.dn.findIndex(x=>x.some(v=>!v));
+ return `<div class="trw"><div class="row"><span style="display:flex;align-items:center;gap:8px"><span class="trlive"></span><span class="trk0" style="color:var(--pk)">EM ANDAMENTO · ${esc(TS.n).toUpperCase()}</span></span><button class="trb3 sm" onclick="trSair()">ENCERRAR</button></div>
+ ${TS.lb?`<small style="text-align:center;letter-spacing:2px">${esc(TS.lb).toUpperCase()}</small>`:''}
+ <div class="trring"><svg width="220" height="220" viewBox="0 0 230 230" aria-hidden="true"><circle cx="115" cy="115" r="96" fill="none" stroke="color-mix(in srgb,var(--acc) 14%,transparent)" stroke-width="12"/><circle cx="115" cy="115" r="96" fill="none" stroke="var(--acc)" stroke-width="12" stroke-linecap="round" stroke-dasharray="603" stroke-dashoffset="${off}" transform="rotate(-90 115 115)" style="transition:stroke-dashoffset .5s"/></svg><div class="c"><b id="trT">${fmtT((Date.now()-TS.t0)/1000)}</b><small>${all?'tudo feito!':'exercício '+(TS.i+1)+' de '+TS.ex.length}</small></div></div>
+ <section class="trbox trglow"><div class="row"><b style="font-family:var(--fd);font-size:24px">${esc(e[0])}</b><span style="font-family:var(--fd);color:var(--acc)">${e[1]>1?e[1]+' × ':''}${esc(e[2])}</span></div>
+ <div class="trsr" style="grid-template-columns:repeat(${Math.min(5,sx.length)},minmax(0,1fr))">${sx.map((v,j)=>`<button class="${v?'on':j==cur?'cur':''}" aria-label="Série ${j+1}" onclick="trSer(${j})">${v?TRI.ok:''}${sx.length>5?j+1:'SÉRIE '+(j+1)}</button>`).join('')}</div>
+ ${rest?`<div class="trrest"><span>Descanso</span><b id="trR">${fmtT((TS.ru-Date.now())/1000)}</b><button class="trb3 sm" onclick="TS.ru=0;trSave();render()">PULAR</button></div>`:''}</section>
+ ${nx>=0?`<button class="trit" onclick="trIr(${nx})"><div class="trrow"><div class="t"><small style="letter-spacing:1px">PRÓXIMO</small><b style="font-size:15px">${esc(TS.ex[nx][0])} · ${TS.ex[nx][1]>1?TS.ex[nx][1]+' × ':''}${esc(TS.ex[nx][2])}</b></div>${TRI.next}</div></button>`:''}
+ <div><div class="row"><small>${q?'Conta na quest: '+esc(q.t):'Recompensa do treino'}</small><small class="gold" style="font-family:var(--fd)">${f}/${tot} séries${q||!t?'':' · +'+t.xp+' XP'}</small></div><div class="bar"><i style="width:${f/Math.max(1,tot)*100}%"></i></div></div>
+ ${all?`<button class="trb1" style="min-height:56px" onclick="trFim()">FINALIZAR TREINO</button>`:cur<0?`<button class="trb1" style="min-height:56px" onclick="trIr(${inc})">IR PARA ${esc(TS.ex[inc][0]).toUpperCase()}</button>`:`<button class="trb1" style="min-height:56px" onclick="trProx()">CONCLUIR ${sx.length>1?'SÉRIE '+(cur+1):'EXERCÍCIO'}</button>`}
+ <div class="trex">${TS.ex.map((x,j)=>`<button class="r" style="width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:var(--ink);font:inherit;text-align:left;cursor:pointer${j==TS.i?';background:color-mix(in srgb,var(--acc) 8%,transparent)':''}" onclick="trIr(${j})"><span class="n">${TS.dn[j].every(Boolean)?'✓':String(j+1).padStart(2,'0')}</span><span style="flex:1">${esc(x[0])}</span><span class="s">${TS.dn[j].filter(Boolean).length}/${x[1]}</span></button>`).join('')}</div></div>`}
+function trProx(){if(!TS)return;const sx=TS.dn[TS.i],j=sx.findIndex(v=>!v);if(j<0)return;sx[j]=1;
+ if(sx.every(Boolean)){const n=TS.dn.findIndex((x,k)=>k>TS.i&&x.some(v=>!v)),m=n>=0?n:TS.dn.findIndex(x=>x.some(v=>!v));if(m>=0)TS.i=m}
+ TS.ru=trFeitas()<trTot()&&TS.rs>0?Date.now()+TS.rs*1000:0;TS.rn=0;trSave();render()}
+function trSer(j){if(!TS)return;const sx=TS.dn[TS.i];sx[j]=sx[j]?0:1;trSave();render()}
+function trIr(i){if(!TS)return;TS.i=i;TS.ru=0;trSave();render();const a=document.getElementById('app');if(a)a.scrollTop=0}
+function trSair(){if(!TS)return;const f=trFeitas();if(f&&f>=trTot()/2&&confirm('Você fez '+f+' de '+trTot()+' séries. Registrar como treino concluído?\n\nOK = registrar · Cancelar = só sair'))return trFim();
+ if(!confirm('Sair sem registrar este treino?'))return;TS=null;trSave();render();toast('Treino encerrado')}
+function trTick(){if(!TS)return;const t=document.getElementById('trT');if(t)t.textContent=fmtT((Date.now()-TS.t0)/1000);
+ if(TS.ru){const r=document.getElementById('trR'),left=(TS.ru-Date.now())/1000;if(r)r.textContent=fmtT(left);
+  if(left<=0){TS.ru=0;trSave();try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}if(S.tab=='t'&&!MOD){render();toast('Descanso terminado: próxima série!')}}}}
+setInterval(trTick,1000);
+
+/* ---- Terminar e dar a recompensa ---- */
+function trFim(){if(!TS)return;const q=trQHoje(TS.k);
+ if(q&&q.mq>0)return modal('Quanto você fez?',`<p>Meta da quest <b>${esc(q.t)}</b>: <b>${q.mq} ${esc(q.mu||'')}</b>.</p><p class="mute" style="font-size:14px">Fazendo ${q.mq*2} ou mais, vira quest secreta.</p><input id="tramt" type="number" inputmode="decimal" min="0" value="${q.mq}">`,`<button class="ghost" onclick="fechaMod()">Voltar</button><button class="btn" onclick="trFimOk()">Concluir</button>`);
+ trFimOk()}
+function trFimOk(){if(!TS)return;const i=document.getElementById('tramt'),amt=i?+i.value:null;MOD='';const o={k:TS.k,n:TS.n,c:TS.c,lb:TS.lb,dur:Math.round((Date.now()-TS.t0)/1000),amt};TS=null;trSave();trConclui(o)}
+function trConclui(o){const s=trS(),t=trGet(o.k),h=hoje(),q=trQHoje(o.k),e={id:uid(),k:o.k,n:o.n,c:o.c,d:h,dur:o.dur||0,xp:0,g:0};if(o.lb)e.lb=o.lb;
+ const w=wk(h),antes=trWk(w);
+ if(q&&(!q.mq||(o.amt!=null&&o.amt>=q.mq))){e.q=q.id;s.h.unshift(e);s.h.splice(400);save();S.tab='t';TRV='home';toggle(q.id,h,q.mq?o.amt:undefined);trFimMsg(e,null,antes);return}
+ const ja=s.h.filter(x=>x.d==h&&x.xp>0).length;let up=0,o0=ri(S.lvl);
+ if(ja<2&&t){e.xp=Math.round(t.xp*mult('xp'));e.g=Math.round(t.g*mult('gold'));up=addXp(e.xp);S.gold+=e.g;led('treino','Treino: '+o.n+(o.lb?' ('+o.lb+')':''),e.xp,e.g,{d:h,cat:t.q&&t.q.cat||'saude'})}
+ s.h.unshift(e);s.h.splice(400);S.tab='t';TRV='home';save();render();
+ if(up)fx(ri(S.lvl)!=o0?'RANK UP':'LEVEL UP',ri(S.lvl)!=o0?RK[o0]+' → '+RK[ri(S.lvl)]:'Nível '+S.lvl);
+ trFimMsg(e,q&&q.mq&&o.amt!=null&&o.amt<q.mq?q:null,antes,ja>=2)}
+function trFimMsg(e,q,antes,lim){const s=trS(),n=trWk(wk(hoje())),lib=antes<s.wg&&n>=s.wg&&!s.wb[wk(hoje())];
+ setTimeout(()=>modal('Treino concluído',`<p style="font-size:18px"><b>${esc(e.n)}</b>${e.lb?' · '+esc(e.lb):''}${e.dur?' · '+fmtT(e.dur):''}</p>${e.q?`<p>Contou na quest <b>${esc((S.quests.find(x=>x.id==e.q)||{}).t||'')}</b>: a recompensa veio pela quest.</p>`:e.xp?`<p><b style="color:var(--acc)">+${e.xp} XP</b> · <b class="gold">+${e.g} ouro</b></p>`:lim?`<p class="mute">A recompensa de treino é de até 2 por dia. Este ficou registrado no histórico.</p>`:''}${q?`<p class="mute">Ficou abaixo da meta da quest (${q.mq} ${esc(q.mu||'')}), então ela não foi marcada.</p>`:''}<p>Semana: <b>${n}/${s.wg}</b> treinos.${lib?' <b class="gold">Bônus semanal liberado!</b>':''}</p>`,`${lib?`<button class="ghost" onclick="fechaMod()">Depois</button><button class="btn" onclick="MOD='';trBonus()">Resgatar bônus</button>`:`<button class="btn" onclick="fechaMod()">Fechar</button>`}`),q||e.q?700:(document.querySelector('.fx')?2500:0))}
+
+/* ---- Bicicleta: registro manual ---- */
+function trBike(id){const t=trGet(id),q=trQHoje(id);modal('Registrar pedal',`<p><b>${esc(t.n)}</b> · meta ${esc(t.m)}</p>${q?`<p class="mute" style="font-size:14px">Conta na quest <b>${esc(q.t)}</b> (meta ${q.mq} ${esc(q.mu||'')}; o dobro vira quest secreta).</p>`:''}
+ <label class="f"><span>Onde pedalou?</span><select id="trbl"><option>Academia</option><option>Rua</option></select></label>
+ <label class="f"><span>Minutos pedalando</span><input id="trbm" type="number" inputmode="numeric" min="1" value="${parseInt(t.m)||30}"></label>
+ <label class="f"><span>Quilômetros (se souber)</span><input id="trbk" type="number" inputmode="decimal" min="0" placeholder="opcional"></label>`,`<button class="ghost" onclick="fechaMod()">Cancelar</button><button class="btn" onclick="trBikeOk('${id}')">Registrar</button>`)}
+function trBikeOk(id){const m=+document.getElementById('trbm').value,k=+document.getElementById('trbk').value,l=document.getElementById('trbl').value,t=trGet(id);if(!(m>0))return toast('Informe os minutos');MOD='';
+ trConclui({k:id,n:t.n,c:'aero',lb:l+(k>0?' · '+String(k).replace('.',',')+' km':''),dur:Math.round(m*60),amt:m})}
+
+/* ---- Adicionar às quests ---- */
+function trQ(id){const t=trGet(id);if(!t)return;const d=t.q||{f:'w',n:3};TQ={k:id,f:d.f||'w',n:d.n||3,days:(d.days||[1,3,5]).slice()};trQP()}
+function trQP(){const t=trGet(TQ.k),d=t.q||{},daily=TQ.f=='d';
+ modal('Adicionar às quests',`<p style="margin-top:0"><b>${esc(t.n)}</b> · Rank ${RK[t.r]}</p>
+ <div class="f"><span>Tipo de quest</span><div class="trpl" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${daily?'on':''}" onclick="TQ.f='d';trQP()">DIÁRIA</button><button class="${daily?'':'on'}" onclick="TQ.f='w';trQP()">SEMANAL</button></div></div>
+ ${daily?`<div class="f"><span>Dias do treino</span><div class="trdays">${DIAS.map((x,i)=>`<button class="${TQ.days.includes(i)?'on':''}" aria-label="${['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][i]}" onclick="trQD(${i})">${x}</button>`).join('')}</div></div>${d.mq?`<p class="mute" style="font-size:14px;margin:0 0 10px">Meta: <b>${d.mq} ${esc(d.mu)}</b> · fazendo ${d.mq*2} vira quest secreta.</p>`:''}`
+ :`<div class="row" style="margin-bottom:10px"><div><small>Meta da semana</small><br><b style="font-family:var(--fd);font-size:20px">${TQ.n} treino${TQ.n>1?'s':''}</b></div><div class="row" style="gap:6px"><button class="trb3 sm" aria-label="Diminuir" onclick="TQ.n=Math.max(1,TQ.n-1);trQP()">−</button><button class="trb3 sm" aria-label="Aumentar" onclick="TQ.n=Math.min(7,TQ.n+1);trQP()">+</button></div></div>`}
+ <div class="trdash row"><small>Recompensa por conclusão</small><b class="gold" style="font-family:var(--fd)">+${t.xp} XP · +${t.g} ouro</b></div>
+ <p class="mute" style="font-size:14px">Ao terminar o treino pela aba Treino, a quest é marcada sozinha.</p>`,
+ `<button class="ghost" onclick="TQ=null;fechaMod()">Cancelar</button><button class="btn" onclick="trQOk()">Criar quest</button>`)}
+function trQD(i){const a=TQ.days;a.includes(i)?a.splice(a.indexOf(i),1):a.push(i);a.sort();trQP()}
+function trQOk(){const t=trGet(TQ.k),d=t.q||{},daily=TQ.f=='d';if(daily&&!TQ.days.length)return toast('Escolha ao menos um dia');
+ S.quests.push({id:uid(),t:'Treino: '+t.n,cat:d.cat||'saude',f:TQ.f,n:daily?1:TQ.n,days:daily?TQ.days.slice():ALL.slice(),xp:t.xp,g:t.g,pr:'p',mq:daily&&d.mq?d.mq:0,mu:daily&&d.mq?d.mu:'',log:[],cr:hoje(),tr:t.id});
+ TQ=null;MOD='';save();render();toast('Quest criada! Ela aparece no Painel.')}
+
+/* ---- Criar meu treino ---- */
+function trNovoAbre(c){TN={c,r:0,n:'',ex:'',tm:45};TRB=c;trNav('novo')}
+function trNovo(){if(!TN)TN={c:'acad',r:0,n:'',ex:'',tm:45};
+ return `${trHd('TREINO // NOVO','CRIAR TREINO',`trNav('${TN.c}')`)}<section class="trbox">
+ <label class="f"><span>Nome do treino</span><input id="trnn" value="${esc(TN.n)}" placeholder="Ex.: Treino de peito" oninput="TN.n=this.value"></label>
+ <div class="f"><span>Categoria</span><div class="trpl" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="${TN.c=='acad'?'on':''}" onclick="TN.c='acad';render()">ACADEMIA</button><button class="${TN.c=='bas'?'on':''}" onclick="TN.c='bas';render()">BÁSICO</button></div></div>
+ <div class="f"><span>Dificuldade</span><div class="trpl" style="grid-template-columns:repeat(3,minmax(0,1fr))">${[0,1,2].map(r=>`<button class="${TN.r==r?'on':''}" onclick="TN.r=${r};render()">RANK ${RK[r]}</button>`).join('')}</div></div>
+ <label class="f"><span>Exercícios (um por linha, ex.: Supino 3x10)</span><textarea id="trnx" rows="6" placeholder="Supino 3x10&#10;Remada 3x12&#10;Prancha 3x30 s" oninput="TN.ex=this.value">${esc(TN.ex)}</textarea></label>
+ <label class="f"><span>Duração aproximada (min)</span><input type="number" inputmode="numeric" min="5" value="${TN.tm}" oninput="TN.tm=+this.value||45"></label>
+ <button class="trb1" onclick="trNovoOk()">SALVAR TREINO</button></section>`}
+function trNovoOk(){const n=(TN.n||'').trim(),L=(TN.ex||'').split('\n').map(x=>x.trim()).filter(Boolean);if(!n)return toast('Dê um nome ao treino');if(!L.length)return toast('Escreva pelo menos um exercício');
+ const ex=L.slice(0,20).map(l=>{const m=l.match(/^(.*?)[\s\-–:]+(\d+)\s*[x×]\s*(.+)$/i);return m?[m[1].trim(),Math.min(20,Math.max(1,+m[2])),/^\d+$/.test(m[3].trim())?m[3].trim()+' reps':m[3].trim()]:[l,1,'']});
+ const xp=[40,60,80][TN.r],t={id:'m'+uid(),c:TN.c,r:TN.r,n:n.slice(0,40),i:ex.length+' exercício'+(ex.length>1?'s':'')+' · '+TN.tm+' min',xp,g:Math.round(xp*.42),rs:60,m:'3 treinos na semana',q:{f:'w',n:3},ex,my:1};
+ trS().my.push(t);const c=TN.c;TN=null;save();TRB=c;trNav('det',t.id);toast('Treino criado!')}
+function trDel(id){if(!confirm('Apagar este treino? As quests criadas com ele continuam.'))return;const s=trS();s.my=s.my.filter(t=>t.id!=id);save();trNav(TRB||'home')}
+
+/* Jarvis conhece a aba Treino */
+JNAV.push(['t','Treino',['treino','treinos','academia','musculacao','exercicio','exercicios','pular corda']]);
+JG.push(['treino','Treino',['treino','treinos','academia','musculacao','exercicio','pular corda','bicicleta','bike','caminho do despertar','monarca'],()=>jP(['A aba <b>Treino</b> tem treinos prontos em 3 categorias: <b>Academia</b> (musculação), <b>Aeróbico</b> (corrida com GPS, pular corda e bicicleta) e <b>Básico</b> (iniciantes, em casa).','Em cada treino você pode tocar em <b>Iniciar agora</b> (cronômetro, séries e descanso) ou em <b>Adicionar às quests</b>. Se o treino estiver numa quest, terminar o treino marca a quest sozinho.','A missão semanal conta treinos e corridas: batendo a meta, você resgata +150 XP e +60 ouro. Quem está começando pode aceitar o <b>Caminho do Despertar</b>, que libera o Treino do Monarca.']),[['Abrir Treino','t']]]);
+
+const _trNavGo=navGo;navGo=function(k){if(k=='t'&&!TS){TRV='home';TQ=null}return _trNavGo(k)};
+
 let LASTD=hoje();setInterval(()=>{if(hoje()!=LASTD){LASTD=hoje();if(!MOD)render()}},30000);
 render();setInterval(gtick,1000);syAuto();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
