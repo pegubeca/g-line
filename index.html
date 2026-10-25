@@ -391,8 +391,8 @@ const rk=()=>`<div class="rank"><span>${RK[ri(S.lvl)]}</span></div>`;
 
 function qrow(q,d){const c=cnt(q,d),t=tgt(q,d),on=q.log.includes(d),full=c>=t,wd=q.log.filter(l=>wk(l)==wk(d)).length,bn=2*(wd-(on?1:0));
  return `<div class="item qrow ${full?'done':''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' sec':''}${q.pr=='o'?' opt':''}${(q.skip||[]).includes(d)?' skp':''}"><button class="chk ${on?'on':''}" aria-label="Marcar" onclick="${q.mq&&!on?`qtyAsk('${q.id}','${d}')`:`toggle('${q.id}','${d}')`}">${on?'✓':''}</button>
- <div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''}${q.mq?' · meta '+q.mq+(q.mu?' '+esc(q.mu):''):''}${on&&q.amt&&q.amt[d]!=null?' · fez '+q.amt[d]:''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' · <span class="gold">✨ secreta</span>':''}${d==hoje()&&!on&&negCats(7).includes(q.cat)?' · <span class="gold">equilíbrio +10%</span>':''}${q.pr=='o'?' · opcional':''}${(q.skip||[]).includes(d)?' · dispensada':''} · +${q.xp} XP · +${q.g} ouro${t>1?' · '+c+'/'+t+' '+(q.f=='w'?'na semana':'no mês'):''}${q.f=='d'?' · semana '+wd+'/'+q.days.length+' · bônus +'+bn+'%':''}</small>${t>1||q.f=='d'?`<div class="bar"><i style="width:${Math.min(100,(q.f=='d'?wd/q.days.length:c/t)*100)}%"></i></div>`:''}</div>
- ${q.mq&&/km/i.test(q.mu||'')&&d==hoje()&&!on?`<button class="ghost" aria-label="Correr com GPS" onclick="RUNQ='${q.id}';go('tab','g')">${NI.g}</button>`:''}<button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">${NI.edit}</button>${q.f=='d'&&d==hoje()&&!on?((q.skip||[]).includes(d)?`<button class="ghost" aria-label="Desfazer dispensa" onclick="skipQ('${q.id}')">${NI.undo}</button>`:`<button class="ghost" aria-label="Dispensar hoje" onclick="skipQ('${q.id}')">${NI.skip}</button>`):''}</div>`}
+ <div class="t"><b>${esc(q.t)}</b><small>${CAT[q.cat]?CAT[q.cat][0]:''}${q.mq?' · meta '+q.mq+(q.mu?' '+esc(q.mu):''):''}${on&&q.amt&&q.amt[d]!=null?' · fez '+q.amt[d]:''}${on&&q.mq&&q.amt&&q.amt[d]>=2*q.mq?' · <span class="gold">✨ secreta</span>':''}${d==hoje()&&!on&&negCats(7).includes(q.cat)?' · <span class="gold">equilíbrio +10%</span>':''}${q.pr=='o'?' · opcional':''}${(q.skip||[]).includes(d)?' · dispensada':''} · +${q.xp} XP · +${q.g} ouro${t>1?' · '+c+'/'+t+' '+(q.f=='w'?'na semana':'no mês'):''}${q.f=='d'?' · semana '+wd+'/'+q.days.length+' · bônus +'+bn+'%':''}</small>${t>1||q.f=='d'?`<div class="bar"><i style="width:${Math.min(100,(q.f=='d'?wd/q.days.length:c/t)*100)}%"></i></div>`:''}${qTrH(q,d,on)}</div>
+ ${!q.tr&&q.mq&&/km/i.test(q.mu||'')&&d==hoje()&&!on?`<button class="ghost" aria-label="Correr com GPS" onclick="RUNQ='${q.id}';go('tab','g')">${NI.g}</button>`:''}<button class="ghost" aria-label="Editar quest" onclick="editQ('${q.id}')">${NI.edit}</button>${q.f=='d'&&d==hoje()&&!on?((q.skip||[]).includes(d)?`<button class="ghost" aria-label="Desfazer dispensa" onclick="skipQ('${q.id}')">${NI.undo}</button>`:`<button class="ghost" aria-label="Dispensar hoje" onclick="skipQ('${q.id}')">${NI.skip}</button>`):''}</div>`}
 function calHtml(){const y=CV.getFullYear(),m=CV.getMonth(),n=new Date(y,m+1,0).getDate(),o=CV.getDay(),h=hoje();
  let b=DIAS.map(d=>`<button class="hd" tabindex="-1">${d}</button>`).join('')+'<span></span>'.repeat(o);
  for(let i=1;i<=n;i++){const d=fmt(new Date(y,m,i));b+=`<button class="${d==h?'td ':''}${d==SEL?'sel ':''}${S.quests.some(q=>q.log.includes(d))?'dot':''}" onclick="SEL='${d}';render()">${i}</button>`}
@@ -845,7 +845,18 @@ function retroCard(){const h=hoje();if(+h.slice(8,10)>7)return '';const mk=prevM
 function dlF(name,text,type){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
 function expRel(){const h=hoje(),R=retroData(RM||prevMk(h.slice(0,7))),P=perStats(addD(h,-(AP-1)),h),row=(k,v)=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`;
  const blk=(t,X)=>`<h2>${t}</h2><table>${row('Quests concluídas',X.n)}${row('XP ganho',X.xp)}${row('Dias ativos',X.act+' de '+X.nd)}${row('Diárias cumpridas',X.rate==null?'—':X.rate+'%')}${row('Falhas',X.fal)}${row('Ouro ganho / gasto',X.gIn+' / '+X.gOut)}${row('Humor médio',X.mood==null?'—':X.mood.toFixed(1).replace('.',','))}${row('Dias com diário',X.diary)}</table><p>Por área: ${Object.keys(X.cc).map(c=>(CAT[c]?CAT[c][0]:c)+' '+X.cc[c]).join(' · ')||'—'}</p>${X.pouco?'<p><i>Pouco conclusivo: poucos dados neste período.</i></p>':''}`;
- const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório G-Line</title><style>body{font-family:system-ui,sans-serif;max-width:720px;margin:20px auto;padding:0 14px;color:#111}h1{font-size:22px}h2{font-size:18px;margin-top:24px}td{padding:4px 8px;border-bottom:1px solid #ddd}</style></head><body><h1>Relatório G-Line</h1><p>${esc(S.name)} · Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl} · gerado em ${dt(new Date().toISOString())}</p>${blk('Últimos '+AP+' dias ('+brD(addD(h,-(AP-1)))+' a '+brD(h)+')',P)}${blk('Retrospectiva de '+mkName(R.mk),R.A)}</body></html>`;
+ const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório G-Line</title><style>body{font-family:system-ui,sans-serif;max-width:720px;margin:20px auto;padding:0 14px;color:#111}h1{font-size:22px}h2{font-size:18px;margin-top:24px}td{padding:4px 8px;border-bottom:1px solid #ddd}
+/* v23.1: exercícios do treino no card da quest */
+.qtr{margin-top:8px}
+.qtrs{margin:0;font-size:13px;line-height:1.45;color:color-mix(in srgb,var(--ink) 85%,var(--mute))}
+.qtrs b{color:var(--acc)}
+.qtrl{margin:8px 0 0;padding:0;list-style:none;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.qtrl li{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 12px;font-size:14px;border-top:1px solid var(--line)}
+.qtrl li:first-child{border-top:0}
+.qtrl b{color:var(--acc);font-family:var(--fd);white-space:nowrap}
+.qtrb{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.qtrb button{min-height:40px;padding:8px 14px;font-size:13px}
+</style></head><body><h1>Relatório G-Line</h1><p>${esc(S.name)} · Rank ${RK[ri(S.lvl)]} · Nível ${S.lvl} · gerado em ${dt(new Date().toISOString())}</p>${blk('Últimos '+AP+' dias ('+brD(addD(h,-(AP-1)))+' a '+brD(h)+')',P)}${blk('Retrospectiva de '+mkName(R.mk),R.A)}</body></html>`;
  dlF('g-line-relatorio-'+h+'.html',html,'text/html');toast('Relatório baixado')}
 function diaWeek(){const w=addD(wk(hoje()),-7*DW),ds=[0,1,2,3,4,5,6].map(i=>addD(w,i)).filter(d=>d<=hoje()),E=ds.map(d=>[d,(S.diary||{})[d]]).filter(x=>x[1]&&(x[1].t||x[1].m)),M=E.filter(x=>x[1].m);
  const avg=M.length?M.reduce((a,x)=>a+x[1].m,0)/M.length:null,wd=E.reduce((a,x)=>a+(x[1].t||'').trim().split(/\s+/).filter(Boolean).length,0),hi=M.slice().sort((a,b)=>b[1].m-a[1].m)[0],lo=M.slice().sort((a,b)=>a[1].m-b[1].m)[0],sn=x=>esc((x[1].t||'').slice(0,70))+((x[1].t||'').length>70?'…':'');
@@ -1702,13 +1713,23 @@ function trDel(id){if(!confirm('Apagar este treino? As quests criadas com ele co
 
 /* Jarvis conhece a aba Treino */
 JNAV.push(['t','Treino',['treino','treinos','academia','musculacao','exercicio','exercicios','pular corda']]);
-JG.push(['treino','Treino',['treino','treinos','academia','musculacao','exercicio','pular corda','bicicleta','bike','caminho do despertar','monarca'],()=>jP(['A aba <b>Treino</b> tem treinos prontos em 3 categorias: <b>Academia</b> (musculação), <b>Aeróbico</b> (corrida com GPS, pular corda e bicicleta) e <b>Básico</b> (iniciantes, em casa).','Em cada treino você pode tocar em <b>Iniciar agora</b> (cronômetro, séries e descanso) ou em <b>Adicionar às quests</b>. Se o treino estiver numa quest, terminar o treino marca a quest sozinho.','A missão semanal conta treinos e corridas: batendo a meta, você resgata +150 XP e +60 ouro. Quem está começando pode aceitar o <b>Caminho do Despertar</b>, que libera o Treino do Monarca.']),[['Abrir Treino','t']]]);
+JG.push(['treino','Treino',['treino','treinos','academia','musculacao','exercicio','pular corda','bicicleta','bike','caminho do despertar','monarca'],()=>jP(['A aba <b>Treino</b> tem treinos prontos em 3 categorias: <b>Academia</b> (musculação), <b>Aeróbico</b> (corrida com GPS, pular corda e bicicleta) e <b>Básico</b> (iniciantes, em casa).','Em cada treino você pode tocar em <b>Iniciar agora</b> (cronômetro, séries e descanso) ou em <b>Adicionar às quests</b>. Se o treino estiver numa quest, terminar o treino marca a quest sozinho. No Painel, a quest de treino mostra os exercícios e tem os botões <b>Ver treino</b> e <b>Iniciar</b>.','A missão semanal conta treinos e corridas: batendo a meta, você resgata +150 XP e +60 ouro. Quem está começando pode aceitar o <b>Caminho do Despertar</b>, que libera o Treino do Monarca.']),[['Abrir Treino','t']]]);
 
 const _trNavGo=navGo;navGo=function(k){if(k=='t'&&!TS){TRV='home';TQ=null}return _trNavGo(k)};
 
 let LASTD=hoje();setInterval(()=>{if(hoje()!=LASTD){LASTD=hoje();if(!MOD)render()}},30000);
 render();setInterval(gtick,1000);syAuto();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+/* ---- v23.1: quests de treino mostram os exercícios, com Ver treino e Iniciar ---- */
+let QX={};
+const trFx=e=>esc(e[0])+' '+(e[1]>1?e[1]+'×':'')+esc(String(e[2]).replace(/ reps$/,''));
+function qTrH(q,d,on){if(!q.tr||typeof trGet!='function')return '';const t=trGet(q.tr);if(!t)return '';
+ const P=trPh(t),E=P.ex||[],op=QX[q.id],cont=typeof TS!='undefined'&&TS&&TS.k==t.id,pode=d==hoje()&&!on&&!(q.skip||[]).includes(d)&&!trLock(t);
+ const res=E.length?(P.lb?'<b>'+esc(P.lb)+'</b> · ':'')+E.map(trFx).join(' · '):esc(t.i||t.m||'');
+ const lst=op?(E.length?`<ol class="qtrl">${E.map(e=>`<li><span>${esc(e[0])}</span><b>${e[1]>1?e[1]+' × ':''}${esc(e[2])}</b></li>`).join('')}</ol>`:`<ol class="qtrl"><li><span>${esc(t.i||'')}</span><b>${esc(t.m||'')}</b></li></ol>`):'';
+ const lb=cont?'▶ Continuar':t.k=='bike'?'Registrar pedal':'▶ Iniciar',ac=cont?"navGo('t')":`trStart('${t.id}')`;
+ return `<div class="qtr"><p class="qtrs">${res}</p>${lst}<div class="qtrb"><button class="ghost" aria-expanded="${op?'true':'false'}" onclick="QX['${q.id}']=!QX['${q.id}'];render()">${op?'Fechar treino':'Ver treino'}</button>${pode||cont?`<button class="btn" onclick="${ac}">${lb}</button>`:''}</div></div>`}
 </script>
 </body>
 </html>
